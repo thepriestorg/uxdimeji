@@ -195,6 +195,9 @@ export default function About() {
                 </div>
             </div>
 
+            {/* Desktop-only scroll buffer - mobile works fine without it */}
+            <div className="hidden md:block md:h-[60vh]" />
+
             {/* The Chapters */}
             <div className="relative z-10">
                 {storyChapters.map((chapter, i) => (
