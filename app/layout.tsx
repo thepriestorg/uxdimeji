@@ -7,6 +7,7 @@ const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://uxdimeji.com'),
   title: "Oladimeji Abubakar — Product Designer",
   description: "Product Designer crafting intuitive and scalable digital products. Specializing in B2C, SaaS, and Design Systems.",
   keywords: ["Product Designer", "UX Designer", "UI Designer", "Design Systems", "SaaS Design", "B2C Product Design", "Oladimeji Abubakar"],
@@ -16,12 +17,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Oladimeji Abubakar",
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Oladimeji Abubakar - Product Designer',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Oladimeji Abubakar — Product Designer",
     description: "Product Designer crafting intuitive and scalable digital products.",
-    creator: "@uxdimeji", // Assuming handle based on folder name, user can update later
+    creator: "@uxdimeji",
+    images: ['/og-image.png'],
   },
 };
 
