@@ -105,7 +105,7 @@ export default function WorkGallery() {
                                 className="relative flex-shrink-0 cursor-pointer"
                                 onClick={() => setSelectedImage(img)}
                             >
-                                <div className="relative h-[160px] md:h-[450px] overflow-hidden rounded-lg md:rounded-2xl">
+                                <div className="relative h-[240px] md:h-[450px] overflow-hidden rounded-lg md:rounded-2xl">
                                     <img
                                         src={getOptimizedUrl(img.image_url, 500)}
                                         alt="Gallery work"
