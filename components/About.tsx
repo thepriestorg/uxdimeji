@@ -195,7 +195,7 @@ export default function About() {
                 </div>
             </div>
             {/* Spacer for scroll buffer */}
-            <div className="h-[50vh]" />
+            <div className="h-[100vh]" />
 
             {/* The Chapters */}
             <div className="relative z-10">
