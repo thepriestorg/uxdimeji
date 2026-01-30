@@ -11,7 +11,7 @@ const storyChapters = [
         role: "Intern",
         company: "LeftLane",
         period: "Jun 2022 — Dec 2022",
-        narrative: "The B2C boot camp. I learned that speed matters, but users matter more. Cutting my teeth on consumer products where every pixel is scrutinized.",
+        narrative: "Cut my teeth on consumer products where every pixel is scrutinized. I learned that in the B2C world, speed matters, but the user experience matters more.",
         highlight: "Consumer Tech"
     },
     {
@@ -19,32 +19,32 @@ const storyChapters = [
         role: "Contract Designer",
         company: "Alta Inc",
         period: "Nov 2022 — Jan 2023",
-        narrative: "SaaS requires structure. I moved from painting pixels to designing systems, building the foundational tools that empower other builders.",
-        highlight: "SaaS Design"
+        narrative: "Democratizing development. I worked on a no-code mobile app builder that empowers creators to launch products without writing code. Transforming complex logic into an intuitive visual interface.",
+        highlight: "No-Code SaaS"
     },
     {
         title: "THE SOCIALITE",
         role: "Contract Designer",
         company: "TheClub",
         period: "Jan 2023 — Aug 2023",
-        narrative: "Social apps live or die by engagement. My mission was to design digital spaces where connection felt natural, addictive, and human.",
-        highlight: "Social Engagement"
+        narrative: "Rhythm and connection. I designed a specialized social platform for DJs to stream live sets, connect with fans, and grow their community digitally.",
+        highlight: "Social Streaming"
     },
     {
         title: "THE MECHANIC",
         role: "Contract Designer",
         company: "RoomService",
         period: "Nov 2023 — Feb 2024",
-        narrative: "E-commerce is a machine. My job was to grease the gears. Removing friction, one click at a time, until the checkout felt invisible.",
-        highlight: "Conversion Ops"
+        narrative: "Culinary commerce. I focused on optimizing the food delivery experience, streamlining the user journey from discovery to checkout to maximize conversion.",
+        highlight: "Food E-commerce"
     },
     {
-        title: "THE STRATEGIST",
+        title: "THE NAVIGATOR",
         role: "Contract Designer",
         company: "LoopWise",
         period: "Mar 2025 — Jun 2025",
-        narrative: "B2B logistics is complex. The interface shouldn't be. I turned massive datasets into intuitive dashboards, proving power doesn't have to be complicated.",
-        highlight: "Data Viz"
+        narrative: "Freight at your fingertips. I designed the mobile experience for shippers and carriers, streamlining complex logistics—from trucking to air cargo—into a seamless tracking and booking flow.",
+        highlight: "Logistics Mobile App"
     },
     {
         title: "THE CATALYST",
@@ -105,14 +105,14 @@ function Chapter({ data, index }: { data: typeof storyChapters[0], index: number
 
                         <div className="mb-6">
                             <h3 className="text-3xl text-white font-serif italic">{data.company}</h3>
-                            <p className="text-secondary font-mono text-sm mt-1">{data.role} // {data.period}</p>
+                            <p className="text-white/70 font-mono text-sm mt-1">{data.role} // {data.period}</p>
                         </div>
 
                         <p className="text-xl md:text-3xl text-white/90 leading-relaxed font-serif mb-8">
                             "{data.narrative}"
                         </p>
 
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-accent uppercase tracking-widest">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-violet-300 uppercase tracking-widest">
                             {data.highlight}
                         </div>
                     </motion.div>
@@ -137,7 +137,7 @@ export default function About() {
         <section ref={containerRef} id="about" className="relative z-20 bg-black text-white">
 
             {/* Profile Intro */}
-            <div className="min-h-screen flex items-center justify-center sticky top-0 z-0 py-20 px-6 bg-background">
+            <div className="sticky top-0 z-0 min-h-screen flex items-center justify-center py-20 px-6 bg-background">
                 <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
 
                     {/* Left: Label */}
@@ -163,7 +163,7 @@ export default function About() {
                                 className="text-5xl md:text-8xl font-serif italic text-white leading-[0.9] mb-8"
                             >
                                 I don't just design interfaces. <br />
-                                <span className="text-secondary not-italic font-sans font-bold tracking-tighter">I engineer clarity.</span>
+                                <span className="text-white/70 not-italic font-sans font-bold tracking-tighter">I engineer clarity.</span>
                             </motion.h2>
                         </div>
 
@@ -173,7 +173,7 @@ export default function About() {
                                 initial={{ opacity: 0, x: 20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-lg md:text-xl text-secondary leading-relaxed font-medium"
+                                className="text-lg md:text-xl text-white/70 leading-relaxed font-medium"
                             >
                                 I’m <span className="text-white">Oladimeji Abubakar</span>, a Product Designer with 5 years of experience crafting intuitive and scalable digital products.
                                 <br /><br />
@@ -194,6 +194,8 @@ export default function About() {
 
                 </div>
             </div>
+            {/* Spacer for scroll buffer */}
+            <div className="h-[50vh]" />
 
             {/* The Chapters */}
             <div className="relative z-10">
@@ -204,6 +206,6 @@ export default function About() {
 
             {/* Outro removed - Moved to Contact.tsx */}
 
-        </section>
+        </section >
     );
 }
