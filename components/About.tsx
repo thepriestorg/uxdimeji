@@ -196,13 +196,16 @@ export default function About() {
 
                     </div>
                 </div>
-            </div>
 
-            {/* The Chapters */}
-            <div className="relative z-10">
-                {storyChapters.map((chapter, i) => (
-                    <Chapter key={i} data={chapter} index={i} />
-                ))}
+                {/* Desktop-only scroll delay - gives time to read Profile before Chapters slide over */}
+                <div className="hidden md:block md:h-[80vh]" />
+
+                {/* The Chapters - Inside wrapper so they slide over Profile */}
+                <div className="relative z-10">
+                    {storyChapters.map((chapter, i) => (
+                        <Chapter key={i} data={chapter} index={i} />
+                    ))}
+                </div>
             </div>
 
             {/* Outro removed - Moved to Contact.tsx */}
