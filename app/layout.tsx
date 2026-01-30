@@ -7,8 +7,22 @@ const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
-  title: "Abubakar Oladimeji | Product Designer",
-  description: "Portfolio of Abubakar Oladimeji, a Product Designer focusing on clear, useful interfaces.",
+  title: "Oladimeji Abubakar — Product Designer",
+  description: "Product Designer crafting intuitive and scalable digital products. Specializing in B2C, SaaS, and Design Systems.",
+  keywords: ["Product Designer", "UX Designer", "UI Designer", "Design Systems", "SaaS Design", "B2C Product Design", "Oladimeji Abubakar"],
+  openGraph: {
+    title: "Oladimeji Abubakar — Product Designer",
+    description: "Product Designer crafting intuitive and scalable digital products. Specializing in B2C, SaaS, and Design Systems.",
+    type: "website",
+    locale: "en_US",
+    siteName: "Oladimeji Abubakar",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Oladimeji Abubakar — Product Designer",
+    description: "Product Designer crafting intuitive and scalable digital products.",
+    creator: "@uxdimeji", // Assuming handle based on folder name, user can update later
+  },
 };
 
 export default function RootLayout({

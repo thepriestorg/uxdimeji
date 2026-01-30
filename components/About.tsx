@@ -199,7 +199,7 @@ export default function About() {
             </div>
 
             {/* The Chapters */}
-            <div className="relative z-10">
+            <div className="relative z-30">
                 {storyChapters.map((chapter, i) => (
                     <Chapter key={i} data={chapter} index={i} />
                 ))}
