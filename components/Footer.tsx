@@ -43,14 +43,14 @@ export default function Footer() {
                     <div>
                         <span className="block font-mono text-sm opacity-50 mb-4">SOCIALS</span>
                         <div className="flex flex-col gap-2">
-                            <a href="#" className="text-lg hover:italic transition-all">Instagram</a>
-                            <a href="#" className="text-lg hover:italic transition-all">Twitter / X</a>
-                            <a href="#" className="text-lg hover:italic transition-all">LinkedIn</a>
+                            <a href="https://www.instagram.com/oladimeji.exe" target="_blank" rel="noopener noreferrer" className="text-lg hover:italic transition-all">Instagram</a>
+                            <a href="https://x.com/olasdimejiuiux" target="_blank" rel="noopener noreferrer" className="text-lg hover:italic transition-all">Twitter / X</a>
+                            <a href="https://www.linkedin.com/in/uiuxoladimeji/" target="_blank" rel="noopener noreferrer" className="text-lg hover:italic transition-all">LinkedIn</a>
                         </div>
                     </div>
                     <div className="md:text-right">
                         <span className="block font-mono text-sm opacity-50 mb-4">COPYRIGHT</span>
-                        <p className="text-sm opacity-50">© 2024 OA.</p>
+                        <p className="text-sm opacity-50">© 2026 OA.</p>
                         <p className="text-sm opacity-50">All Rights Reserved.</p>
                     </div>
                 </div>
