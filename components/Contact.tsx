@@ -39,9 +39,9 @@ export default function Contact() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="text-xl md:text-3xl font-medium max-w-2xl mx-auto leading-relaxed mb-12"
                     >
-                        I’ve spent 5 years <span className="text-black font-bold">designing products</span> that scale. Now, I’m looking for a challenge that redefines the standard.
+                        Interfaces should be felt, not just seen. I’ve spent half a decade mastering the architecture of digital emotion. Now, I’m looking for the next vision that deserves my absolute obsession.
                         <br /><br />
-                        <span className="font-serif italic text-black">Are you ready to be Chapter 07?</span>
+                        <span className="font-serif italic text-black">Start Chapter 07 here.</span>
                     </motion.p>
 
                     <motion.a
