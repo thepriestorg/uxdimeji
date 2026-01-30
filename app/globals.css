@@ -74,6 +74,25 @@
   }
 }
 
+/* Gallery Scroll Animation - Fast continuous scroll */
+@keyframes scroll-gallery {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-scroll-gallery {
+  animation: scroll-gallery 12s linear infinite;
+}
+
+.animate-scroll-gallery:hover {
+  animation-play-state: paused;
+}
+
 /* Base Styles */
 :root {
   --foreground-rgb: 237, 237, 237;

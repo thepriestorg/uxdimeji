@@ -4,6 +4,19 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Trash2, Loader2, RefreshCcw } from "lucide-react";
 import MediaUploader from "@/components/admin/MediaUploader";
+import Image from "next/image";
+
+// Optimize Cloudinary URL with transformations for faster loading
+const getOptimizedUrl = (url: string, width: number = 400) => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+    return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
+};
+
+// Generate a tiny blur placeholder URL
+const getBlurUrl = (url: string) => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+    return url.replace('/upload/', '/upload/f_auto,q_10,w_20,e_blur:1000/');
+};
 
 export default function GalleryAdmin() {
     const supabase = createClient();
@@ -101,10 +114,15 @@ export default function GalleryAdmin() {
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     {images.map((img) => (
                         <div key={img.id} className="group relative aspect-square rounded-xl overflow-hidden bg-black border border-white/10">
-                            <img
-                                src={img.image_url}
-                                alt="Gallery"
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            <Image
+                                src={getOptimizedUrl(img.image_url, 400)}
+                                alt={`Gallery image`}
+                                fill
+                                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                loading="lazy"
+                                placeholder="blur"
+                                blurDataURL={getBlurUrl(img.image_url)}
                             />
 
                             {/* Overlay */}
