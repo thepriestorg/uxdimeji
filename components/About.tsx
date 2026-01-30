@@ -136,10 +136,10 @@ export default function About() {
     return (
         <section ref={containerRef} id="about" className="relative z-20 bg-black text-white">
 
-            {/* Profile Section Wrapper - Extended height on desktop to control scroll duration */}
-            <div className="relative md:min-h-[180vh]">
-                {/* Profile Intro - Sticky inside wrapper */}
-                <div className="sticky top-0 z-0 min-h-screen flex items-start justify-center pt-32 pb-12 px-6 bg-background">
+            {/* Profile Intro - Sticky Bottom Approach */}
+            {/* The container is tall (150vh) to allow scrolling. The content sticks to the BOTTOM. */}
+            <div className="relative z-0 min-h-[150vh] flex flex-col justify-end">
+                <div className="sticky bottom-0 py-20 px-6 bg-background min-h-screen flex items-center justify-center">
                     <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
 
                         {/* Left: Label */}
@@ -196,16 +196,13 @@ export default function About() {
 
                     </div>
                 </div>
+            </div>
 
-                {/* Desktop-only scroll delay - gives time to read Profile before Chapters slide over */}
-                <div className="hidden md:block md:h-[80vh]" />
-
-                {/* The Chapters - Inside wrapper so they slide over Profile */}
-                <div className="relative z-10">
-                    {storyChapters.map((chapter, i) => (
-                        <Chapter key={i} data={chapter} index={i} />
-                    ))}
-                </div>
+            {/* The Chapters */}
+            <div className="relative z-10">
+                {storyChapters.map((chapter, i) => (
+                    <Chapter key={i} data={chapter} index={i} />
+                ))}
             </div>
 
             {/* Outro removed - Moved to Contact.tsx */}
