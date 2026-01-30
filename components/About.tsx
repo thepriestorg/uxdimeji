@@ -136,67 +136,67 @@ export default function About() {
     return (
         <section ref={containerRef} id="about" className="relative z-20 bg-black text-white">
 
-            {/* Profile Intro */}
-            <div className="sticky top-0 z-0 min-h-screen flex items-start justify-center pt-32 pb-12 px-6 bg-background">
-                <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+            {/* Profile Section Wrapper - Extended height on desktop to control scroll duration */}
+            <div className="relative md:min-h-[180vh]">
+                {/* Profile Intro - Sticky inside wrapper */}
+                <div className="sticky top-0 z-0 min-h-screen flex items-start justify-center pt-32 pb-12 px-6 bg-background">
+                    <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
 
-                    {/* Left: Label */}
-                    <div className="md:col-span-2">
-                        <motion.span
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="block font-mono text-accent text-xs tracking-[0.2em] uppercase sticky top-32"
-                        >
-                            (002) <br /> Profile
-                        </motion.span>
-                    </div>
-
-                    {/* Right: Content */}
-                    <div className="md:col-span-10 flex flex-col gap-8 md:gap-16">
-                        {/* Headline */}
-                        <div className="max-w-4xl">
-                            <motion.h2
-                                initial={{ opacity: 0, y: 30 }}
+                        {/* Left: Label */}
+                        <div className="md:col-span-2">
+                            <motion.span
+                                initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8 }}
-                                className="text-5xl md:text-8xl font-serif italic text-white leading-[0.9] mb-4"
+                                transition={{ duration: 0.6 }}
+                                className="block font-mono text-accent text-xs tracking-[0.2em] uppercase sticky top-32"
                             >
-                                I don't just design interfaces. <br />
-                                <span className="text-white/70 not-italic font-sans font-bold tracking-tighter">I engineer clarity.</span>
-                            </motion.h2>
+                                (002) <br /> Profile
+                            </motion.span>
                         </div>
 
-                        {/* Restored Bio */}
-                        <div className="max-w-2xl ml-auto border-l border-white/10 pl-8 md:pl-12">
-                            <motion.p
-                                initial={{ opacity: 0, x: 20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-lg md:text-xl text-white/70 leading-relaxed font-medium"
-                            >
-                                I’m <span className="text-white">Oladimeji Abubakar</span>, a Product Designer with 5 years of experience crafting intuitive and scalable digital products.
-                                <br /><br />
-                                Backed by a <span className="text-white">First Class degree in Computer Science</span>, I design with structure, clarity, and intent, bridging user needs and business goals through thoughtful interfaces.
-                            </motion.p>
+                        {/* Right: Content */}
+                        <div className="md:col-span-10 flex flex-col gap-8 md:gap-16">
+                            {/* Headline */}
+                            <div className="max-w-4xl">
+                                <motion.h2
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8 }}
+                                    className="text-5xl md:text-8xl font-serif italic text-white leading-[0.9] mb-4"
+                                >
+                                    I don't just design interfaces. <br />
+                                    <span className="text-white/70 not-italic font-sans font-bold tracking-tighter">I engineer clarity.</span>
+                                </motion.h2>
+                            </div>
 
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                transition={{ duration: 1, delay: 0.4 }}
-                                className="mt-8 flex items-center gap-4 text-xs font-mono text-accent uppercase tracking-widest"
-                            >
-                                <span>Scroll to explore the journey</span>
-                                <div className="w-12 h-[1px] bg-accent" />
-                            </motion.div>
+                            {/* Restored Bio */}
+                            <div className="max-w-2xl ml-auto border-l border-white/10 pl-8 md:pl-12">
+                                <motion.p
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                    className="text-lg md:text-xl text-white/70 leading-relaxed font-medium"
+                                >
+                                    I'm <span className="text-white">Oladimeji Abubakar</span>, a Product Designer with 5 years of experience crafting intuitive and scalable digital products.
+                                    <br /><br />
+                                    Backed by a <span className="text-white">First Class degree in Computer Science</span>, I design with structure, clarity, and intent, bridging user needs and business goals through thoughtful interfaces.
+                                </motion.p>
+
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
+                                    transition={{ duration: 1, delay: 0.4 }}
+                                    className="mt-8 flex items-center gap-4 text-xs font-mono text-accent uppercase tracking-widest"
+                                >
+                                    <span>Scroll to explore the journey</span>
+                                    <div className="w-12 h-[1px] bg-accent" />
+                                </motion.div>
+                            </div>
                         </div>
+
                     </div>
-
                 </div>
             </div>
-
-            {/* Desktop-only scroll buffer - mobile works fine without it */}
-            <div className="hidden md:block md:h-[60vh]" />
 
             {/* The Chapters */}
             <div className="relative z-10">
