@@ -137,7 +137,7 @@ export default function About() {
         <section ref={containerRef} id="about" className="relative z-20 bg-black text-white">
 
             {/* Profile Intro */}
-            <div className="sticky top-0 z-0 min-h-screen flex items-center justify-center py-20 px-6 bg-background">
+            <div className="sticky top-0 z-0 min-h-screen flex items-start justify-center pt-32 pb-12 px-6 bg-background">
                 <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
 
                     {/* Left: Label */}
@@ -153,14 +153,14 @@ export default function About() {
                     </div>
 
                     {/* Right: Content */}
-                    <div className="md:col-span-10 flex flex-col gap-12 md:gap-24">
+                    <div className="md:col-span-10 flex flex-col gap-8 md:gap-16">
                         {/* Headline */}
                         <div className="max-w-4xl">
                             <motion.h2
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8 }}
-                                className="text-5xl md:text-8xl font-serif italic text-white leading-[0.9] mb-8"
+                                className="text-5xl md:text-8xl font-serif italic text-white leading-[0.9] mb-4"
                             >
                                 I don't just design interfaces. <br />
                                 <span className="text-white/70 not-italic font-sans font-bold tracking-tighter">I engineer clarity.</span>
@@ -194,8 +194,6 @@ export default function About() {
 
                 </div>
             </div>
-            {/* Spacer for scroll buffer */}
-            <div className="h-[100vh]" />
 
             {/* The Chapters */}
             <div className="relative z-10">
