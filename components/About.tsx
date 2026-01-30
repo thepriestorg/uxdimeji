@@ -47,14 +47,6 @@ const storyChapters = [
         highlight: "Logistics Mobile App"
     },
     {
-        title: "THE CATALYST",
-        role: "Product Designer",
-        company: "NasDigit",
-        period: "Dec 2025 — Present",
-        narrative: "Digital transformation at scale. Working on enterprise-grade solutions that require precision, scalability, and robust design systems.",
-        highlight: "Enterprise UX"
-    },
-    {
         title: "THE VISIONARY",
         role: "Product Designer",
         company: "Elevayt",

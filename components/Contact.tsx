@@ -21,7 +21,7 @@ export default function Contact() {
                         transition={{ duration: 0.6 }}
                         className="font-mono text-black/60 text-sm tracking-[0.2em] mb-6 block uppercase"
                     >
-                        Chapter 08
+                        Chapter 07
                     </motion.span>
                     <motion.h2
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -39,7 +39,9 @@ export default function Contact() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="text-xl md:text-3xl font-medium max-w-2xl mx-auto leading-relaxed mb-12"
                     >
-                        I’ve shared my journey. Now I’m looking for the next big challenge. Are you ready to be my Chapter 08?
+                        I’ve spent 5 years <span className="text-black font-bold">designing products</span> that scale. Now, I’m looking for a challenge that redefines the standard.
+                        <br /><br />
+                        <span className="font-serif italic text-black">Are you ready to be Chapter 07?</span>
                     </motion.p>
 
                     <motion.a
