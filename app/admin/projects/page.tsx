@@ -39,66 +39,68 @@ export default async function ProjectsPage() {
                 </div>
             ) : projects && projects.length > 0 ? (
                 <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-white/10">
-                                <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Title</th>
-                                <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Category</th>
-                                <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Year</th>
-                                <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Featured</th>
-                                <th className="text-right text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {projects.map((project) => (
-                                <tr key={project.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-4">
-                                            {project.featured_image && (
-                                                <img
-                                                    src={project.featured_image}
-                                                    alt={project.title}
-                                                    className="w-12 h-12 rounded-lg object-cover"
-                                                />
-                                            )}
-                                            <span className="font-bold text-white">{project.title}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-white/60">{project.category}</td>
-                                    <td className="px-6 py-4 text-white/60">{project.year}</td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-bold ${project.is_featured ? "bg-accent/20 text-accent" : "bg-white/10 text-white/40"}`}>
-                                            {project.is_featured ? "Yes" : "No"}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={`/projects/${project.slug}`}
-                                                className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
-                                                title="View"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </Link>
-                                            <Link
-                                                href={`/admin/projects/${project.slug}`}
-                                                className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
-                                                title="Edit"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </Link>
-                                            <button
-                                                className="p-2 rounded-lg hover:bg-red-500/10 text-white/60 hover:text-red-400 transition-colors"
-                                                title="Delete"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[800px]">
+                            <thead>
+                                <tr className="border-b border-white/10">
+                                    <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Title</th>
+                                    <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Category</th>
+                                    <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Year</th>
+                                    <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Featured</th>
+                                    <th className="text-right text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {projects.map((project) => (
+                                    <tr key={project.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-4">
+                                                {project.featured_image && (
+                                                    <img
+                                                        src={project.featured_image}
+                                                        alt={project.title}
+                                                        className="w-12 h-12 rounded-lg object-cover"
+                                                    />
+                                                )}
+                                                <span className="font-bold text-white">{project.title}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-white/60">{project.category}</td>
+                                        <td className="px-6 py-4 text-white/60">{project.year}</td>
+                                        <td className="px-6 py-4">
+                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${project.is_featured ? "bg-accent/20 text-accent" : "bg-white/10 text-white/40"}`}>
+                                                {project.is_featured ? "Yes" : "No"}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Link
+                                                    href={`/projects/${project.slug}`}
+                                                    className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                                                    title="View"
+                                                >
+                                                    <Eye className="w-4 h-4" />
+                                                </Link>
+                                                <Link
+                                                    href={`/admin/projects/${project.slug}`}
+                                                    className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </Link>
+                                                <button
+                                                    className="p-2 rounded-lg hover:bg-red-500/10 text-white/60 hover:text-red-400 transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : (
                 <div className="bg-white/5 border border-white/10 border-dashed rounded-2xl p-12 text-center">
