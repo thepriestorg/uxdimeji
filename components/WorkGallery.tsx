@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 // Optimize Cloudinary URL with transformations for faster loading
 const getOptimizedUrl = (url: string, width: number = 800) => {
     if (!url || !url.includes('cloudinary.com')) return url;
-    return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
+    return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width},dpr_auto/`);
 };
 
 interface GalleryImage {
@@ -28,7 +28,7 @@ export default function WorkGallery() {
             const { data } = await supabase
                 .from('gallery_images')
                 .select('*')
-                .order('created_at', { ascending: false });
+                .order('display_order', { ascending: true });
             if (data) setImages(data);
         };
         fetchImages();
@@ -78,12 +78,13 @@ export default function WorkGallery() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <span className="font-mono text-accent text-[10px] md:text-xs tracking-[0.15em] md:tracking-[0.2em] uppercase block mb-2 md:mb-3">
-                            Selected Works
-                        </span>
-                        <h2 className="text-2xl md:text-5xl font-black text-white tracking-tight">
-                            Gallery
+
+                        <h2 className="text-2xl md:text-5xl font-black text-white tracking-tight mb-4">
+                            Playground
                         </h2>
+                        <p className="text-white/60 max-w-md text-sm md:text-base leading-relaxed">
+                            Some of my favorite screens.
+                        </p>
                     </motion.div>
                 </div>
 
@@ -105,9 +106,9 @@ export default function WorkGallery() {
                                 className="relative flex-shrink-0 cursor-pointer"
                                 onClick={() => setSelectedImage(img)}
                             >
-                                <div className="relative h-[240px] md:h-[450px] overflow-hidden rounded-lg md:rounded-2xl">
+                                <div className="relative h-[260px] md:h-[450px] overflow-hidden rounded-lg md:rounded-2xl">
                                     <img
-                                        src={getOptimizedUrl(img.image_url, 500)}
+                                        src={getOptimizedUrl(img.image_url, 1000)}
                                         alt="Gallery work"
                                         className="h-full w-auto max-w-none object-contain"
                                         loading="lazy"
