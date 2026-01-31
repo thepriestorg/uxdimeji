@@ -34,6 +34,25 @@ export default function WorkGallery() {
         fetchImages();
     }, []);
 
+    const direction = useRef(1);
+    const lastScrollY = useRef(0);
+
+    // Track scroll direction
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY.current) {
+                direction.current = 1; // Scrolling down -> Moving left
+            } else if (currentScrollY < lastScrollY.current) {
+                direction.current = -1; // Scrolling up -> Moving right
+            }
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     // Scroll animation using requestAnimationFrame
     useEffect(() => {
         if (!scrollRef.current || images.length === 0) return;
@@ -45,12 +64,14 @@ export default function WorkGallery() {
         const animate = () => {
             if (!scrollRef.current) return;
 
-            scrollPosition += speed;
+            scrollPosition += speed * direction.current;
             const scrollWidth = scrollRef.current.scrollWidth;
             const resetPoint = scrollWidth / 3;
 
             if (scrollPosition >= resetPoint) {
                 scrollPosition = 0;
+            } else if (scrollPosition <= 0) {
+                scrollPosition = resetPoint;
             }
 
             scrollRef.current.style.transform = `translateX(-${scrollPosition}px)`;
