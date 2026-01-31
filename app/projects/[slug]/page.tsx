@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -129,6 +130,46 @@ function renderNode(node: { type?: string; content?: unknown[]; attrs?: Record<s
 function extractYoutubeId(url: string): string {
     const match = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
     return match?.[1] || "";
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const supabase = await createClient();
+
+    const { data: project } = await supabase
+        .from("projects")
+        .select("title, category, featured_image")
+        .eq("slug", slug)
+        .single();
+
+    if (!project) {
+        return {
+            title: "Project Not Found - Oladimeji Abubakar",
+        };
+    }
+
+    return {
+        title: `${project.title} - Oladimeji Abubakar`,
+        description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+        openGraph: {
+            title: `${project.title} - Oladimeji Abubakar`,
+            description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+            images: project.featured_image ? [
+                {
+                    url: project.featured_image,
+                    width: 1200,
+                    height: 630,
+                    alt: project.title,
+                }
+            ] : [],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: `${project.title} - Oladimeji Abubakar`,
+            description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+            images: project.featured_image ? [project.featured_image] : [],
+        },
+    };
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {

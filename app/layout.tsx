@@ -17,21 +17,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Oladimeji Abubakar",
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Oladimeji Abubakar - Product Designer',
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Oladimeji Abubakar — Product Designer",
     description: "Product Designer crafting intuitive and scalable digital products.",
     creator: "@uxdimeji",
-    images: ['/og-image.png'],
   },
 };
 
