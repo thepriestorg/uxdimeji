@@ -92,42 +92,63 @@ export default function WorkGallery() {
         <>
             <section className="relative py-12 md:py-32 bg-background overflow-hidden border-t border-white/5">
                 {/* Section Header - Compact on mobile */}
-                <div className="px-4 md:px-12 md:max-w-7xl md:mx-auto mb-6 md:mb-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                    >
+                {/* Section Header */}
+                <div className="px-4 md:px-12 md:max-w-7xl md:mx-auto mb-16 md:mb-24">
+                    <div className="flex flex-col md:flex-row gap-12 md:items-end md:justify-between">
+                        <div>
+                            <motion.span
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5 }}
+                                className="font-mono text-accent text-xs tracking-[0.2em] uppercase block mb-4"
+                            >
+                                (001) — ARCHIVES
+                            </motion.span>
+                            <motion.h2
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.1 }}
+                                className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-none"
+                            >
+                                PLAYGROUND
+                            </motion.h2>
+                        </div>
 
-                        <h2 className="text-2xl md:text-5xl font-black text-white tracking-tight mb-4">
-                            Playground
-                        </h2>
-                        <p className="text-white/60 max-w-md text-sm md:text-base leading-relaxed">
-                            Some of my favorite screens.
-                        </p>
-                    </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="md:max-w-sm border-l border-white/20 pl-6 py-1"
+                        >
+                            <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed">
+                                A curated collection of high-fidelity interfaces and visual experiments.
+                            </p>
+                        </motion.div>
+                    </div>
                 </div>
 
                 {/* Full-bleed scrolling gallery */}
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden w-full">
                     {/* Subtle gradient overlays - smaller on mobile */}
-                    <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 md:w-24 bg-gradient-to-r from-background to-transparent z-10" />
-                    <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 md:w-24 bg-gradient-to-l from-background to-transparent z-10" />
+                    <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 md:w-32 bg-gradient-to-r from-background to-transparent z-10" />
+                    <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 md:w-32 bg-gradient-to-l from-background to-transparent z-10" />
 
                     {/* Scrolling container - taller images on mobile */}
                     <div
                         ref={scrollRef}
-                        className="flex gap-2 md:gap-5 will-change-transform"
+                        className="flex gap-4 md:gap-8 will-change-transform px-4 md:px-0"
                         style={{ width: 'max-content' }}
                     >
                         {scrollImages.map((img, i) => (
                             <div
                                 key={`${img.id}-${i}`}
-                                className="relative flex-shrink-0 cursor-pointer"
+                                className="relative flex-shrink-0 cursor-pointer group"
                                 onClick={() => setSelectedImage(img)}
                             >
-                                <div className="relative h-[260px] md:h-[450px] overflow-hidden rounded-lg md:rounded-2xl">
+                                <div className="relative h-[260px] md:h-[500px] overflow-hidden rounded-lg md:rounded-none transition-all duration-500 group-hover:opacity-80">
                                     <img
                                         src={getOptimizedUrl(img.image_url, 1000)}
                                         alt="Gallery work"
