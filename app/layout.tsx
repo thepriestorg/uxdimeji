@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "Oladimeji Abubakar",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og_image.png",
         width: 1200,
         height: 630,
         alt: "Oladimeji Abubakar — Product Designer",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: "Oladimeji Abubakar — Product Designer",
     description: "Product Designer crafting intuitive and scalable digital products.",
     creator: "@uxdimeji",
-    images: ["/og-image.png"],
+    images: ["/og_image.png"],
   },
 };
 
