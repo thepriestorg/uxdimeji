@@ -21,7 +21,7 @@ export default function Contact() {
                         transition={{ duration: 0.6 }}
                         className="font-mono text-black/60 text-sm tracking-[0.2em] mb-6 block uppercase"
                     >
-                        Chapter 07
+                        Chapter 08
                     </motion.span>
                     <motion.h2
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -41,7 +41,7 @@ export default function Contact() {
                     >
                         Interfaces should be felt, not just seen. I’ve spent half a decade mastering the architecture of digital emotion. Now, I’m looking for the next vision that deserves my absolute obsession.
                         <br /><br />
-                        <span className="font-serif italic text-black">Start Chapter 07 here.</span>
+                        <span className="font-serif italic text-black">Start Chapter 08 here.</span>
                     </motion.p>
 
                     <motion.a

@@ -47,6 +47,14 @@ const storyChapters = [
         highlight: "Logistics Mobile App"
     },
     {
+        title: "THE BUILDER",
+        role: "Product Designer × Vibe Coder",
+        company: "Vibe Coding",
+        period: "2025 — Present",
+        narrative: "A product designer with a builder mindset. I leverage AI to go from idea to shipped product — designing, prompting, and building full applications myself. No handoffs, no waiting. Just a designer who refuses to stop at mockups.",
+        highlight: "AI-Powered Building"
+    },
+    {
         title: "THE VISIONARY",
         role: "Product Designer",
         company: "Elevayt",

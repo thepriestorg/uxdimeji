@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ArrowUpRight, Sparkles, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -19,8 +19,22 @@ interface Project {
     order: number;
 }
 
+export interface VibeProject {
+    id: string;
+    title: string;
+    description: string;
+    tags: string[];
+    status: string;
+    image: string;
+    url: string | null;
+    accent: string;
+    span: string;
+    order: number;
+}
+
 interface ProjectsClientProps {
     projects: Project[];
+    vibeProjects?: VibeProject[];
 }
 
 // Mobile project card with intersection observer
@@ -105,8 +119,9 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
     );
 }
 
-export default function ProjectsClient({ projects }: ProjectsClientProps) {
+export default function ProjectsClient({ projects, vibeProjects = [] }: ProjectsClientProps) {
     const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [activeTab, setActiveTab] = useState<"design" | "vibe">("design");
 
     if (!projects || projects.length === 0) {
         return null;
@@ -139,17 +154,59 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
                             See the Proof.
                         </motion.h2>
                     </div>
+
+                    {/* Tab Switcher */}
+                    <motion.div
+                        className="flex items-center gap-1 p-1 rounded-full bg-white/5 border border-white/10 self-start md:self-auto"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <button
+                            onClick={() => setActiveTab("design")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer",
+                                activeTab === "design"
+                                    ? "bg-white text-black"
+                                    : "text-white/60 hover:text-white"
+                            )}
+                        >
+                            Design Work
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("vibe")}
+                            className={cn(
+                                "px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer",
+                                activeTab === "vibe"
+                                    ? "bg-white text-black"
+                                    : "text-white/60 hover:text-white"
+                            )}
+                        >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            Vibe Coded
+                        </button>
+                    </motion.div>
                 </div>
 
-                {/* Mobile: Stacked Cards */}
-                <div className="md:hidden flex flex-col gap-6">
-                    {projects.map((project, index) => (
-                        <MobileProjectCard key={project.id} project={project} index={index} />
-                    ))}
-                </div>
+                <AnimatePresence mode="wait">
+                    {activeTab === "design" ? (
+                        <motion.div
+                            key="design"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            {/* Mobile: Stacked Cards */}
+                            <div className="md:hidden flex flex-col gap-6">
+                                {projects.map((project, index) => (
+                                    <MobileProjectCard key={project.id} project={project} index={index} />
+                                ))}
+                            </div>
 
-                {/* Desktop: The Accordion */}
-                <div className="hidden md:flex flex-row gap-2 h-[80vh] w-full">
+                            {/* Desktop: The Accordion */}
+                            <div className="hidden md:flex flex-row gap-2 h-[80vh] w-full">
                     {projects.map((project, index) => {
                         const isActive = activeIndex === index;
 
@@ -259,7 +316,211 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
                         );
                     })}
                 </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="vibe"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            {/* Bento Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                                {vibeProjects.map((project, index) => (
+                                    <motion.div
+                                        key={project.id}
+                                        initial={{ opacity: 0, y: 40 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.08, duration: 0.5 }}
+                                        className={cn(
+                                            project.span === "large" && "md:col-span-2"
+                                        )}
+                                    >
+                                        {project.url ? (
+                                            <a
+                                                href={project.url}
+                                                target={project.url.startsWith('/') ? undefined : "_blank"}
+                                                rel={project.url.startsWith('/') ? undefined : "noopener noreferrer"}
+                                                className="block"
+                                            >
+                                                <VibeBentoCard project={project} index={index} />
+                                            </a>
+                                        ) : (
+                                            <VibeBentoCard project={project} index={index} />
+                                        )}
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            {/* Bottom */}
+                            <div className="mt-12 pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                <p className="text-white/30 text-sm font-mono">
+                                    More shipping soon — the backlog never sleeps.
+                                </p>
+                                <div className="flex items-center gap-2 text-white/20 text-xs font-mono">
+                                    <Sparkles className="w-3 h-3" />
+                                    Built with AI as my engineering partner
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </section>
+    );
+}
+
+/* ── Vibe Bento Card with browser mockup + 3D tilt ── */
+
+function VibeBentoCard({ project, index }: { project: VibeProject; index: number }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const isLarge = project.span === "large";
+
+    // Detect touch device — disable 3D tilt for mobile
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+    useEffect(() => {
+        setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+    }, []);
+
+    // 3D tilt
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+    const springX = useSpring(x, { stiffness: 200, damping: 20 });
+    const springY = useSpring(y, { stiffness: 200, damping: 20 });
+    const rotateX = useTransform(springY, [-0.5, 0.5], [6, -6]);
+    const rotateY = useTransform(springX, [-0.5, 0.5], [-6, 6]);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!ref.current || isTouchDevice) return;
+        const rect = ref.current.getBoundingClientRect();
+        x.set((e.clientX - rect.left) / rect.width - 0.5);
+        y.set((e.clientY - rect.top) / rect.height - 0.5);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    return (
+        <motion.div
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={isTouchDevice ? {} : { rotateX, rotateY, transformPerspective: 800 }}
+            className="group relative rounded-2xl overflow-hidden cursor-pointer will-change-transform"
+        >
+            {/* Background glow on hover */}
+            <div
+                className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+                style={{
+                    background: `linear-gradient(135deg, ${project.accent}30, transparent 60%)`,
+                }}
+            />
+
+            <div className="relative z-10 rounded-2xl overflow-hidden bg-[#111113] border border-white/[0.06] group-hover:border-white/[0.12] transition-colors duration-500">
+                {/* Browser Chrome */}
+                <div className="flex items-center gap-2 px-4 py-3 bg-[#1A1A1D] border-b border-white/[0.04]">
+                    <div className="flex gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
+                    </div>
+                    <div className="flex-1 mx-3">
+                        <div className="bg-[#0D0D0F] rounded-md px-3 py-1 text-[10px] text-white/20 font-mono truncate">
+                            {project.url || `${project.title.toLowerCase().replace(/\s+/g, '-')}.app`}
+                        </div>
+                    </div>
+                    <div className="text-white/20 group-hover:text-white/40 transition-colors">
+                        <ExternalLink className="w-3.5 h-3.5" />
+                    </div>
+                </div>
+
+                {/* Screenshot area */}
+                <div className={cn(
+                    "relative overflow-hidden",
+                    isLarge ? "aspect-[16/10] md:aspect-[2.4/1]" : "aspect-[16/10] md:aspect-[4/3]"
+                )}>
+                    <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                    />
+                    {/* Fallback gradient for missing images */}
+                    <div
+                        className="absolute inset-0 -z-10"
+                        style={{
+                            background: `linear-gradient(135deg, ${project.accent}15, ${project.accent}05 50%, transparent)`,
+                        }}
+                    />
+                    {/* Bottom gradient for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#111113] via-[#111113]/20 to-transparent" />
+
+                    {/* Hover overlay with accent color */}
+                    <div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-soft-light"
+                        style={{ background: project.accent }}
+                    />
+                </div>
+
+                {/* Content bar */}
+                <div className={cn(
+                    "p-5 md:p-6",
+                    isLarge && "md:flex md:items-end md:justify-between md:gap-8"
+                )}>
+                    <div className={cn(isLarge && "md:flex-1")}>
+                        {/* Title row */}
+                        <div className="flex items-center gap-2.5 mb-2">
+                            <h3 className="text-lg md:text-2xl font-bold text-white tracking-tight group-hover:text-white transition-colors">
+                                {project.title}
+                            </h3>
+                            <span className={cn(
+                                "text-[9px] font-mono uppercase tracking-[0.15em] px-2.5 py-1 rounded-full",
+                                project.status === "Live"
+                                    ? "text-emerald-400 bg-emerald-400/10 border border-emerald-400/15"
+                                    : "text-amber-400 bg-amber-400/10 border border-amber-400/15"
+                            )}>
+                                {project.status === "Live" ? "● Live" : "◐ WIP"}
+                            </span>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-white/40 text-sm leading-relaxed mb-4 max-w-lg">
+                            {project.description}
+                        </p>
+                    </div>
+
+                    {/* Tags + Arrow */}
+                    <div className={cn(
+                        "flex items-center justify-between gap-3",
+                        isLarge && "md:shrink-0"
+                    )}>
+                        <div className="flex flex-wrap gap-1.5">
+                            {project.tags.map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="px-2.5 py-1 text-[10px] font-mono text-white/25 bg-white/[0.03] rounded-md group-hover:text-white/35 group-hover:bg-white/[0.05] transition-all duration-300"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                        <div
+                            className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 group-hover:scale-110"
+                            style={{
+                                borderColor: `${project.accent}30`,
+                                color: `${project.accent}80`,
+                            }}
+                        >
+                            <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
     );
 }

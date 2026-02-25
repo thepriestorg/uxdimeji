@@ -10,5 +10,10 @@ export default async function Projects() {
         .eq("is_featured", true)
         .order("order", { ascending: true });
 
-    return <ProjectsClient projects={projects || []} />;
+    const { data: vibeProjects } = await supabase
+        .from("vibe_projects")
+        .select("*")
+        .order("order", { ascending: true });
+
+    return <ProjectsClient projects={projects || []} vibeProjects={vibeProjects || []} />;
 }

@@ -29,7 +29,7 @@ export default function Hero() {
                         transition={{ delay: 0.2 }}
                         className="text-xs md:text-sm font-mono text-accent tracking-widest uppercase"
                     >
-             // Product Designer <br /> Based in Nigeria
+             // Product Designer & Vibe Coder <br /> Based in Nigeria
                     </motion.span>
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
