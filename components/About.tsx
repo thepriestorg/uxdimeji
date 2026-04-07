@@ -62,7 +62,7 @@ const storyChapters = [
         narrative: "Elevating the standard. Currently partnering with government bodies to revolutionize education systems. Building the digital infrastructure that will power the next generation of learning.",
         highlight: "GovTech & Edu"
     }
-].reverse(); // Reverse story array for logical timeline flow
+];
 
 // (Old chapter component removed)
 
@@ -151,19 +151,24 @@ export default function About() {
                             key={i} 
                             className="relative"
                         >
-                            {/* Date Marker */}
-                            <div className="flex items-center gap-4 mb-8">
-                                <span className="w-8 h-[1px] bg-accent/50" />
-                                <span className="font-mono text-accent text-sm tracking-widest">{chapter.period}</span>
+                            {/* Chapter Header */}
+                            <div className="flex flex-wrap items-center gap-4 mb-6">
+                                <span className="font-mono text-accent text-[13px] tracking-[0.2em] uppercase font-bold">
+                                    CHAPTER 0{i + 1}
+                                </span>
+                                <span className="w-8 h-[1px] bg-white/20" />
+                                <span className="font-mono text-white/50 text-[13px] tracking-widest uppercase">
+                                    {chapter.period}
+                                </span>
                             </div>
                             
-                            {/* Company & Role */}
-                            <div className="mb-6">
-                                <h3 className="text-3xl md:text-5xl text-white font-medium tracking-tight mb-2">
-                                    {chapter.company}
+                            {/* Chapter Title & Role */}
+                            <div className="mb-8">
+                                <h3 className="text-4xl md:text-6xl text-white font-serif italic mb-4">
+                                    {chapter.title}
                                 </h3>
-                                <p className="text-white/40 font-mono text-xs uppercase tracking-[0.2em]">
-                                    {chapter.role}
+                                <p className="text-white/70 font-mono text-sm uppercase tracking-[0.15em]">
+                                    {chapter.role} <span className="mx-2 text-accent/50">—</span> {chapter.company}
                                 </p>
                             </div>
 

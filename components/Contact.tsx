@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function Contact() {
     return (
-        <section className="min-h-screen flex flex-col items-center justify-center bg-accent text-black relative z-40 overflow-hidden">
+        <section className="min-h-[100dvh] py-24 md:py-32 flex flex-col items-center justify-center bg-accent text-black relative z-40 overflow-hidden">
 
             {/* Background Decoration */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -28,21 +28,24 @@ export default function Contact() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
-                        className="text-[15vw] md:text-[12vw] font-serif italic leading-[0.8] mb-12 tracking-tighter"
+                        className="text-7xl md:text-9xl lg:text-[10rem] font-serif italic mb-6 md:mb-12 tracking-tighter leading-none"
                     >
                         What's Next?
                     </motion.h2>
-                    <motion.p
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2, duration: 0.8 }}
-                        className="text-xl md:text-3xl font-medium max-w-2xl mx-auto leading-relaxed mb-12"
+                        className="text-xl md:text-3xl lg:text-4xl font-medium max-w-4xl mx-auto leading-[1.5] mb-12 md:mb-16 px-4"
                     >
-                        Interfaces should be felt, not just seen. I’ve spent half a decade mastering the architecture of digital emotion. Now, I’m looking for the next vision that deserves my absolute obsession.
-                        <br /><br />
-                        <span className="font-serif italic text-black">Start Chapter 08 here.</span>
-                    </motion.p>
+                        <p className="mb-4 text-black/80 font-serif italic">
+                            Interfaces should be felt, not just seen. I've spent half a decade mastering the architecture of digital emotion. Now, I'm looking for the next vision that deserves my absolute obsession.
+                        </p>
+                        <p className="font-serif italic text-black mt-10">
+                            Start Chapter 08 here.
+                        </p>
+                    </motion.div>
 
                     <motion.a
                         initial={{ opacity: 0, y: 20 }}
@@ -50,7 +53,7 @@ export default function Contact() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.4, duration: 0.8 }}
                         href="mailto:oladimejiuiux@gmail.com"
-                        className="inline-flex items-center gap-4 px-10 py-5 bg-black text-white rounded-full font-sans font-bold uppercase tracking-widest hover:scale-105 transition-transform"
+                        className="inline-flex items-center gap-4 px-10 md:px-12 py-5 md:py-6 bg-black text-white rounded-full font-sans text-sm md:text-base font-bold uppercase tracking-widest hover:scale-105 transition-transform"
                     >
                         Start Conversation <ArrowUpRight className="w-5 h-5" />
                     </motion.a>
@@ -59,3 +62,5 @@ export default function Contact() {
         </section>
     );
 }
+
+
