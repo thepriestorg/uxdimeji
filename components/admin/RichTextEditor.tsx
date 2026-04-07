@@ -69,7 +69,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         },
         editorProps: {
             attributes: {
-                class: "prose prose-invert prose-lg max-w-none focus:outline-none min-h-[400px] px-6 py-4",
+                class: "prose prose-invert prose-lg max-w-none focus:outline-none min-h-[360px] px-6 py-4",
             },
         },
     });
@@ -148,7 +148,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     return (
         <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
             {/* Toolbar */}
-            <div className="border-b border-white/10 p-2 flex flex-wrap items-center gap-1">
+            <div className="sticky top-0 z-20 border-b border-white/10 bg-zinc-950/95 backdrop-blur p-2 flex flex-wrap items-center gap-1">
                 <ToolbarButton
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     isActive={editor.isActive("bold")}
@@ -248,7 +248,9 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             </div>
 
             {/* Editor */}
-            <EditorContent editor={editor} />
+            <div className="max-h-[70vh] overflow-y-auto">
+                <EditorContent editor={editor} />
+            </div>
 
             {/* Link Modal */}
             {showLinkModal && (

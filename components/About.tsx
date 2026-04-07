@@ -62,66 +62,9 @@ const storyChapters = [
         narrative: "Elevating the standard. Currently partnering with government bodies to revolutionize education systems. Building the digital infrastructure that will power the next generation of learning.",
         highlight: "GovTech & Edu"
     }
-];
+].reverse(); // Reverse story array for logical timeline flow
 
-function Chapter({ data, index }: { data: typeof storyChapters[0], index: number }) {
-    return (
-        <div className="min-h-screen flex items-center justify-center py-20 sticky top-0 bg-background/5 border-t border-white/5 backdrop-blur-3xl overflow-hidden">
-            <div className="max-w-7xl w-full px-6 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-
-                {/* Left: The Title Card */}
-                <div className="md:col-span-5 md:text-right relative z-10">
-                    <motion.span
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, margin: "-20%" }}
-                        transition={{ duration: 0.5 }}
-                        className="font-mono text-accent text-sm tracking-[0.2em] mb-4 block"
-                    >
-                        CHAPTER 0{index + 1}
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: false, margin: "-20%" }}
-                        transition={{ duration: 0.6 }}
-                        className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase leading-[0.85]"
-                    >
-                        <span className="block text-transparent text-stroke opacity-20">{data.title.split(" ")[0]}</span>
-                        <span className="block text-white mt-[-0.2em] relative z-20">{data.title.split(" ").slice(1).join(" ")}</span>
-                    </motion.h2>
-                </div>
-
-                {/* Right: The Narrative */}
-                <div className="md:col-span-7 md:pl-12">
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, margin: "-20%" }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="relative pl-8 border-l border-accent/30"
-                    >
-                        <span className="absolute -left-[5px] top-0 w-[9px] h-[9px] bg-accent rounded-full shadow-[0_0_10px_#7C3AED]" />
-
-                        <div className="mb-6">
-                            <h3 className="text-3xl text-white font-serif italic">{data.company}</h3>
-                            <p className="text-white/70 font-mono text-sm mt-1">{data.role} // {data.period}</p>
-                        </div>
-
-                        <p className="text-xl md:text-3xl text-white/90 leading-relaxed font-serif mb-8">
-                            "{data.narrative}"
-                        </p>
-
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-violet-300 uppercase tracking-widest">
-                            {data.highlight}
-                        </div>
-                    </motion.div>
-                </div>
-
-            </div>
-        </div>
-    );
-}
+// (Old chapter component removed)
 
 export default function About() {
     const containerRef = useRef(null);
@@ -136,76 +79,109 @@ export default function About() {
     return (
         <section ref={containerRef} id="about" className="relative z-20 bg-black text-white">
 
-            {/* Profile Intro - Sticky Bottom Approach */}
-            {/* The container is tall (150vh) to allow scrolling. The content sticks to the BOTTOM. */}
-            <div className="relative z-0 min-h-[150vh] flex flex-col justify-end">
-                <div className="sticky bottom-0 py-20 px-6 bg-background min-h-screen flex items-center justify-center">
-                    <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+            {/* Profile Intro - Simple clean scroll approach */}
+            <div className="relative pt-32 pb-24 md:pt-48 md:pb-32 px-6">
+                <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+                    
+                    {/* Left: Label */}
+                    <div className="md:col-span-3 lg:col-span-4">
+                        <motion.span
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                            className="block font-mono text-accent text-[11px] tracking-[0.2em] uppercase sticky top-32"
+                        >
+                            (002) <br className="hidden md:block my-2" /> Profile
+                        </motion.span>
+                    </div>
 
-                        {/* Left: Label */}
-                        <div className="md:col-span-2">
-                            <motion.span
+                    {/* Right: Content */}
+                    <div className="md:col-span-9 lg:col-span-8 flex flex-col gap-12 md:gap-20">
+                        {/* Headline */}
+                        <div className="max-w-3xl">
+                            <motion.h2
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8 }}
+                                viewport={{ once: true }}
+                                className="text-4xl md:text-6xl lg:text-7xl font-light tracking-[-0.02em] text-white leading-[1.1] mb-4"
+                            >
+                                I don't just design interfaces. <br />
+                                <span className="text-white/40">I engineer clarity.</span>
+                            </motion.h2>
+                        </div>
+
+                        {/* Bio paragraphs */}
+                        <div className="w-full">
+                            <motion.p
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6 }}
-                                className="block font-mono text-accent text-xs tracking-[0.2em] uppercase sticky top-32"
+                                transition={{ duration: 0.8, delay: 0.2 }}
+                                viewport={{ once: true }}
+                                className="text-xl md:text-2xl text-white/80 leading-[1.6] font-light max-w-2xl mb-8"
                             >
-                                (002) <br /> Profile
-                            </motion.span>
+                                I'm <span className="text-white font-medium">Oladimeji Abubakar</span>, a Product Designer with 5 years of experience crafting intuitive and scalable digital products.
+                            </motion.p>
+                            
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8, delay: 0.3 }}
+                                viewport={{ once: true }}
+                                className="text-xl md:text-2xl text-white/80 leading-[1.6] font-light max-w-2xl"
+                            >
+                                Backed by a <span className="text-white font-medium">First Class degree in Computer Science</span>, I design with structure, clarity, and intent, bridging user needs and business goals through thoughtful interfaces.
+                            </motion.p>
                         </div>
-
-                        {/* Right: Content */}
-                        <div className="md:col-span-10 flex flex-col gap-8 md:gap-16">
-                            {/* Headline */}
-                            <div className="max-w-4xl">
-                                <motion.h2
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8 }}
-                                    className="text-5xl md:text-8xl font-serif italic text-white leading-[0.9] mb-4"
-                                >
-                                    I don't just design interfaces. <br />
-                                    <span className="text-white/70 not-italic font-sans font-bold tracking-tighter">I engineer clarity.</span>
-                                </motion.h2>
-                            </div>
-
-                            {/* Restored Bio */}
-                            <div className="max-w-2xl ml-auto border-l border-white/10 pl-8 md:pl-12">
-                                <motion.p
-                                    initial={{ opacity: 0, x: 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-lg md:text-xl text-white/70 leading-relaxed font-medium"
-                                >
-                                    I'm <span className="text-white">Oladimeji Abubakar</span>, a Product Designer with 5 years of experience crafting intuitive and scalable digital products.
-                                    <br /><br />
-                                    Backed by a <span className="text-white">First Class degree in Computer Science</span>, I design with structure, clarity, and intent, bridging user needs and business goals through thoughtful interfaces.
-                                </motion.p>
-
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    whileInView={{ opacity: 1 }}
-                                    transition={{ duration: 1, delay: 0.4 }}
-                                    className="mt-8 flex items-center gap-4 text-xs font-mono text-accent uppercase tracking-widest"
-                                >
-                                    <span>Scroll to explore the journey</span>
-                                    <div className="w-12 h-[1px] bg-accent" />
-                                </motion.div>
-                            </div>
-                        </div>
-
                     </div>
+
                 </div>
             </div>
 
-            {/* The Chapters */}
-            <div className="relative z-30">
-                {storyChapters.map((chapter, i) => (
-                    <Chapter key={i} data={chapter} index={i} />
-                ))}
-            </div>
+            {/* The Chapters - Editorial Storytelling Flow */}
+            <div className="relative border-t border-white/5 bg-[#050505]">
+                <div className="max-w-4xl mx-auto px-6 py-32 md:py-48 flex flex-col gap-32 md:gap-48">
+                    {storyChapters.map((chapter, i) => (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-15%" }}
+                            transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+                            key={i} 
+                            className="relative"
+                        >
+                            {/* Date Marker */}
+                            <div className="flex items-center gap-4 mb-8">
+                                <span className="w-8 h-[1px] bg-accent/50" />
+                                <span className="font-mono text-accent text-sm tracking-widest">{chapter.period}</span>
+                            </div>
+                            
+                            {/* Company & Role */}
+                            <div className="mb-6">
+                                <h3 className="text-3xl md:text-5xl text-white font-medium tracking-tight mb-2">
+                                    {chapter.company}
+                                </h3>
+                                <p className="text-white/40 font-mono text-xs uppercase tracking-[0.2em]">
+                                    {chapter.role}
+                                </p>
+                            </div>
 
-            {/* Outro removed - Moved to Contact.tsx */}
+                            {/* The Narrative (Large & elegant) */}
+                            <p className="text-2xl md:text-4xl text-white/90 leading-[1.4] font-light mb-10 tracking-tight">
+                                {chapter.narrative}
+                            </p>
+
+                            {/* Tags */}
+                            <div className="flex items-center gap-3">
+                                <span className="px-5 py-2.5 rounded-full border border-white/10 text-white/60 text-xs font-mono uppercase tracking-widest bg-white/5">
+                                    {chapter.highlight}
+                                </span>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
 
         </section >
     );
