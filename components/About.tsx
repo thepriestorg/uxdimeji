@@ -80,8 +80,8 @@ export default function About() {
         <section ref={containerRef} id="about" className="relative z-20 bg-black text-white">
 
             {/* Profile Intro - Simple clean scroll approach */}
-            <div className="relative pt-32 pb-24 md:pt-48 md:pb-32 px-6">
-                <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+            <div className="layout-gutter relative pt-32 pb-24 md:pt-48 md:pb-32">
+                <div className="layout-shell grid w-full grid-cols-1 items-start gap-12 md:grid-cols-12">
                     
                     {/* Left: Label */}
                     <div className="md:col-span-3 lg:col-span-4">
@@ -141,17 +141,18 @@ export default function About() {
 
             {/* The Chapters - Editorial Storytelling Flow */}
             <div className="relative border-t border-white/5 bg-[#050505]">
-                <div className="max-w-4xl mx-auto px-6 py-32 md:py-48 flex flex-col gap-32 md:gap-48">
+                <div className="w-full flex flex-col relative">
                     {storyChapters.map((chapter, i) => (
                         <motion.div 
-                            initial={{ opacity: 0, y: 40 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-15%" }}
                             transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
                             key={i} 
-                            className="relative"
+                            className="layout-gutter sticky top-0 flex h-[100dvh] w-full flex-col justify-center overflow-hidden border-t border-white/5 bg-[#050505] py-24 shadow-2xl" style={{ zIndex: i }}
                         >
-                            {/* Chapter Header */}
+                            <div className="max-w-4xl mx-auto w-full">
+                                {/* Chapter Header */}
                             <div className="flex flex-wrap items-center gap-4 mb-6">
                                 <span className="font-mono text-accent text-[13px] tracking-[0.2em] uppercase font-bold">
                                     CHAPTER 0{i + 1}
@@ -183,6 +184,7 @@ export default function About() {
                                     {chapter.highlight}
                                 </span>
                             </div>
+                        </div>
                         </motion.div>
                     ))}
                 </div>
@@ -191,3 +193,8 @@ export default function About() {
         </section >
     );
 }
+
+
+
+
+

@@ -15,14 +15,14 @@ export default function Hero() {
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <section ref={containerRef} className="relative min-h-screen flex flex-col justify-end pb-12 md:pb-20 px-4 md:px-12 pt-0 md:pt-0 overflow-hidden">
+        <section ref={containerRef} className="layout-gutter relative flex min-h-screen flex-col justify-end overflow-hidden pt-0 pb-12 md:pt-0 md:pb-20">
 
             {/* Background Elements */}
-            <div className="absolute top-0 right-0 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-accent/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
+            <div className="pointer-events-none absolute top-0 right-0 h-[80vw] w-[80vw] rounded-full bg-accent/10 blur-[150px] mix-blend-screen md:h-[min(42vw,760px)] md:w-[min(42vw,760px)]" />
 
-            <motion.div style={{ y, opacity }} className="relative z-10 w-full max-w-[90rem]">
+            <motion.div style={{ y, opacity }} className="layout-shell relative z-10">
                 {/* Top Meta Line */}
-                <div className="flex justify-between items-end mb-4 md:mb-8 border-b border-white/10 pb-4">
+                <div className="mb-4 grid grid-cols-1 gap-4 border-b border-white/10 pb-4 md:mb-8 md:grid-cols-[auto,minmax(220px,360px)] md:items-end md:justify-between md:gap-8">
                     <motion.span
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -50,7 +50,7 @@ export default function Hero() {
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             transition={{ duration: 1, delay: 0.5, ease: [0.76, 0, 0.24, 1] }}
-                            className="text-[18vw] md:text-[14vw] leading-[0.8] font-bold text-white tracking-tighter mix-blend-difference"
+                            className="text-[clamp(4.5rem,14vw,18rem)] leading-[0.82] font-bold text-white tracking-tighter mix-blend-difference"
                         >
                             OLADIMEJI
                         </motion.h1>
@@ -60,7 +60,7 @@ export default function Hero() {
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             transition={{ duration: 1, delay: 0.6, ease: [0.76, 0, 0.24, 1] }}
-                            className="text-[18vw] md:text-[14vw] leading-[0.8] font-bold text-transparent text-stroke tracking-tighter"
+                            className="text-[clamp(4.5rem,14vw,18rem)] leading-[0.82] font-bold text-transparent text-stroke tracking-tighter"
                         >
                             ABUBAKAR
                         </motion.h1>
@@ -68,7 +68,7 @@ export default function Hero() {
                             initial={{ scale: 0, rotate: -45 }}
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ delay: 1, duration: 0.8 }}
-                            className="hidden md:flex items-center justify-center w-[10vw] h-[10vw] rounded-full bg-accent text-black"
+                            className="hidden md:flex items-center justify-center rounded-full bg-accent text-black h-[clamp(4rem,7vw,8.5rem)] w-[clamp(4rem,7vw,8.5rem)]"
                         >
                             <ArrowDownRight className="w-1/2 h-1/2" />
                         </motion.div>

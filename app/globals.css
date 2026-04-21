@@ -114,6 +114,34 @@ body {
 
 /* Utilities */
 @layer utilities {
+  .layout-gutter {
+    padding-inline: 1rem;
+  }
+
+  .layout-shell {
+    width: 100%;
+    max-width: 1700px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .layout-gutter {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .layout-gutter {
+      padding-inline: 3.5rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .layout-gutter {
+      padding-inline: 5rem;
+    }
+  }
+
   .text-balance {
     text-wrap: balance;
   }

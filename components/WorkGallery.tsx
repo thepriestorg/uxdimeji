@@ -93,7 +93,8 @@ export default function WorkGallery() {
             <section className="relative py-12 md:py-32 bg-background overflow-hidden border-t border-white/5">
                 {/* Section Header - Compact on mobile */}
                 {/* Section Header */}
-                <div className="px-4 md:px-12 md:max-w-7xl md:mx-auto mb-16 md:mb-24">
+                <div className="layout-gutter mb-16 md:mb-24">
+                    <div className="layout-shell">
                     <div className="flex flex-col md:flex-row gap-12 md:items-end md:justify-between">
                         <div>
                             <motion.span
@@ -127,6 +128,7 @@ export default function WorkGallery() {
                                 A curated collection of high-fidelity interfaces and visual experiments.
                             </p>
                         </motion.div>
+                    </div>
                     </div>
                 </div>
 

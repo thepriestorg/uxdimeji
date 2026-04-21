@@ -5,11 +5,11 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer id="contact" className="relative bg-black text-white py-24 px-6 md:px-12 z-30 overflow-hidden border-t border-white/10">
+        <footer id="contact" className="layout-gutter relative z-30 overflow-hidden border-t border-white/10 bg-black py-24 text-white">
             {/* Noise Texture */}
             <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
-            <div className="max-w-[1800px] mx-auto relative z-10 flex flex-col justify-between min-h-[50vh]">
+            <div className="layout-shell relative z-10 flex min-h-[50vh] flex-col justify-between">
 
                 {/* CTA Section */}
                 <div className="mb-24">
@@ -17,7 +17,7 @@ export default function Footer() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-[10vw] font-black uppercase leading-[0.8] tracking-tighter mb-12"
+                        className="mb-12 text-[clamp(3.5rem,10vw,14rem)] font-black uppercase leading-[0.82] tracking-tighter"
                     >
                         Ready to<br />Start?
                     </motion.h2>

@@ -235,7 +235,7 @@ export default function ProjectsClient({ projects, vibeProjects = [] }: Projects
             <div className="pointer-events-none absolute -top-24 left-[-10%] h-72 w-72 rounded-full bg-accent/20 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-[-120px] right-[-8%] h-80 w-80 rounded-full bg-cyan-400/10 blur-[150px]" />
 
-            <div className="relative mx-auto max-w-[1700px] px-4 md:px-10">
+            <div className="layout-shell layout-gutter relative">
                 <div className="mb-10 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
                     <div className="max-w-3xl">
                         <motion.span

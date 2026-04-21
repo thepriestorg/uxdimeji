@@ -12,7 +12,7 @@ export default function Contact() {
                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_transparent_0%,_black_100%)]" />
             </div>
 
-            <div className="max-w-7xl w-full px-6 grid grid-cols-1 md:grid-cols-12 gap-12 items-center relative z-10">
+            <div className="layout-shell layout-gutter relative z-10 grid w-full grid-cols-1 items-center gap-12 md:grid-cols-12">
                 <div className="md:col-span-12 text-center">
                     <motion.span
                         initial={{ opacity: 0, y: 20 }}
