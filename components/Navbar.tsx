@@ -6,9 +6,15 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { X, Menu } from "lucide-react";
 
-export default function Navbar() {
+interface NavbarProps {
+    basePath?: string;
+}
+
+export default function Navbar({ basePath = "" }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const homeHref = basePath || "/";
+    const sectionHref = (section: string) => `${homeHref}#${section}`;
 
     const menuVariants = {
         closed: { opacity: 0, y: "-100%" },
@@ -24,19 +30,19 @@ export default function Navbar() {
                 className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4"
             >
                 <div className="glass-panel px-6 py-3 rounded-full flex items-center gap-8 backdrop-blur-xl bg-black/40 border border-white/10 shadow-2xl relative z-50">
-                    <Link href="/" className="font-heading font-bold text-xl tracking-tight hover:text-white transition-colors">
+                    <Link href={homeHref} className="font-heading font-bold text-xl tracking-tight hover:text-white transition-colors">
                         OA<span className="text-accent">.</span>
                     </Link>
 
                     <div className="hidden md:flex items-center gap-1">
-                        <Link href="/#projects" className="relative px-4 py-2 text-sm text-secondary hover:text-white transition-colors group">
+                        <Link href={sectionHref("projects")} className="relative px-4 py-2 text-sm text-secondary hover:text-white transition-colors group">
                             Work
                             <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accent group-hover:w-full transition-all duration-300" />
                         </Link>
                         {["About", "Contact"].map((item) => (
                             <Link
                                 key={item}
-                                href={`/#${item.toLowerCase()}`}
+                                href={sectionHref(item.toLowerCase())}
                                 className="relative px-4 py-2 text-sm text-secondary hover:text-white transition-colors group"
                             >
                                 {item}
@@ -70,7 +76,7 @@ export default function Navbar() {
                     >
                         {/* Mobile Menu Content */}
                         <Link
-                            href="/#projects"
+                            href={sectionHref("projects")}
                             onClick={() => setIsOpen(false)}
                             className="text-5xl font-heading font-bold text-white hover:text-accent transition-colors"
                         >
@@ -79,7 +85,7 @@ export default function Navbar() {
                         {["About", "Contact"].map((item) => (
                             <Link
                                 key={item}
-                                href={`/#${item.toLowerCase()}`}
+                                href={sectionHref(item.toLowerCase())}
                                 onClick={() => setIsOpen(false)}
                                 className="text-5xl font-heading font-bold text-white hover:text-accent transition-colors"
                             >

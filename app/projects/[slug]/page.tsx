@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -90,11 +91,14 @@ function renderNode(node: { type?: string; content?: unknown[]; attrs?: Record<s
 
     if (node.type === "image") {
         return (
-            <figure className="my-16 -mx-6 md:-mx-12 lg:-mx-24">
-                <img
+            <figure className="my-16 -mx-6 md:-mx-12 lg:-mx-24 relative">
+                <Image
                     src={node.attrs?.src as string}
                     alt={node.attrs?.alt as string || ""}
-                    className="w-full"
+                    width={1600}
+                    height={900}
+                    className="w-full h-auto rounded-xl"
+                    quality={95}
                 />
             </figure>
         );
@@ -196,18 +200,22 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         .limit(2);
 
     return (
-        <main className="min-h-screen bg-black text-white">
-            <Navbar />
+        <main className="v2-light min-h-screen bg-background text-primary selection:bg-accent selection:text-white">
+            <Navbar basePath="/" />
 
             {/* Hero - Intrinsic Height Image with Overlay Text */}
             <section className="relative w-full">
                 {/* Background Image - Intrinsic Size */}
                 {project.featured_image && (
                     <div className="relative w-full">
-                        <img
+                        <Image
                             src={project.featured_image}
                             alt={project.title}
+                            width={1920}
+                            height={1080}
                             className="w-full h-auto object-cover bg-zinc-900"
+                            priority
+                            quality={100}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60" />
                     </div>
@@ -260,7 +268,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
             {/* Other Projects */}
             {otherProjects && otherProjects.length > 0 && (
-                <section className="border-t border-white/10 py-24 md:py-32 bg-zinc-950">
+                <section className="border-t border-white/10 py-24 md:py-32 bg-black">
                     <div className="max-w-[1400px] mx-auto px-6 md:px-12">
                         <div className="flex items-end justify-between mb-16 md:mb-24">
                             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9]">
@@ -283,10 +291,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                                 >
                                     <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-white/5">
                                         {p.featured_image && (
-                                            <img
+                                            <Image
                                                 src={p.featured_image}
                                                 alt={p.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                                quality={90}
                                             />
                                         )}
                                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />

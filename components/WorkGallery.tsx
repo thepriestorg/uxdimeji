@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState, useRef } from "react";
 import { X } from "lucide-react";
+import Image from "next/image";
 
 // Optimize Cloudinary URL with transformations for faster loading
 const getOptimizedUrl = (url: string, width: number = 800) => {
@@ -150,12 +151,14 @@ export default function WorkGallery() {
                                 className="relative flex-shrink-0 cursor-pointer group"
                                 onClick={() => setSelectedImage(img)}
                             >
-                                <div className="relative h-[260px] md:h-[500px] overflow-hidden rounded-lg md:rounded-none transition-all duration-500 group-hover:opacity-80">
-                                    <img
+                                <div className="relative overflow-hidden rounded-lg md:rounded-none transition-all duration-500 group-hover:opacity-80">
+                                    <Image
                                         src={getOptimizedUrl(img.image_url, 1000)}
                                         alt="Gallery work"
-                                        className="h-full w-auto max-w-none object-contain"
-                                        loading="lazy"
+                                        width={1000}
+                                        height={1000}
+                                        className="h-[260px] md:h-[500px] w-auto max-w-none object-contain"
+                                        quality={90}
                                     />
                                 </div>
                             </div>
@@ -180,15 +183,22 @@ export default function WorkGallery() {
                         <X className="w-4 h-4" />
                     </button>
 
-                    <motion.img
+                    <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", damping: 25 }}
-                        src={getOptimizedUrl(selectedImage.image_url, 1200)}
-                        alt="Full size"
-                        className="max-w-full max-h-[85vh] object-contain rounded-md"
+                        className="relative w-full h-full flex items-center justify-center p-4"
                         onClick={(e) => e.stopPropagation()}
-                    />
+                    >
+                        <Image
+                            src={getOptimizedUrl(selectedImage.image_url, 1600)}
+                            alt="Full size"
+                            width={1600}
+                            height={1200}
+                            className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-md"
+                            quality={100}
+                        />
+                    </motion.div>
                 </motion.div>
             )}
         </>

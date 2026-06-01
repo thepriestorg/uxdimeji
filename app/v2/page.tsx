@@ -10,15 +10,15 @@ import Footer from "@/components/Footer";
 import V2Animations from "@/components/dev/V2Animations";
 
 export const metadata: Metadata = {
-  title: "Oladimeji Abubakar - Product Designer",
-  description: "Portfolio of Oladimeji Abubakar, Product Designer.",
+  title: "Oladimeji Abubakar - Light Mode",
+  description: "A light-mode version of Oladimeji Abubakar's portfolio homepage.",
 };
 
-export default function Home() {
+export default function V2Home() {
   return (
     <main className="v2-light min-h-screen bg-background text-primary antialiased selection:bg-accent selection:text-white">
       <Noise />
-      <Navbar basePath="/" />
+      <Navbar basePath="/v2" />
       <V2Animations>
         <Hero />
         <WorkGallery />

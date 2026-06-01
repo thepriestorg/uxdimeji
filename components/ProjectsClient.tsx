@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ExternalLink, Sparkles } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface Project {
@@ -35,7 +36,12 @@ export interface VibeProject {
 interface ProjectsClientProps {
     projects: Project[];
     vibeProjects?: VibeProject[];
+    variant?: "dark" | "light";
 }
+
+/* ═══════════════════════════════════════════════
+   DARK VARIANT CARDS — Original design (restored)
+   ═══════════════════════════════════════════════ */
 
 function DesignShowcaseCard({
     project,
@@ -73,10 +79,13 @@ function DesignShowcaseCard({
                     </h3>
 
                     <div className="relative mt-5 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                        <img
+                        <Image
                             src={project.featured_image}
                             alt={project.title}
+                            width={1600}
+                            height={1200}
                             className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.01]"
+                            quality={95}
                         />
                         <div className={cn("pointer-events-none absolute inset-0 opacity-20 mix-blend-soft-light", project.color)} />
                     </div>
@@ -119,10 +128,13 @@ function DesignShowcaseCard({
                 </h3>
 
                 <div className="relative mt-4 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                    <img
+                    <Image
                         src={project.featured_image}
                         alt={project.title}
+                        width={1600}
+                        height={1200}
                         className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.01]"
+                        quality={95}
                     />
                     <div className={cn("pointer-events-none absolute inset-0 opacity-15 mix-blend-soft-light", project.color)} />
                 </div>
@@ -187,13 +199,12 @@ function VibeStripCard({ project, index }: { project: VibeProject; index: number
                 </div>
 
                 <div className="relative min-h-[220px] md:col-span-5 md:min-h-[260px]">
-                    <img
+                    <Image
                         src={project.image}
                         alt={project.title}
-                        className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = "none";
-                        }}
+                        fill
+                        className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                        quality={90}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0E0E12] via-transparent to-transparent md:bg-gradient-to-l" />
 
@@ -206,7 +217,140 @@ function VibeStripCard({ project, index }: { project: VibeProject; index: number
     );
 }
 
-export default function ProjectsClient({ projects, vibeProjects = [] }: ProjectsClientProps) {
+/* ═══════════════════════════════════════════════
+   LIGHT VARIANT — Refined Minimalist Design
+   ═══════════════════════════════════════════════ */
+
+const fluidSpring = { type: "spring", stiffness: 50, damping: 20, mass: 1 };
+
+function LightDesignProject({ project, index }: { project: Project; index: number }) {
+    return (
+        <Link href={`/projects/${project.slug}`} className="group block">
+            <motion.div
+                initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-15%" }}
+                transition={{ ...fluidSpring, delay: index * 0.1 }}
+                className="mx-auto flex max-w-5xl flex-col gap-6 md:gap-8"
+            >
+                {/* Image — No background, let the mockup background shine */}
+                <div className="relative overflow-hidden rounded-3xl transition-transform duration-700 ease-[0.25,0.1,0.25,1] group-hover:scale-[0.98]">
+                    <Image
+                        src={project.featured_image}
+                        alt={project.title}
+                        width={1920}
+                        height={1200}
+                        className="w-full h-auto object-cover"
+                        priority={index < 2}
+                        quality={95}
+                    />
+                </div>
+
+                {/* Text info */}
+                <div className="flex flex-col gap-3 px-2 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+                            <span>{project.category}</span>
+                            <span className="h-[2px] w-4 bg-black/10" />
+                            <span>{project.year}</span>
+                        </div>
+                        <h3 className="text-3xl font-medium leading-tight tracking-tight text-black md:text-4xl">
+                            {project.title}
+                        </h3>
+                    </div>
+
+                    <span className="inline-flex items-center gap-3 text-sm font-medium text-black/50 transition-colors duration-300 group-hover:text-black mt-2 md:mt-0">
+                        View case study
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-sm transition-all duration-300 group-hover:bg-black group-hover:text-white group-hover:rotate-45">
+                            <ArrowUpRight className="h-4 w-4" />
+                        </span>
+                    </span>
+                </div>
+            </motion.div>
+        </Link>
+    );
+}
+
+function LightVibeRow({ project, index }: { project: VibeProject; index: number }) {
+    const urlPreview = project.url || `${project.title.toLowerCase().replace(/\s+/g, "-")}.app`;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ ...fluidSpring, delay: index * 0.05 }}
+            className="group mx-auto grid max-w-5xl grid-cols-1 items-center gap-8 py-10 md:grid-cols-12 md:gap-12 md:py-16"
+        >
+            {/* Image — Left side */}
+            <div className="relative overflow-hidden rounded-3xl md:col-span-6 lg:col-span-7 transition-transform duration-700 group-hover:scale-[0.98]">
+                <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={1200}
+                    height={800}
+                    className="w-full h-auto object-cover"
+                    quality={90}
+                />
+            </div>
+
+            {/* Content — Right side */}
+            <div className="flex flex-col gap-4 md:col-span-6 lg:col-span-5 px-2 md:px-0">
+                <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-[11px] text-black/30">
+                        {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                        className={cn(
+                            "rounded-full px-3 py-1 font-mono text-[9px] uppercase tracking-[0.15em]",
+                            project.status === "Live"
+                                ? "bg-emerald-50 text-emerald-600"
+                                : "bg-amber-50 text-amber-600"
+                        )}
+                    >
+                        <span className={cn(
+                            "mr-1.5 inline-block h-1.5 w-1.5 rounded-full",
+                            project.status === "Live" ? "bg-emerald-400" : "bg-amber-400"
+                        )} />
+                        {project.status}
+                    </span>
+                </div>
+
+                <h3 className="text-3xl font-medium leading-tight tracking-tight text-black">
+                    {project.title}
+                </h3>
+
+                <p className="text-[15px] leading-[1.7] text-black/55">
+                    {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-2">
+                    {project.tags.map((tag) => (
+                        <span
+                            key={tag}
+                            className="rounded-md border border-black/[0.05] bg-white px-2.5 py-1 font-mono text-[10px] text-black/40 shadow-sm"
+                        >
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+
+                {project.url && (
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-black/40 transition-colors group-hover:text-accent">
+                        Visit project
+                        <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                )}
+            </div>
+        </motion.div>
+    );
+}
+
+/* ═══════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════ */
+
+export default function ProjectsClient({ projects, vibeProjects = [], variant = "dark" }: ProjectsClientProps) {
     const hasDesignProjects = projects.length > 0;
     const hasVibeProjects = vibeProjects.length > 0;
     const designCount = projects.length;
@@ -228,6 +372,174 @@ export default function ProjectsClient({ projects, vibeProjects = [] }: Projects
         return null;
     }
 
+    /* ── LIGHT VARIANT — Refined Minimalist ────────── */
+    if (variant === "light") {
+        return (
+            <section className="relative z-30 overflow-hidden bg-white py-24 md:py-40">
+                <span id="projects" className="absolute -top-24 left-0 h-0 w-full opacity-0 pointer-events-none" />
+
+                <div className="layout-shell layout-gutter relative">
+                    {/* Section Header */}
+                    <div className="mb-20 md:mb-32 flex flex-col items-center text-center">
+                        <motion.span
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ ...fluidSpring }}
+                            className="mb-6 block font-mono text-[11px] uppercase tracking-[0.3em] text-accent"
+                        >
+                            Portfolio
+                        </motion.span>
+
+                        <motion.h2
+                            initial={{ opacity: 0, y: 25 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ ...fluidSpring, delay: 0.1 }}
+                            className="text-5xl font-light leading-[1.05] tracking-tight text-black md:text-7xl lg:text-8xl"
+                        >
+                            Selected Work
+                        </motion.h2>
+
+                        {/* Tab switcher */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ ...fluidSpring, delay: 0.2 }}
+                            className="mt-12"
+                        >
+                            <div className="inline-flex rounded-full border border-black/5 bg-[#fcfcfc] p-1.5 shadow-sm">
+                                <button
+                                    onClick={() => setActiveTab("design")}
+                                    className={cn(
+                                        "relative cursor-pointer rounded-full px-6 py-3 text-sm font-medium transition-colors",
+                                        "disabled:cursor-not-allowed disabled:opacity-40",
+                                        activeTab === "design" ? "text-white" : "text-black/50 hover:text-black/80"
+                                    )}
+                                    disabled={!hasDesignProjects}
+                                >
+                                    {activeTab === "design" && (
+                                        <motion.span
+                                            layoutId="light-pill"
+                                            transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                                            className="absolute inset-0 -z-10 rounded-full bg-black"
+                                        />
+                                    )}
+                                    <span className="inline-flex items-center gap-2">
+                                        Design Work
+                                        <span className={cn(
+                                            "rounded-full px-1.5 py-0.5 text-[10px] font-mono",
+                                            activeTab === "design" ? "bg-white/15 text-white/80" : "bg-black/5 text-black/40"
+                                        )}>
+                                            {designCount}
+                                        </span>
+                                    </span>
+                                </button>
+
+                                <button
+                                    onClick={() => setActiveTab("vibe")}
+                                    className={cn(
+                                        "relative cursor-pointer rounded-full px-6 py-3 text-sm font-medium transition-colors",
+                                        "disabled:cursor-not-allowed disabled:opacity-40",
+                                        activeTab === "vibe" ? "text-white" : "text-black/50 hover:text-black/80"
+                                    )}
+                                    disabled={!hasVibeProjects}
+                                >
+                                    {activeTab === "vibe" && (
+                                        <motion.span
+                                            layoutId="light-pill"
+                                            transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                                            className="absolute inset-0 -z-10 rounded-full bg-black"
+                                        />
+                                    )}
+                                    <span className="inline-flex items-center gap-2">
+                                        <Sparkles className="h-3.5 w-3.5" />
+                                        Vibe Coded
+                                        <span className={cn(
+                                            "rounded-full px-1.5 py-0.5 text-[10px] font-mono",
+                                            activeTab === "vibe" ? "bg-white/15 text-white/80" : "bg-black/5 text-black/40"
+                                        )}>
+                                            {vibeCount}
+                                        </span>
+                                    </span>
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Content */}
+                    <AnimatePresence mode="wait">
+                        {activeTab === "design" ? (
+                            <motion.div
+                                key="light-design-gallery"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.4, ease: "circOut" }}
+                            >
+                                {hasDesignProjects ? (
+                                    <div className="flex flex-col gap-24 md:gap-32">
+                                        {projects.map((project, index) => (
+                                            <LightDesignProject
+                                                key={project.id}
+                                                project={project}
+                                                index={index}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="py-8 text-center text-black/45">
+                                        Design projects will appear here soon.
+                                    </p>
+                                )}
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="light-vibe-list"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.4, ease: "circOut" }}
+                            >
+                                {hasVibeProjects ? (
+                                    <div className="flex flex-col gap-8 md:gap-12">
+                                        {vibeProjects.map((project, index) => {
+                                            const isExternal = Boolean(
+                                                project.url && !project.url.startsWith("/")
+                                            );
+
+                                            return project.url ? (
+                                                <a
+                                                    key={project.id}
+                                                    href={project.url}
+                                                    target={isExternal ? "_blank" : undefined}
+                                                    rel={isExternal ? "noopener noreferrer" : undefined}
+                                                    className="block border-b border-black/[0.04] pb-8 md:pb-12 last:border-0"
+                                                >
+                                                    <LightVibeRow project={project} index={index} />
+                                                </a>
+                                            ) : (
+                                                <div key={project.id} className="border-b border-black/[0.04] pb-8 md:pb-12 last:border-0">
+                                                    <LightVibeRow project={project} index={index} />
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <p className="py-8 text-center text-black/45">
+                                        Vibe-coded projects will appear here soon.
+                                    </p>
+                                )}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </section>
+        );
+    }
+
+    /* ── DARK VARIANT — Original (restored) ────── */
     return (
         <section className="relative z-30 overflow-hidden border-t border-white/5 bg-background py-16 md:py-24">
             <span id="projects" className="absolute -top-24 left-0 h-0 w-full opacity-0 pointer-events-none" />

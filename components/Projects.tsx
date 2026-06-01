@@ -1,7 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import ProjectsClient from "./ProjectsClient";
 
-export default async function Projects() {
+interface ProjectsProps {
+    variant?: "dark" | "light";
+}
+
+export default async function Projects({ variant = "dark" }: ProjectsProps) {
     const supabase = await createClient();
 
     const { data: projects } = await supabase
@@ -15,5 +19,5 @@ export default async function Projects() {
         .select("*")
         .order("order", { ascending: true });
 
-    return <ProjectsClient projects={projects || []} vibeProjects={vibeProjects || []} />;
+    return <ProjectsClient projects={projects || []} vibeProjects={vibeProjects || []} variant={variant} />;
 }

@@ -61,7 +61,7 @@ export default function Hero() {
                                 initial={{ y: "100%" }}
                                 animate={{ y: 0 }}
                                 transition={{ duration: 1, delay: 0.6, ease: [0.76, 0, 0.24, 1] }}
-                                className="text-[clamp(4.5rem,14vw,18rem)] leading-[0.82] font-bold text-transparent text-stroke tracking-tighter"
+                                className="text-[clamp(4.5rem,14vw,18rem)] leading-[0.82] font-bold text-transparent text-stroke-bold tracking-tighter"
                             >
                                 ABUBAKAR
                             </motion.h1>
