@@ -221,7 +221,7 @@ function VibeStripCard({ project, index }: { project: VibeProject; index: number
    LIGHT VARIANT — Refined Minimalist Design
    ═══════════════════════════════════════════════ */
 
-const fluidSpring = { type: "spring", stiffness: 50, damping: 20, mass: 1 };
+const fluidSpring = { type: "spring" as const, stiffness: 50, damping: 20, mass: 1 };
 
 function LightDesignProject({ project, index }: { project: Project; index: number }) {
     return (
