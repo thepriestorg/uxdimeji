@@ -213,11 +213,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                             alt={project.title}
                             width={1920}
                             height={1080}
+                            sizes="100vw"
                             className="w-full h-auto object-cover bg-zinc-900"
                             priority
-                            quality={100}
+                            quality={85}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent opacity-60" />
                     </div>
                 )}
 
@@ -225,7 +226,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 <div className="absolute top-24 md:top-28 left-6 md:left-12 z-30">
                     <Link
                         href="/#projects"
-                        className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors text-sm font-medium bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10"
+                        className="inline-flex items-center gap-2 text-[#ffffff]/80 hover:text-[#ffffff] transition-colors text-sm font-medium bg-[#000000]/30 backdrop-blur-sm px-4 py-2 rounded-full border border-[#ffffff]/10"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back
@@ -234,11 +235,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
                 {/* Content Overlay */}
                 <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none">
-                    <div className="w-full max-w-[1800px] mx-auto px-6 md:px-12 pb-8 md:pb-16 pt-32 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-auto">
+                    <div className="w-full max-w-[1800px] mx-auto px-6 md:px-12 pb-8 md:pb-16 pt-32 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent pointer-events-auto">
                         {/* Title Group */}
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8 items-end">
                             <div className="lg:col-span-9">
-                                <h1 className="text-[10vw] md:text-[8vw] font-black uppercase tracking-tighter leading-[0.85] text-white">
+                                <h1 className="text-[10vw] md:text-[8vw] font-black uppercase tracking-tighter leading-[0.85] text-[#ffffff]">
                                     {project.title}
                                 </h1>
                             </div>
@@ -246,12 +247,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                             {/* Minimal Meta */}
                             <div className="lg:col-span-3 flex lg:flex-col gap-6 lg:gap-4 text-xs md:text-sm">
                                 <div>
-                                    <span className="block text-white/60 mb-1 font-mono uppercase tracking-widest">Type</span>
-                                    <span className="text-white font-medium">{project.category}</span>
+                                    <span className="block text-[#ffffff]/60 mb-1 font-mono uppercase tracking-widest">Type</span>
+                                    <span className="text-[#ffffff] font-medium">{project.category}</span>
                                 </div>
                                 <div>
-                                    <span className="block text-white/60 mb-1 font-mono uppercase tracking-widest">Year</span>
-                                    <span className="text-white font-medium">{project.year}</span>
+                                    <span className="block text-[#ffffff]/60 mb-1 font-mono uppercase tracking-widest">Year</span>
+                                    <span className="text-[#ffffff] font-medium">{project.year}</span>
                                 </div>
                             </div>
                         </div>
