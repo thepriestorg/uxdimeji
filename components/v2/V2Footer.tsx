@@ -21,7 +21,9 @@ export default function V2Footer() {
           Dribbble
         </a>
       </div>
-      <a href="#top">Back to top &uarr;</a>
+      <a href="#top">
+        Back to top <span className="arrow-icon arrow-up" aria-hidden="true" />
+      </a>
     </footer>
   );
 }

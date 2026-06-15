@@ -21,7 +21,8 @@ export default function V2Hero() {
             interaction design, interface systems, and functional builds.
           </p>
           <a href="#work">
-            View selected work <span aria-hidden="true">↓</span>
+            View selected work
+            <span className="arrow-icon arrow-down" aria-hidden="true" />
           </a>
         </div>
       </div>

@@ -426,7 +426,8 @@ export default function KineticWall() {
               data-wall-link=""
               href={`/projects/${activeItem.projectSlug}`}
             >
-              Open case study <i>&#x2197;&#xFE0E;</i>
+              Open case study
+              <i className="arrow-icon arrow-out" aria-hidden="true" />
             </Link>
           )}
         </div>
@@ -516,7 +517,8 @@ export default function KineticWall() {
           Past interfaces collapse into archive
         </div>
         <div className="wall-instruction">
-          Scroll to reorganize <span>↓</span>
+          Scroll to reorganize
+          <span className="arrow-icon arrow-down" aria-hidden="true" />
         </div>
       </div>
     </section>

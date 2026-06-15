@@ -1,4 +1,13 @@
 html, body { overflow-x: clip !important; max-width: 100vw; }
+
+.v2-design .arrow-icon { position: relative; width: .85em; height: .85em; display: inline-block; flex: 0 0 auto; color: currentColor; vertical-align: -.08em; }
+.v2-design .arrow-down::before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 78%; background: currentColor; transform: translateX(-50%); }
+.v2-design .arrow-down::after { content: ""; position: absolute; right: 18%; bottom: 5%; width: 46%; height: 46%; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg); }
+.v2-design .arrow-up { transform: rotate(180deg); }
+.v2-design .arrow-up::before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 78%; background: currentColor; transform: translateX(-50%); }
+.v2-design .arrow-up::after { content: ""; position: absolute; right: 18%; bottom: 5%; width: 46%; height: 46%; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg); }
+.v2-design .arrow-out::before { content: ""; position: absolute; top: 4%; right: 4%; width: 48%; height: 48%; border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
+.v2-design .arrow-out::after { content: ""; position: absolute; left: 8%; bottom: 10%; width: 105%; height: 1px; background: currentColor; transform: rotate(-45deg); transform-origin: left center; }
 /* ═══════════════════════════════════════════════════════
    V2 Design System — Scoped under .v2-design
    Ported from uxdimejiv2/styles.css
@@ -84,7 +93,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .hero-support { padding-bottom: 9px; }
 .v2-design .hero-support p { margin: 0 0 34px; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .v2-design .hero-support a { padding-bottom: 7px; border-bottom: 1px solid var(--ink); display: flex; justify-content: space-between; font-size: 11px; font-weight: 650; }
-.v2-design .hero-support a span { color: var(--signal); }
+.v2-design .hero-support a .arrow-icon { color: var(--signal); }
 .v2-design .hero-capabilities { padding-top: 18px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); color: var(--muted); font-size: 10px; }
 
 .v2-design .section-intro { display: grid; grid-template-columns: .42fr 1.58fr; gap: 5vw; }
@@ -110,7 +119,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .project-copy dt { color: var(--muted); font-size: 8px; text-transform: uppercase; }
 .v2-design .project-copy dd { margin: 0; font-size: 10px; }
 .v2-design .text-link { align-self: flex-start; padding-bottom: 5px; font-size: 10px; font-weight: 650; }
-.v2-design .text-link span { margin-left: 18px; color: var(--signal); }
+.v2-design .text-link .arrow-icon { margin-left: 18px; color: var(--signal); }
 
 /* Project visual containers */
 .v2-design .project-visual-inner { position: absolute; inset: 0; display: grid; place-items: center; }
@@ -146,7 +155,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .contact-main { min-height: 470px; display: flex; flex-direction: column; justify-content: center; }
 .v2-design .contact-main h2 { max-width: 940px; margin: 0 0 45px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(54px, 7.3vw, 110px); font-weight: 400; font-style: italic; line-height: .95; letter-spacing: -.06em; }
 .v2-design .contact-main a { align-self: flex-start; padding-bottom: 7px; border-bottom: 1px solid #7c8882; color: #dce5e1; font-size: clamp(17px, 2vw, 27px); }
-.v2-design .contact-main a span { margin-left: 35px; color: #a9c3b8; }
+.v2-design .contact-main a .arrow-icon { margin-left: 35px; color: #a9c3b8; }
 .v2-design .contact-foot { padding-top: 18px; border-top: 1px solid #4a504d; display: flex; justify-content: space-between; color: #98a09c; font-size: 9px; }
 
 /* Footer */
@@ -188,7 +197,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .wall-status b { position: absolute; inset: 0; background: #a9c3b8; transform: scaleX(0); transform-origin: left; }
 .v2-design .wall-archive-label { position: absolute; z-index: 30; left: var(--gutter); bottom: 75px; color: rgba(255,255,255,.25); font-size: 7px; letter-spacing: .08em; text-transform: uppercase; }
 .v2-design .wall-instruction { position: absolute; z-index: 30; right: var(--gutter); bottom: 35px; color: rgba(255,255,255,.38); font-size: 8px; letter-spacing: .07em; text-transform: uppercase; }
-.v2-design .wall-instruction span { margin-left: 9px; color: #a9c3b8; }
+.v2-design .wall-instruction .arrow-icon { margin-left: 9px; color: #a9c3b8; }
 .v2-design .site-header.on-wall { color: #fff; border-color: rgba(255,255,255,.12); background: rgba(16,18,16,.88); }
 .v2-design .site-header.on-wall .identity span, .v2-design .site-header.on-wall .header-status { color: rgba(255,255,255,.48); }
 
@@ -243,7 +252,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .contact-main { min-height: 430px; }
   .v2-design .contact-main h2 { font-size: 16vw; }
   .v2-design .contact-main a { font-size: 16px; }
-  .v2-design .contact-main a span { margin-left: 15px; }
+  .v2-design .contact-main a .arrow-icon { margin-left: 15px; }
   .v2-design .contact-foot { flex-direction: column; gap: 8px; }
   .v2-design .site-footer { height: auto; padding-top: 27px; padding-bottom: 27px; grid-template-columns: 1fr auto; gap: 22px; }
   .v2-design .site-footer div { grid-column: 1 / -1; grid-row: 1; justify-self: start; }

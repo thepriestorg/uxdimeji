@@ -186,7 +186,8 @@ export default function V2SelectedWorkClient({
               </p>
             )}
             <Link className="text-link" href={`/projects/${project.slug}`}>
-              Read case study <span>&#x2197;&#xFE0E;</span>
+              Read case study
+              <span className="arrow-icon arrow-out" aria-hidden="true" />
             </Link>
           </div>
         </article>
@@ -304,7 +305,8 @@ export default function V2SelectedWorkClient({
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
                 >
-                  Visit project <span>↗</span>
+                  Visit project
+                  <span className="arrow-icon arrow-out" aria-hidden="true" />
                 </a>
               )}
             </div>
