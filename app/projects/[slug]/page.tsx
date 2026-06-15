@@ -5,28 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import "@/app/case-studies.css"; // The new case studies CSS
 
-function extractText(node: any): string {
-  if (node.type === "text") return node.text || "";
-  if (node.content) return node.content.map(extractText).join("");
-  return "";
-}
-
-function getProjectSummary(content: string | null): string {
-  if (!content) return "";
-  try {
-    const doc = JSON.parse(content);
-    if (doc.type === "doc" && doc.content) {
-      for (const node of doc.content) {
-        if (node.type === "paragraph") {
-          const text = extractText(node);
-          if (text.length > 10) return text;
-        }
-      }
-    }
-  } catch (e) {}
-  return "";
-}
-
 // TipTap content renderer
 function RenderContent({ content }: { content: string | null }) {
     if (!content) return null;
@@ -257,10 +235,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     <header className="project-header">
                         <p className="project-label">{project.title} / {project.category} / {project.year}</p>
                         <h1>{project.title}</h1>
-                        <p className="project-summary">
-                            {getProjectSummary(project.content)}
-                        </p>
-                        {/* We could render project.meta here if we wanted to store that in db */}
                     </header>
 
                     {project.featured_image && (

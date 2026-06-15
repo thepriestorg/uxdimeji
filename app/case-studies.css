@@ -35,7 +35,7 @@ figure { margin: 0; }
 .project-page { padding: 0 var(--gutter); }
 .project-header { max-width: 1180px; margin: 0 auto; padding: 170px 0 90px; }
 .project-label, .section-number { margin: 0; color: var(--muted); font-size: 9px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
-.project-header h1 { margin: 68px 0 24px; font-size: clamp(84px, 12vw, 176px); font-weight: 460; line-height: .82; letter-spacing: -.09em; }
+.project-header h1 { margin: 68px 0 0; font-size: clamp(84px, 12vw, 176px); font-weight: 460; line-height: .82; letter-spacing: -.09em; }
 .wayfinder-theme .project-header h1 { font-size: clamp(72px, 10.5vw, 154px); }
 .project-summary { max-width: 790px; margin: 0; color: #555650; font-size: clamp(25px, 3.2vw, 45px); font-weight: 400; line-height: 1.2; letter-spacing: -.045em; }
 .project-meta { margin: 85px 0 0; padding-top: 18px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
@@ -113,7 +113,7 @@ figcaption { margin-top: 12px; color: var(--muted); font-size: 8px; }
 @media (max-width: 760px) {
   :root { --gutter: 18px; }
   .case-nav { height: 64px; gap: 18px; }.case-nav a:nth-child(2) { display: none; }.case-nav { grid-template-columns: 1fr auto; }
-  .project-header { padding: 120px 0 65px; }.project-header h1, .wayfinder-theme .project-header h1 { margin-top: 45px; font-size: 22vw; }.wayfinder-theme .project-header h1 { font-size: 17vw; }.project-summary { font-size: 25px; }.project-meta { margin-top: 55px; grid-template-columns: 1fr 1fr; gap: 20px; }.project-meta div:nth-child(3), .project-meta div:nth-child(4) { display: none; }
+  .project-header { padding: 120px 0 65px; }.project-header h1, .wayfinder-theme .project-header h1 { margin-top: 45px; font-size: 22vw; }.wayfinder-theme .project-header h1 { font-size: 17vw; }.project-meta { margin-top: 55px; grid-template-columns: 1fr 1fr; gap: 20px; }.project-meta div:nth-child(3), .project-meta div:nth-child(4) { display: none; }
   .featured-media, .media-block { padding: 14px; }.featured-media figcaption, .media-block figcaption { margin-bottom: -34px; }
   .app-nav { height: 46px; padding: 0 12px; }.app-nav span { display: none; }.dashboard-content { min-height: 410px; padding: 35px 18px; }.dashboard-content > h2 { font-size: 49px; }.dashboard-grid { margin-top: 55px; grid-template-columns: 1fr; }.chart-block { min-height: 175px; }.bars { height: 120px; }.goal-block { display: none; }
   .text-block { margin: 110px auto; }.text-block h2 { margin-bottom: 30px; font-size: 38px; }.text-block > p:not(.section-number) { font-size: 14px; line-height: 1.72; }

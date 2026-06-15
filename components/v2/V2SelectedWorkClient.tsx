@@ -136,6 +136,7 @@ export default function V2SelectedWorkClient({
       </header>
 
       {/* ── Design projects ─────────────────────────── */}
+      <div className="projects-grid">
       {projects.map((project, index) => (
         <article key={project.id} className="project-row reveal">
           <Link
@@ -154,7 +155,7 @@ export default function V2SelectedWorkClient({
                   fill
                   priority={index < 2}
                   quality={90}
-                  sizes="(max-width: 980px) calc(100vw - 36px), 62vw"
+                  sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                   ref={(image) => {
                     if (image?.complete) applyProjectImageRatio(image);
                   }}
@@ -220,7 +221,7 @@ export default function V2SelectedWorkClient({
                       alt={project.title}
                       fill
                       quality={90}
-                      sizes="(max-width: 980px) calc(100vw - 36px), 62vw"
+                      sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
                         if (image?.complete) applyProjectImageRatio(image);
                       }}
@@ -246,7 +247,7 @@ export default function V2SelectedWorkClient({
                       alt={project.title}
                       fill
                       quality={90}
-                      sizes="(max-width: 980px) calc(100vw - 36px), 62vw"
+                      sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
                         if (image?.complete) applyProjectImageRatio(image);
                       }}
@@ -313,6 +314,7 @@ export default function V2SelectedWorkClient({
           </article>
         );
       })}
+      </div>
     </section>
   );
 }
