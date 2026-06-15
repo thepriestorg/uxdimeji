@@ -51,12 +51,11 @@ const hasLongWord = (title: string) =>
 const applyProjectImageRatio = (image: HTMLImageElement | null) => {
   if (!image?.naturalWidth || !image.naturalHeight) return;
 
-  image
-    .closest<HTMLElement>(".project-visual")
-    ?.style.setProperty(
-      "--project-media-ratio",
-      String(image.naturalWidth / image.naturalHeight)
-    );
+  const visual = image.closest<HTMLElement>(".project-visual");
+  if (!visual) return;
+
+  const ratio = image.naturalWidth / image.naturalHeight;
+  visual.style.setProperty("--project-media-ratio", String(ratio));
   window.dispatchEvent(new Event("portfolio:layout"));
 };
 
