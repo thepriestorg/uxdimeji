@@ -1,59 +1,239 @@
 "use client";
 
 import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function V2ScrollEffects() {
   useEffect(() => {
-    // --- Page progress bar ---
-    const progressBar = document.querySelector<HTMLElement>(".page-progress");
+    gsap.registerPlugin(ScrollTrigger);
 
+    const root = document.querySelector<HTMLElement>(".v2-design");
+    if (!root) return;
+
+    const progressBar = document.querySelector<HTMLElement>(".page-progress");
     const updateProgress = () => {
       if (!progressBar) return;
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? scrollTop / docHeight : 0;
-      progressBar.style.transform = `scaleX(${progress})`;
+      const distance = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.transform = `scaleX(${distance > 0 ? window.scrollY / distance : 0})`;
     };
 
     window.addEventListener("scroll", updateProgress, { passive: true });
     updateProgress();
 
-    // --- Reveal animations via IntersectionObserver ---
-    const revealElements = document.querySelectorAll(".reveal");
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -60px 0px",
-      }
-    );
+    const context = gsap.context(() => {
+      gsap.set(".hero h1", { autoAlpha: 1, y: 0 });
+      gsap.set(".hero-line-inner", { yPercent: 118, rotate: 1.5 });
+      gsap.set(".hero-index, .hero-support, .hero-capabilities", {
+        autoAlpha: 0,
+        y: 24,
+      });
 
-    revealElements.forEach((el) => revealObserver.observe(el));
+      const opening = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
 
-    // --- Auto-fill year in [data-year] elements ---
-    const yearElements = document.querySelectorAll("[data-year]");
-    const currentYear = new Date().getFullYear().toString();
-    yearElements.forEach((el) => {
-      el.textContent = currentYear;
+      opening
+        .fromTo(
+          ".page-intro-mark",
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, duration: 0.65 }
+        )
+        .to(".page-intro-line", { scaleX: 1, duration: 0.75 }, 0.12)
+        .to(".page-intro", {
+          yPercent: -100,
+          duration: 1.05,
+          ease: "expo.inOut",
+        }, 0.82)
+        .set(".page-intro", { display: "none" })
+        .from(".site-header", {
+          autoAlpha: 0,
+          y: -24,
+          duration: 0.75,
+        }, 1.35)
+        .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.7 }, 1.42)
+        .to(".hero-line-inner", {
+          yPercent: 0,
+          rotate: 0,
+          duration: 1.15,
+          stagger: 0.12,
+          ease: "expo.out",
+        }, 1.48)
+        .to(".hero-support", { autoAlpha: 1, y: 0, duration: 0.8 }, 1.88)
+        .to(".hero-capabilities", { autoAlpha: 1, y: 0, duration: 0.75 }, 2)
+        .from(".hero-capabilities span", {
+          autoAlpha: 0,
+          y: 12,
+          duration: 0.55,
+          stagger: 0.08,
+        }, 2.05);
+
+      gsap.to(".hero-copy", {
+        yPercent: -10,
+        scale: 0.965,
+        opacity: 0.18,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      document.querySelectorAll<HTMLElement>(".section-intro").forEach((intro) => {
+        const eyebrow = intro.querySelector(".eyebrow");
+        const heading = intro.querySelector("h2");
+        gsap.set(intro, { autoAlpha: 1, y: 0 });
+
+        if (eyebrow) {
+          gsap.from(eyebrow, {
+            autoAlpha: 0,
+            x: -30,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: { trigger: intro, start: "top 82%", once: true },
+          });
+        }
+
+        if (heading) {
+          gsap.from(heading, {
+            autoAlpha: 0,
+            y: 70,
+            clipPath: "inset(0 0 100% 0)",
+            duration: 1.15,
+            ease: "expo.out",
+            scrollTrigger: { trigger: intro, start: "top 80%", once: true },
+          });
+        }
+      });
+
+      document.querySelectorAll<HTMLElement>(".project-row").forEach((row) => {
+        const visual = row.querySelector<HTMLElement>(".project-visual");
+        const copy = row.querySelector<HTMLElement>(".project-copy");
+        const copyItems = copy
+          ? Array.from(copy.children) as HTMLElement[]
+          : [];
+
+        gsap.set(row, { autoAlpha: 1, y: 0 });
+
+        if (visual) {
+          gsap.from(visual, {
+            autoAlpha: 0,
+            y: 55,
+            clipPath: "inset(0 0 100% 0)",
+            duration: 1.2,
+            ease: "expo.out",
+            scrollTrigger: { trigger: row, start: "top 78%", once: true },
+          });
+        }
+
+        if (copyItems.length > 0) {
+          gsap.from(copyItems, {
+            autoAlpha: 0,
+            x: 34,
+            duration: 0.8,
+            stagger: 0.09,
+            ease: "power3.out",
+            scrollTrigger: { trigger: row, start: "top 72%", once: true },
+          });
+        }
+      });
+
+      gsap.set(".profile-statement, .profile-detail, .practice-list", {
+        autoAlpha: 1,
+        y: 0,
+      });
+
+      gsap.from(".profile-statement", {
+        autoAlpha: 0,
+        y: 70,
+        duration: 1.1,
+        ease: "expo.out",
+        immediateRender: false,
+        scrollTrigger: { trigger: ".profile-grid", start: "top 76%", once: true },
+      });
+
+      gsap.from(".profile-detail p", {
+        autoAlpha: 0,
+        y: 30,
+        duration: 0.75,
+        stagger: 0.13,
+        ease: "power3.out",
+        immediateRender: false,
+        scrollTrigger: { trigger: ".profile-detail", start: "top 78%", once: true },
+      });
+
+      gsap.from(".practice-list > div", {
+        autoAlpha: 0,
+        y: 45,
+        duration: 0.85,
+        stagger: 0.12,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".practice-list", start: "top 78%", once: true },
+      });
+
+      gsap.set(".contact .eyebrow, .contact-main", { autoAlpha: 1, y: 0 });
+      gsap.from(".contact .eyebrow", {
+        autoAlpha: 0,
+        x: -28,
+        duration: 0.8,
+        scrollTrigger: { trigger: ".contact", start: "top 72%", once: true },
+      });
+      gsap.from(".contact-main h2", {
+        autoAlpha: 0,
+        y: 90,
+        rotate: 1.5,
+        duration: 1.2,
+        ease: "expo.out",
+        scrollTrigger: { trigger: ".contact-main", start: "top 75%", once: true },
+      });
+      gsap.from(".contact-main a, .contact-foot", {
+        autoAlpha: 0,
+        y: 28,
+        duration: 0.8,
+        stagger: 0.13,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".contact-main", start: "top 62%", once: true },
+      });
+
+      gsap.from(".site-footer > *", {
+        autoAlpha: 0,
+        y: 18,
+        duration: 0.65,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".site-footer", start: "top 96%", once: true },
+      });
+    }, root);
+
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("portfolio:layout", refresh);
+    window.addEventListener("load", refresh, { once: true });
+    const refreshTimer = window.setTimeout(refresh, 1200);
+
+    document.querySelectorAll("[data-year]").forEach((element) => {
+      element.textContent = String(new Date().getFullYear());
     });
 
-    // --- Cleanup ---
     return () => {
+      window.clearTimeout(refreshTimer);
       window.removeEventListener("scroll", updateProgress);
-      revealObserver.disconnect();
+      window.removeEventListener("portfolio:layout", refresh);
+      window.removeEventListener("load", refresh);
+      context.revert();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
   return (
     <>
+      <div className="page-intro" aria-hidden="true">
+        <div className="page-intro-mark">
+          Oladimeji Abubakar / Product designer
+        </div>
+        <div className="page-intro-line" />
+      </div>
       <div className="page-progress" />
       <a href="#main" className="skip-link">
         Skip to content

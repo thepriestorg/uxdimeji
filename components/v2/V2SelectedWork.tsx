@@ -15,10 +15,14 @@ export default async function V2SelectedWork() {
     .select("*")
     .order("order", { ascending: true });
 
+  const visibleVibeProjects = (vibeProjects || []).filter(
+    (project) => project.is_featured !== false
+  );
+
   return (
     <V2SelectedWorkClient
       projects={projects || []}
-      vibeProjects={vibeProjects || []}
+      vibeProjects={visibleVibeProjects}
     />
   );
 }

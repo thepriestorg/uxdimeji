@@ -9,13 +9,16 @@ export default function V2Hero() {
       </div>
       <div className="hero-copy">
         <h1 className="reveal">
-          I help teams turn complex products into{" "}
-          <em>clear, useful experiences.</em>
+          <span className="hero-line">
+            <span className="hero-line-inner">
+              I design how products <em>think, move,</em> and work.
+            </span>
+          </span>
         </h1>
         <div className="hero-support reveal">
           <p>
-            Working across product strategy, interaction design, and design
-            systems from early definition through launch.
+            I do not stop at Figma. I take products through strategy,
+            interaction design, interface systems, and functional builds.
           </p>
           <a href="#work">
             View selected work <span aria-hidden="true">↓</span>
@@ -26,7 +29,7 @@ export default function V2Hero() {
         <span>Product strategy</span>
         <span>UX and interaction</span>
         <span>Interface systems</span>
-        <span>Design leadership</span>
+        <span>Functional builds</span>
       </div>
     </section>
   );

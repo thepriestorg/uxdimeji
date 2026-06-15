@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Trash2, Loader2, RefreshCcw, Pencil, X, Check } from "lucide-react";
 import MediaUploader from "@/components/admin/MediaUploader";
@@ -40,12 +40,20 @@ interface ProjectOption {
     slug: string;
 }
 
+interface GalleryImage {
+    id: string;
+    image_url: string;
+    display_order: number;
+    title: string | null;
+    description: string | null;
+    project_id: string | null;
+}
+
 export default function GalleryAdmin() {
-    const supabase = createClient();
-    const [images, setImages] = useState<any[]>([]);
+    const supabase = useMemo(() => createClient(), []);
+    const [images, setImages] = useState<GalleryImage[]>([]);
     const [projects, setProjects] = useState<ProjectOption[]>([]);
     const [loading, setLoading] = useState(true);
-    const [uploading, setUploading] = useState(false);
     const [savingOrder, setSavingOrder] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editTitle, setEditTitle] = useState("");
@@ -59,8 +67,7 @@ export default function GalleryAdmin() {
         })
     );
 
-    const fetchImages = async () => {
-        setLoading(true);
+    const fetchImages = useCallback(async () => {
         const { data, error } = await supabase
             .from('gallery_images')
             .select('*')
@@ -73,25 +80,27 @@ export default function GalleryAdmin() {
             setImages(data || []);
         }
         setLoading(false);
-    };
+    }, [supabase]);
 
-    const fetchProjects = async () => {
+    const fetchProjects = useCallback(async () => {
         const { data } = await supabase
             .from('projects')
             .select('id, title, slug')
             .order('order', { ascending: true });
         if (data) setProjects(data);
-    };
+    }, [supabase]);
 
     useEffect(() => {
-        fetchImages();
-        fetchProjects();
-    }, []);
+        const frame = window.requestAnimationFrame(() => {
+            void fetchImages();
+            void fetchProjects();
+        });
+
+        return () => window.cancelAnimationFrame(frame);
+    }, [fetchImages, fetchProjects]);
 
     const handleAddImages = async (urls: string[]) => {
         if (!urls.length) return;
-        setUploading(true);
-
         let maxOrder = 0;
         if (images.length > 0) {
             maxOrder = Math.max(...images.map(img => img.display_order || 0));
@@ -112,7 +121,6 @@ export default function GalleryAdmin() {
         } else {
             fetchImages();
         }
-        setUploading(false);
     };
 
     const handleDelete = async (id: string) => {
@@ -131,7 +139,7 @@ export default function GalleryAdmin() {
         }
     };
 
-    const startEditing = (img: any) => {
+    const startEditing = (img: GalleryImage) => {
         setEditingId(img.id);
         setEditTitle(img.title || "");
         setEditDescription(img.description || "");
@@ -184,7 +192,7 @@ export default function GalleryAdmin() {
         }
     };
 
-    const persistOrder = async (newItems: any[]) => {
+    const persistOrder = async (newItems: GalleryImage[]) => {
         setSavingOrder(true);
         try {
             await Promise.all(newItems.map((item, index) =>
@@ -208,7 +216,10 @@ export default function GalleryAdmin() {
                 <div className="flex items-center gap-2">
                     {savingOrder && <span className="text-xs text-white/50 animate-pulse">Saving order...</span>}
                     <button
-                        onClick={fetchImages}
+                        onClick={() => {
+                            setLoading(true);
+                            void fetchImages();
+                        }}
                         className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
                     >
                         <RefreshCcw className={`w-5 h-5 text-white ${loading ? 'animate-spin' : ''}`} />
@@ -244,7 +255,11 @@ export default function GalleryAdmin() {
                     >
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {images.map((img) => (
-                                <SortableGalleryItem key={img.id} id={img.id}>
+                                <SortableGalleryItem
+                                    key={img.id}
+                                    id={img.id}
+                                    disabled={editingId === img.id}
+                                >
                                     <div className="group relative rounded-xl overflow-hidden bg-black border border-white/10">
                                         {/* Image */}
                                         <div className="relative aspect-[4/3]">
@@ -282,7 +297,11 @@ export default function GalleryAdmin() {
                                         <div className="p-3 border-t border-white/10">
                                             {editingId === img.id ? (
                                                 /* ── Editing mode ─── */
-                                                <div className="flex flex-col gap-2" onPointerDown={(e) => e.stopPropagation()}>
+                                                <div
+                                                    className="flex flex-col gap-2"
+                                                    onPointerDown={(e) => e.stopPropagation()}
+                                                    onKeyDown={(e) => e.stopPropagation()}
+                                                >
                                                     <input
                                                         type="text"
                                                         value={editTitle}

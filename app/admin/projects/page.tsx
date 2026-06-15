@@ -46,7 +46,7 @@ export default async function ProjectsPage() {
                                     <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Title</th>
                                     <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Category</th>
                                     <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Year</th>
-                                    <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Featured</th>
+                                    <th className="text-left text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Homepage</th>
                                     <th className="text-right text-white/50 text-sm font-mono uppercase tracking-wider px-6 py-4">Actions</th>
                                 </tr>
                             </thead>
@@ -69,7 +69,7 @@ export default async function ProjectsPage() {
                                         <td className="px-6 py-4 text-white/60">{project.year}</td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded-full text-xs font-bold ${project.is_featured ? "bg-accent/20 text-accent" : "bg-white/10 text-white/40"}`}>
-                                                {project.is_featured ? "Yes" : "No"}
+                                                {project.is_featured ? "Visible" : "Hidden"}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">

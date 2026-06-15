@@ -4,7 +4,7 @@ export default function V2Footer() {
   return (
     <footer className="site-footer">
       <span>
-        © <span data-year>{new Date().getFullYear()}</span> Dimeji A.
+        &copy; <span data-year>{new Date().getFullYear()}</span> Dimeji A.
       </span>
       <div>
         <a
@@ -21,7 +21,7 @@ export default function V2Footer() {
           Dribbble
         </a>
       </div>
-      <a href="#top">Back to top ↑</a>
+      <a href="#top">Back to top &uarr;</a>
     </footer>
   );
 }

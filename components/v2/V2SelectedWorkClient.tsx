@@ -29,6 +29,7 @@ interface VibeProject {
   accent: string;
   span: string;
   order: number;
+  is_featured?: boolean;
 }
 
 interface V2SelectedWorkClientProps {
@@ -56,6 +57,7 @@ const applyProjectImageRatio = (image: HTMLImageElement | null) => {
       "--project-media-ratio",
       String(image.naturalWidth / image.naturalHeight)
     );
+  window.dispatchEvent(new Event("portfolio:layout"));
 };
 
 const getProjectSummary = (contentJsonString?: string): string => {
@@ -128,11 +130,9 @@ export default function V2SelectedWorkClient({
     <section className="selected-work" id="work">
       {/* Section intro */}
       <header className="section-intro reveal">
-        <p className="eyebrow">Selected work / 2023–2025</p>
+        <p className="eyebrow">Selected work / 2023-Now</p>
         <div>
-          <h2 id="work-title">
-            Three products. Three different kinds of complexity.
-          </h2>
+          <h2 id="work-title">Ideas get interesting when they become useful.</h2>
         </div>
       </header>
 
@@ -262,7 +262,7 @@ export default function V2SelectedWorkClient({
             {/* Copy */}
             <div className="project-copy">
               <div className="project-number">
-                {pad(totalDesign + index + 1)} / Vibe Coded / 2025
+                {pad(totalDesign + index + 1)} / Built by me / 2025
               </div>
               <h3 className={hasLongWord(project.title) ? "project-title-long" : undefined}>
                 {project.url ? (

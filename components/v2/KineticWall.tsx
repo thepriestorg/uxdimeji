@@ -39,12 +39,50 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const applyWallImageRatio = (image: HTMLImageElement | null) => {
   if (!image?.naturalWidth || !image.naturalHeight) return;
 
-  image
-    .closest<HTMLElement>(".wall-card")
-    ?.style.setProperty(
-      "--wall-card-ratio",
-      String(image.naturalWidth / image.naturalHeight)
+  const card = image.closest<HTMLElement>(".wall-card");
+  if (!card) return;
+
+  const ratio = image.naturalWidth / image.naturalHeight;
+  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+  const mobile = window.innerWidth <= 700;
+  const maxWidth = mobile
+    ? Math.min(window.innerWidth - 32, 380)
+    : Math.min(window.innerWidth * 0.48, 720);
+  let maxHeight = Math.min(viewportHeight * 0.62, 620);
+
+  if (mobile) {
+    const copy = card
+      .closest<HTMLElement>(".kinetic-wall")
+      ?.querySelector<HTMLElement>(".wall-copy");
+    const copyBottom = copy
+      ? copy.offsetTop + copy.offsetHeight
+      : viewportHeight * 0.38;
+    const safeTop = Math.max(copyBottom + 24, viewportHeight * 0.39);
+    const safeBottom = viewportHeight - 52;
+    const availableHeight = Math.max(
+      safeBottom - safeTop,
+      viewportHeight * 0.28
     );
+
+    maxHeight = Math.min(availableHeight, viewportHeight * 0.52, 460);
+    card.style.setProperty(
+      "--wall-card-top",
+      `${Math.round(safeTop + (safeBottom - safeTop) / 2)}px`
+    );
+  }
+
+  let width = maxWidth;
+  let height = width / ratio;
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * ratio;
+  }
+
+  card.style.setProperty("--wall-card-ratio", String(ratio));
+  card.style.setProperty("--wall-card-width", `${Math.round(width)}px`);
+  card.style.setProperty("--wall-card-height", `${Math.round(height)}px`);
+  window.dispatchEvent(new Event("portfolio:layout"));
 };
 
 /* ── 3D state calculator ──────────────────────── */
@@ -65,9 +103,9 @@ const wallState = (
   mobile: boolean
 ): CardState => {
   const vw = window.innerWidth / 100;
-  const vh = window.innerHeight / 100;
+  const vh = (window.visualViewport?.height ?? window.innerHeight) / 100;
 
-  const active: CardState = { x: mobile ? 0 : 8 * vw, y: mobile ? 4 * vh : 4 * vh, z: 160, s: 1, rx: 0, ry: mobile ? 0 : -2, rz: 0, o: 1 };
+  const active: CardState = { x: mobile ? 0 : 8 * vw, y: mobile ? 0 : 4 * vh, z: 160, s: 1, rx: 0, ry: mobile ? 0 : -2, rz: 0, o: 1 };
   const previous: CardState = { x: mobile ? -66 * vw : -48 * vw, y: 33 * vh, z: -410, s: mobile ? 0.25 : 0.22, rx: 2, ry: 11, rz: -8, o: 0.34 };
   const next: CardState = { x: mobile ? 64 * vw : 34 * vw, y: 25 * vh, z: -300, s: mobile ? 0.36 : 0.46, rx: -8, ry: -13, rz: 8, o: 0.52 };
   if (position >= -1 && position <= 0) {
@@ -152,6 +190,9 @@ export default function KineticWall() {
               : null,
         }));
         setItems(mapped);
+        window.requestAnimationFrame(() => {
+          window.dispatchEvent(new Event("portfolio:layout"));
+        });
       }
       setLoading(false);
     };
@@ -164,7 +205,8 @@ export default function KineticWall() {
     if (!section || items.length === 0) return;
 
     const sectionHeight = section.offsetHeight;
-    const viewH = window.innerHeight;
+    const viewH = window.visualViewport?.height ?? window.innerHeight;
+    section.style.setProperty("--wall-viewport-height", `${viewH}px`);
     const distance = sectionHeight - viewH;
     const localScroll = window.scrollY - section.offsetTop;
     const inside =
@@ -180,8 +222,8 @@ export default function KineticWall() {
     );
     sticky?.classList.toggle("is-ended", localScroll >= distance);
 
-    const amount = clamp(localScroll / distance);
     const mobile = window.innerWidth < 700;
+    const amount = clamp(localScroll / distance);
 
     const rawIndex = amount * (items.length - 1);
     const selectedIndex = Math.round(rawIndex);
@@ -278,8 +320,17 @@ export default function KineticWall() {
       if (image.complete) applyWallImageRatio(image);
     });
 
+    const syncAllRatios = () => {
+      images.forEach((image) => applyWallImageRatio(image));
+    };
+
+    window.addEventListener("resize", syncAllRatios, { passive: true });
+    window.visualViewport?.addEventListener("resize", syncAllRatios);
+
     return () => {
       images.forEach((image) => image.removeEventListener("load", syncRatio));
+      window.removeEventListener("resize", syncAllRatios);
+      window.visualViewport?.removeEventListener("resize", syncAllRatios);
     };
   }, [items]);
 
@@ -352,12 +403,12 @@ export default function KineticWall() {
         {/* Heading */}
         <header className="wall-heading">
           <span>
-            Interface index / 01-{pad(count)}
+            Interface archive / 01-{pad(count)}
           </span>
           <h2>
-            Product craft,
+            Product thinking,
             <br />
-            under pressure.
+            in motion.
           </h2>
         </header>
 
@@ -384,17 +435,11 @@ export default function KineticWall() {
         <div className="wall-stage" data-wall-stage="" ref={stageRef}>
           {items.map((item, index) => {
             const hasProject = Boolean(item.projectSlug);
-            const sizeClasses = [
-              "wall-atlas",
-              "wall-wayfinder",
-              "wall-common",
-              "wall-transfer",
-              "wall-system",
-              "wall-insight",
-            ];
-            const cardClass = `wall-card ${sizeClasses[index % sizeClasses.length]}`;
+            const cardClass = "wall-card wall-gallery-card";
             const cardStyle = {
               "--wall-card-ratio": 4 / 3,
+              "--wall-card-width": "min(680px, 48vw)",
+              "--wall-card-height": "min(440px, 33vw)",
             } as CSSProperties;
 
             const cardContent = (
@@ -407,7 +452,8 @@ export default function KineticWall() {
                   fill
                   className="object-contain"
                   quality={90}
-                  sizes="(max-width: 700px) 320px, 680px"
+                  priority={index === 0}
+                  sizes="(max-width: 700px) calc(100vw - 32px), 48vw"
                   ref={(image) => {
                     if (image?.complete) applyWallImageRatio(image);
                   }}

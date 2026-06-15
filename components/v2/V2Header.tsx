@@ -13,8 +13,11 @@ export default function V2Header() {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    const frame = window.requestAnimationFrame(handleScroll);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [handleScroll]);
 
   useEffect(() => {
@@ -45,7 +48,7 @@ export default function V2Header() {
         </Link>
         <p className="header-status">
           <i />
-          Lagos, Nigeria / Available worldwide
+          Kwara, Nigeria / Available worldwide
         </p>
         <nav className="desktop-nav" aria-label="Primary navigation">
           <a href="#work">Work</a>

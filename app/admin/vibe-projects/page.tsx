@@ -83,6 +83,13 @@ export default async function VibeProjectsPage() {
                                     }`}>
                                         {project.span}
                                     </span>
+                                    <span className={`shrink-0 text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                        project.is_featured !== false
+                                            ? "text-accent bg-accent/10 border border-accent/20"
+                                            : "text-white/30 bg-white/5 border border-white/10"
+                                    }`}>
+                                        {project.is_featured !== false ? "Homepage" : "Hidden"}
+                                    </span>
                                 </div>
                                 <p className="text-sm text-white/40 truncate">{project.description}</p>
                                 {project.tags && project.tags.length > 0 && (

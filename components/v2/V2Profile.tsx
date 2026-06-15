@@ -10,11 +10,11 @@ export default function V2Profile() {
         </div>
       </header>
       <div className="profile-grid">
-        <p className="profile-statement reveal">
+        <p className="profile-statement">
           I am Dimeji, a product designer with five years of experience helping
           teams make difficult products easier to understand and use.
         </p>
-        <div className="profile-detail reveal">
+        <div className="profile-detail">
           <p>
             My work spans early product definition, research, interaction
             design, visual systems, and launch. I am at my best when the problem
@@ -24,6 +24,11 @@ export default function V2Profile() {
           <p>
             I have worked with product, engineering, operations, research, and
             leadership teams across fintech, healthcare, and travel.
+          </p>
+          <p>
+            My work does not end at Figma. I prototype and build functional,
+            testable products, closing the gap between design intent and what
+            people can actually use.
           </p>
         </div>
       </div>
@@ -48,8 +53,8 @@ export default function V2Profile() {
           <span>03</span>
           <h3>Ship</h3>
           <p>
-            Work closely with engineering, test the details, and learn from
-            release.
+            Prototype, build, and work closely with engineering to protect the
+            details through release.
           </p>
         </div>
       </div>

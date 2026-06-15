@@ -43,6 +43,9 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .skip-link { position: fixed; z-index: 1000; top: 12px; left: 12px; padding: 10px 14px; color: #fff; background: var(--ink); transform: translateY(-150%); }
 .v2-design .skip-link:focus { transform: none; }
 .v2-design .page-progress { position: fixed; z-index: 500; top: 0; left: 0; width: 100%; height: 2px; background: var(--signal); transform: scaleX(0); transform-origin: left; }
+.v2-design .page-intro { position: fixed; z-index: 2000; inset: 0; padding: var(--gutter); display: flex; align-items: center; justify-content: center; color: #fff; background: #181816; }
+.v2-design .page-intro-mark { font-size: 10px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+.v2-design .page-intro-line { position: absolute; right: var(--gutter); bottom: 46px; left: var(--gutter); height: 1px; background: rgba(255,255,255,.42); transform: scaleX(0); transform-origin: left; }
 
 .v2-design .site-header {
   position: fixed;
@@ -75,7 +78,9 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .hero-index { padding-bottom: 19px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
 .v2-design .hero-copy { margin: auto 0; display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(270px, .35fr); gap: 9vw; align-items: end; }
 .v2-design .hero h1 { max-width: 1050px; margin: 0; font-size: clamp(58px, 7.3vw, 112px); font-weight: 470; line-height: .98; letter-spacing: -.067em; }
-.v2-design .hero h1 em { color: var(--signal); font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-style: italic; letter-spacing: -.055em; }
+.v2-design .hero h1 em { display: inline-block; color: var(--signal); font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-style: italic; letter-spacing: -.055em; white-space: nowrap; }
+.v2-design .hero-line { display: block; overflow: hidden; padding-bottom: .07em; }
+.v2-design .hero-line-inner { display: block; transform-origin: left bottom; will-change: transform; }
 .v2-design .hero-support { padding-bottom: 9px; }
 .v2-design .hero-support p { margin: 0 0 34px; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .v2-design .hero-support a { padding-bottom: 7px; border-bottom: 1px solid var(--ink); display: flex; justify-content: space-between; font-size: 11px; font-weight: 650; }
@@ -84,7 +89,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 
 .v2-design .section-intro { display: grid; grid-template-columns: .42fr 1.58fr; gap: 5vw; }
 .v2-design .eyebrow { margin: 0; color: var(--muted); font-size: 9px; font-weight: 650; letter-spacing: .09em; text-transform: uppercase; }
-.v2-design .section-intro h2 { max-width: 990px; margin: 0; font-size: clamp(43px, 5vw, 76px); font-weight: 470; line-height: 1.02; letter-spacing: -.058em; }
+.v2-design .section-intro h2 { max-width: 990px; margin: 0; font-size: clamp(43px, 5vw, 76px); font-weight: 470; line-height: 1.02; letter-spacing: -.058em; will-change: transform, opacity, clip-path; }
 .v2-design .section-intro > div > p { max-width: 580px; margin: 26px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 
 /* Selected Work */
@@ -92,7 +97,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .selected-work > .section-intro { margin-bottom: 125px; }
 .v2-design .project-row { padding: 92px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr); gap: 7vw; align-items: center; }
 .v2-design .project-row:last-child { border-bottom: 1px solid var(--line); }
-.v2-design .project-visual { position: relative; width: 100%; min-height: 0; aspect-ratio: var(--project-media-ratio, 4 / 3); overflow: hidden; display: block; transition: transform .45s cubic-bezier(.2, .7, .2, 1); }
+.v2-design .project-visual { position: relative; width: 100%; min-height: 0; aspect-ratio: var(--project-media-ratio, 4 / 3); overflow: hidden; display: block; transition: transform .45s cubic-bezier(.2, .7, .2, 1); will-change: transform, opacity, clip-path; }
 .v2-design .project-visual:hover { transform: scale(.992); }
 .v2-design .project-copy { min-width: 0; align-self: center; padding: 8px 0; display: flex; flex-direction: column; }
 .v2-design .project-number { color: var(--muted); font-size: 8px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; }
@@ -172,11 +177,11 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .wall-copy.changing strong, .v2-design .wall-copy.changing p, .v2-design .wall-copy.changing a { animation: wall-copy-in .34s cubic-bezier(.22,1,.36,1); }
 @keyframes wall-copy-in { from { opacity: 0; transform: translateY(10px); } }
 .v2-design .wall-stage { position: absolute; z-index: 10; inset: 0; transform-style: preserve-3d; pointer-events: none; }
-.v2-design .wall-card { --wx: 0px; --wy: 0px; --wz: 0px; --ws: .5; --wrx: 0deg; --wry: 0deg; --wrz: 0deg; --wo: 0; position: absolute; left: 64%; top: 54%; display: block; opacity: var(--wo); transform: translate(-50%,-50%) translate3d(var(--wx),var(--wy),var(--wz)) rotateX(var(--wrx)) rotateY(var(--wry)) rotateZ(var(--wrz)) scale(var(--ws)); transform-style: preserve-3d; will-change: transform, opacity; pointer-events: auto; }
+.v2-design .wall-card { --wx: 0px; --wy: 0px; --wz: 0px; --ws: .5; --wrx: 0deg; --wry: 0deg; --wrz: 0deg; --wo: 0; position: absolute; left: 64%; top: 54%; width: var(--wall-card-width, min(680px, 48vw)); height: var(--wall-card-height, 440px); display: block; opacity: var(--wo); transform: translate(-50%,-50%) translate3d(var(--wx),var(--wy),var(--wz)) rotateX(var(--wrx)) rotateY(var(--wry)) rotateZ(var(--wrz)) scale(var(--ws)); transform-style: preserve-3d; will-change: transform, opacity; pointer-events: auto; }
 .v2-design .wall-surface { width: 100%; height: 100%; overflow: hidden; color: var(--ink); background: #fff; box-shadow: 0 28px 75px rgba(0,0,0,.4); transform: rotateX(var(--pointer-y, 0deg)) rotateY(var(--pointer-x, 0deg)); transition: transform .18s ease, box-shadow .25s; }
 .v2-design .wall-image-surface { position: relative; border-radius: 8px; }
 .v2-design .wall-image-surface img { object-fit: contain; }
-.v2-design .wall-card.is-active .wall-surface { box-shadow: 0 45px 120px rgba(0,0,0,.58), 0 0 0 2px #a9c3b8; }
+.v2-design .wall-card.is-active .wall-surface { box-shadow: 0 45px 120px rgba(0,0,0,.58); }
 .v2-design .wall-card:focus-visible { outline: 3px solid #fff; outline-offset: 7px; }
 .v2-design .wall-status { position: absolute; z-index: 30; top: clamp(103px, 12vh, 137px); right: var(--gutter); display: flex; align-items: center; gap: 11px; color: rgba(255,255,255,.45); font-size: 8px; }
 .v2-design .wall-status i { position: relative; width: 100px; height: 1px; overflow: hidden; background: rgba(255,255,255,.18); }
@@ -188,7 +193,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .site-header.on-wall .identity span, .v2-design .site-header.on-wall .header-status { color: rgba(255,255,255,.48); }
 
 /* Gallery card (image-based) */
-.v2-design .wall-gallery-card { width: min(680px, 48vw); height: 440px; }
+.v2-design .wall-gallery-card { width: var(--wall-card-width, min(680px, 48vw)); height: var(--wall-card-height, 440px); aspect-ratio: var(--wall-card-ratio, 4 / 3); }
 .v2-design .wall-gallery-card .wall-surface { position: relative; border-radius: 8px; }
 
 /* ── Responsive ──────────────────────────────── */
@@ -215,7 +220,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .site-header.menu-active .identity span { color: #a9b1ad; }
   .v2-design .hero { min-height: 760px; padding-top: 105px; }
   .v2-design .hero-index { font-size: 8px; }
-  .v2-design .hero h1 { font-size: clamp(48px, 14vw, 62px); line-height: 1; }
+  .v2-design .hero h1 { font-size: clamp(44px, 12vw, 51px); line-height: .96; letter-spacing: -.062em; }
   .v2-design .hero-support p { font-size: 13px; }
   .v2-design .hero-capabilities { grid-template-columns: 1fr 1fr; gap: 13px; font-size: 8px; }
   .v2-design .section-intro { grid-template-columns: 1fr; gap: 25px; }
@@ -229,7 +234,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .project-copy h3.project-title-long { font-size: 50px; }
   .v2-design .project-lead { font-size: 15px; }
   .v2-design .profile { padding-top: 100px; padding-bottom: 100px; }
-  .v2-design .profile-grid { margin-top: 70px; }
+  .v2-design .profile-grid { margin-top: 24px; padding-top: 18px; gap: 20px; }
   .v2-design .profile-statement { font-size: 34px; }
   .v2-design .practice-list { margin-top: 75px; grid-template-columns: 1fr; }
   .v2-design .practice-list > div { min-height: 210px; padding: 22px 0; border-right: 0; border-bottom: 1px solid var(--line); }
@@ -255,29 +260,13 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .wall-copy strong { margin-top: 7px; font-size: 26px; }
   .v2-design .wall-copy p { max-width: 340px; margin-top: 7px; font-size: 10px; line-height: 1.4; }
   .v2-design .wall-copy a { margin-top: 9px; font-size: 8px; }
-  .v2-design .wall-card { left: 50%; top: 69%; }
-  .v2-design .wall-gallery-card { width: 320px; height: 220px; }
+  .v2-design .wall-card { left: 50%; top: var(--wall-card-top, 69%); }
+  .v2-design .wall-gallery-card { width: var(--wall-card-width, 320px); height: var(--wall-card-height, 220px); }
   .v2-design .wall-status { top: 36px; right: 18px; }
   .v2-design .wall-status i { width: 56px; }
   .v2-design .wall-number { right: -5vw; bottom: -1vh; font-size: 65vw; }
   .v2-design .wall-archive-label { display: none; }
   .v2-design .wall-instruction { right: 18px; bottom: 18px; }
-}
-
-.v2-design .wall-atlas { width: min(720px, 50vw); height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-.v2-design .wall-wayfinder { width: min(520px, 38vw); height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-.v2-design .wall-common { width: min(650px, 46vw); height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-.v2-design .wall-transfer { width: min(500px, 36vw); height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-.v2-design .wall-system { width: min(600px, 43vw); height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-.v2-design .wall-insight { width: min(670px, 47vw); height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-
-@media (max-width: 700px) {
-  .v2-design .wall-atlas { width: 340px; height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-  .v2-design .wall-wayfinder { width: 290px; height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-  .v2-design .wall-common { width: 320px; height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-  .v2-design .wall-transfer { width: 280px; height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-  .v2-design .wall-system { width: 320px; height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
-  .v2-design .wall-insight { width: 330px; height: auto; aspect-ratio: var(--wall-card-ratio, 4 / 3); }
 }
 
 /* Force the kinetic experience on real mobile browsers, including devices
@@ -297,7 +286,8 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
     top: 0 !important;
     width: 100% !important;
     height: 100vh !important;
-    height: 100svh !important;
+    height: 100dvh !important;
+    height: var(--wall-viewport-height, 100dvh) !important;
     min-height: 0 !important;
     overflow: hidden !important;
   }
@@ -326,16 +316,15 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .kinetic-wall-forced .wall-card {
     position: absolute !important;
     left: 50% !important;
-    top: 69% !important;
+    top: var(--wall-card-top, 69%) !important;
     display: block !important;
     opacity: var(--wo) !important;
     transform: translate(-50%,-50%) translate3d(var(--wx),var(--wy),var(--wz)) rotateX(var(--wrx)) rotateY(var(--wry)) rotateZ(var(--wrz)) scale(var(--ws)) !important;
   }
 
-  .v2-design .kinetic-wall-forced .wall-atlas { width: 340px !important; height: auto !important; aspect-ratio: var(--wall-card-ratio, 4 / 3) !important; }
-  .v2-design .kinetic-wall-forced .wall-wayfinder { width: 290px !important; height: auto !important; aspect-ratio: var(--wall-card-ratio, 4 / 3) !important; }
-  .v2-design .kinetic-wall-forced .wall-common { width: 320px !important; height: auto !important; aspect-ratio: var(--wall-card-ratio, 4 / 3) !important; }
-  .v2-design .kinetic-wall-forced .wall-transfer { width: 280px !important; height: auto !important; aspect-ratio: var(--wall-card-ratio, 4 / 3) !important; }
-  .v2-design .kinetic-wall-forced .wall-system { width: 320px !important; height: auto !important; aspect-ratio: var(--wall-card-ratio, 4 / 3) !important; }
-  .v2-design .kinetic-wall-forced .wall-insight { width: 330px !important; height: auto !important; aspect-ratio: var(--wall-card-ratio, 4 / 3) !important; }
+  .v2-design .kinetic-wall-forced .wall-gallery-card {
+    width: var(--wall-card-width, 320px) !important;
+    height: var(--wall-card-height, 220px) !important;
+    aspect-ratio: var(--wall-card-ratio, 4 / 3) !important;
+  }
 }
