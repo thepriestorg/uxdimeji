@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./v2-design.css";
 
 @theme {
   /* Custom Colors: "Void" Palette */
@@ -107,7 +108,7 @@ body {
   color: var(--color-primary);
   background: var(--color-background);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

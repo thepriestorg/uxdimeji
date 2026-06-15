@@ -1,32 +1,30 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Noise from "@/components/Noise";
-import About from "@/components/About";
-import Projects from "@/components/Projects";
-import WorkGallery from "@/components/WorkGallery";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import V2Animations from "@/components/dev/V2Animations";
+import V2Header from "@/components/v2/V2Header";
+import V2Hero from "@/components/v2/V2Hero";
+import V2ScrollEffects from "@/components/v2/V2ScrollEffects";
+import KineticWall from "@/components/v2/KineticWall";
+import V2SelectedWork from "@/components/v2/V2SelectedWork";
+import V2Profile from "@/components/v2/V2Profile";
+import V2Contact from "@/components/v2/V2Contact";
+import V2Footer from "@/components/v2/V2Footer";
 
 export const metadata: Metadata = {
-  title: "Oladimeji Abubakar - Product Designer",
-  description: "Portfolio of Oladimeji Abubakar, Product Designer.",
+  title: "Dimeji A. — Product Designer",
+  description:
+    "Dimeji is a product designer creating clear digital products and systems.",
 };
 
 export default function Home() {
   return (
-    <main className="v2-light min-h-screen bg-background text-primary antialiased selection:bg-accent selection:text-white">
-      <Noise />
-      <Navbar basePath="/" />
-      <V2Animations>
-        <Hero />
-        <WorkGallery />
-        <Projects variant="light" />
-        <About variant="light" />
-        <Contact />
-        <Footer />
-      </V2Animations>
+    <main className="v2-design">
+      <V2ScrollEffects />
+      <V2Header />
+      <V2Hero />
+      <KineticWall />
+      <V2SelectedWork />
+      <V2Profile />
+      <V2Contact />
+      <V2Footer />
     </main>
   );
 }

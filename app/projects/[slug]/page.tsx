@@ -3,9 +3,29 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import "@/app/case-studies.css"; // The new case studies CSS
+
+function extractText(node: any): string {
+  if (node.type === "text") return node.text || "";
+  if (node.content) return node.content.map(extractText).join("");
+  return "";
+}
+
+function getProjectSummary(content: string | null): string {
+  if (!content) return "";
+  try {
+    const doc = JSON.parse(content);
+    if (doc.type === "doc" && doc.content) {
+      for (const node of doc.content) {
+        if (node.type === "paragraph") {
+          const text = extractText(node);
+          if (text.length > 10) return text;
+        }
+      }
+    }
+  } catch (e) {}
+  return "";
+}
 
 // TipTap content renderer
 function RenderContent({ content }: { content: string | null }) {
@@ -13,121 +33,140 @@ function RenderContent({ content }: { content: string | null }) {
 
     try {
         const doc = JSON.parse(content);
-        return <>{renderNode(doc)}</>;
+        if (!doc.content) return null;
+        
+        const blocks: React.ReactNode[] = [];
+        let currentTextBlock: any[] = [];
+        
+        doc.content.forEach((child: any, i: number) => {
+            if (child.type === "image" || child.type === "youtube") {
+                if (currentTextBlock.length > 0) {
+                    blocks.push(
+                        <section key={`text-${i}`} className="text-block">
+                            {currentTextBlock.map((t, j) => renderNode(t, j))}
+                        </section>
+                    );
+                    currentTextBlock = [];
+                }
+                if (child.type === "image") {
+                    blocks.push(
+                        <figure key={`img-${i}`} className="media-block">
+                            <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
+                                <Image
+                                    src={child.attrs?.src as string}
+                                    alt={(child.attrs?.alt as string) || "Project media"}
+                                    width={1400}
+                                    height={1000}
+                                    style={{ width: "100%", height: "auto", display: "block" }}
+                                    quality={95}
+                                />
+                            </div>
+                            {child.attrs?.alt && <figcaption>{child.attrs.alt}</figcaption>}
+                        </figure>
+                    );
+                } else if (child.type === "youtube") {
+                    blocks.push(
+                        <figure key={`yt-${i}`} className="media-block">
+                             <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto", aspectRatio: "16/9" }}>
+                                <iframe
+                                    src={`https://www.youtube.com/embed/${extractYoutubeId(child.attrs?.src as string)}`}
+                                    className="w-full h-full"
+                                    style={{ position: "absolute", top: 0, left: 0 }}
+                                    allowFullScreen
+                                />
+                            </div>
+                        </figure>
+                    );
+                }
+            } else {
+                currentTextBlock.push(child);
+            }
+        });
+
+        if (currentTextBlock.length > 0) {
+            blocks.push(
+                <section key="text-last" className="text-block">
+                    {currentTextBlock.map((t, j) => renderNode(t, j))}
+                </section>
+            );
+        }
+
+        return <>{blocks}</>;
     } catch {
         return null;
     }
 }
 
-function renderNode(node: { type?: string; content?: unknown[]; attrs?: Record<string, unknown>; text?: string; marks?: { type: string; attrs?: Record<string, unknown> }[] }): React.ReactNode {
+function renderNode(node: any, key: number): React.ReactNode {
     if (!node) return null;
-
-    if (node.type === "doc") {
-        return node.content?.map((child, i) => <div key={i}>{renderNode(child as typeof node)}</div>);
-    }
 
     if (node.type === "paragraph") {
         return (
-            <p className="text-lg md:text-xl text-white/70 leading-relaxed mb-6">
-                {node.content?.map((child, i) => <span key={i}>{renderNode(child as typeof node)}</span>)}
+            <p key={key}>
+                {node.content?.map((child: any, i: number) => renderInline(child, i))}
             </p>
         );
     }
 
     if (node.type === "heading") {
-        const level = (node.attrs?.level || 1) as 1 | 2 | 3 | 4 | 5 | 6;
-        const styles: Record<number, string> = {
-            1: "text-4xl md:text-6xl font-black text-white mb-8 mt-20 first:mt-0",
-            2: "text-3xl md:text-4xl font-bold text-white mb-6 mt-16 first:mt-0",
-            3: "text-2xl md:text-3xl font-bold text-white mb-4 mt-12",
-            4: "text-xl md:text-2xl font-semibold text-white mb-3 mt-8",
-            5: "text-lg md:text-xl font-semibold text-white mb-2 mt-6",
-            6: "text-base md:text-lg font-semibold text-white mb-2 mt-4",
-        };
-        const HeadingTag = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+        const level = (node.attrs?.level || 2) as number;
+        // In case-studies.css, h2 is styled. Let's make all headings h2 or h3.
+        const HeadingTag = `h${Math.max(2, level)}` as any;
         return (
-            <HeadingTag className={styles[level]}>
-                {node.content?.map((child, i) => <span key={i}>{renderNode(child as typeof node)}</span>)}
+            <HeadingTag key={key}>
+                {node.content?.map((child: any, i: number) => renderInline(child, i))}
             </HeadingTag>
         );
     }
 
     if (node.type === "bulletList") {
         return (
-            <ul className="list-disc ml-6 space-y-2 text-white/70 text-lg mb-6">
-                {node.content?.map((child, i) => renderNode(child as typeof node))}
+            <ul key={key} style={{ paddingLeft: "20px", marginBottom: "20px" }}>
+                {node.content?.map((child: any, i: number) => <li key={i}>{child.content?.map((c: any, j: number) => renderNode(c, j))}</li>)}
             </ul>
         );
     }
 
     if (node.type === "orderedList") {
         return (
-            <ol className="list-decimal ml-6 space-y-2 text-white/70 text-lg mb-6">
-                {node.content?.map((child, i) => renderNode(child as typeof node))}
+            <ol key={key} style={{ paddingLeft: "20px", marginBottom: "20px" }}>
+                {node.content?.map((child: any, i: number) => <li key={i}>{child.content?.map((c: any, j: number) => renderNode(c, j))}</li>)}
             </ol>
         );
     }
 
-    if (node.type === "listItem") {
-        return <li key={Math.random()}>{node.content?.map((child) => renderNode(child as typeof node))}</li>;
-    }
-
     if (node.type === "blockquote") {
         return (
-            <blockquote className="border-l-2 border-white/20 pl-8 my-12 text-2xl md:text-3xl text-white/60 font-serif italic leading-relaxed">
-                {node.content?.map((child, i) => <div key={i}>{renderNode(child as typeof node)}</div>)}
+            <blockquote key={key} style={{ borderLeft: "2px solid var(--line)", paddingLeft: "20px", color: "var(--muted)", fontStyle: "italic" }}>
+                {node.content?.map((child: any, i: number) => renderNode(child, i))}
             </blockquote>
         );
     }
 
     if (node.type === "codeBlock") {
-        const code = node.content?.map((child) => (child as typeof node).text || "").join("") || "";
+        const code = node.content?.map((child: any) => child.text || "").join("") || "";
         return (
-            <pre className="bg-white/5 rounded-xl p-6 overflow-x-auto my-8">
-                <code className="text-sm text-white/80 font-mono">{code}</code>
+            <pre key={key} style={{ background: "var(--media)", padding: "20px", overflowX: "auto" }}>
+                <code>{code}</code>
             </pre>
         );
     }
 
-    if (node.type === "image") {
-        return (
-            <figure className="my-16 -mx-6 md:-mx-12 lg:-mx-24 relative">
-                <Image
-                    src={node.attrs?.src as string}
-                    alt={node.attrs?.alt as string || ""}
-                    width={1600}
-                    height={900}
-                    className="w-full h-auto rounded-xl"
-                    quality={95}
-                />
-            </figure>
-        );
-    }
+    return null;
+}
 
-    if (node.type === "youtube") {
-        return (
-            <div className="aspect-video rounded-xl overflow-hidden my-12">
-                <iframe
-                    src={`https://www.youtube.com/embed/${extractYoutubeId(node.attrs?.src as string)}`}
-                    className="w-full h-full"
-                    allowFullScreen
-                />
-            </div>
-        );
-    }
-
+function renderInline(node: any, key: number): React.ReactNode {
     if (node.type === "text") {
         let text: React.ReactNode = node.text;
         if (node.marks) {
-            node.marks.forEach((mark) => {
-                if (mark.type === "bold") text = <strong className="font-semibold text-white">{text}</strong>;
-                if (mark.type === "italic") text = <em>{text}</em>;
-                if (mark.type === "link") text = <a href={mark.attrs?.href as string} className="underline underline-offset-4 hover:text-white transition-colors">{text}</a>;
+            node.marks.forEach((mark: any) => {
+                if (mark.type === "bold") text = <strong key={key}>{text}</strong>;
+                if (mark.type === "italic") text = <em key={key}>{text}</em>;
+                if (mark.type === "link") text = <a key={key} href={mark.attrs?.href as string} style={{ textDecoration: "underline" }}>{text}</a>;
             });
         }
-        return text;
+        return <span key={key}>{text}</span>;
     }
-
     return null;
 }
 
@@ -190,141 +229,75 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         notFound();
     }
 
-    // Fetch other projects (excluding current)
+    // Fetch next project for the footer
     const { data: otherProjects } = await supabase
         .from("projects")
-        .select("id, title, slug, category, featured_image")
+        .select("id, title, slug")
         .neq("slug", slug)
         .eq("is_featured", true)
         .order("order", { ascending: true })
-        .limit(2);
+        .limit(1);
+
+    const nextProject = otherProjects?.[0];
+    const themeClass = `${project.slug}-theme`;
 
     return (
-        <main className="v2-light min-h-screen bg-background text-primary selection:bg-accent selection:text-white">
-            <Navbar basePath="/" />
+        <div className="case-study-page">
+            <div className={themeClass} style={{ minHeight: "100vh", position: "relative" }}>
+                <div className="case-progress" data-case-progress aria-hidden="true" style={{ transform: "scaleX(1)" }}></div>
+                <nav className="case-nav scrolled">
+                    <Link className="case-brand" href="/">Dimeji A.</Link>
+                    <Link href="/#work">All work</Link>
+                    {nextProject && (
+                        <Link href={`/projects/${nextProject.slug}`}>Next project <span>→</span></Link>
+                    )}
+                </nav>
 
-            {/* Hero - Intrinsic Height Image with Overlay Text */}
-            <section className="relative w-full">
-                {/* Background Image - Intrinsic Size */}
-                {project.featured_image && (
-                    <div className="relative w-full">
-                        <Image
-                            src={project.featured_image}
-                            alt={project.title}
-                            width={1920}
-                            height={1080}
-                            sizes="100vw"
-                            className="w-full h-auto object-cover bg-zinc-900"
-                            priority
-                            quality={85}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent opacity-60" />
-                    </div>
-                )}
+                <main id="case-main" className="project-page">
+                    <header className="project-header">
+                        <p className="project-label">{project.title} / {project.category} / {project.year}</p>
+                        <h1>{project.title}</h1>
+                        <p className="project-summary">
+                            {getProjectSummary(project.content)}
+                        </p>
+                        {/* We could render project.meta here if we wanted to store that in db */}
+                    </header>
 
-                {/* Back Link - Below Navbar */}
-                <div className="absolute top-24 md:top-28 left-6 md:left-12 z-30">
-                    <Link
-                        href="/#projects"
-                        className="inline-flex items-center gap-2 text-[#ffffff]/80 hover:text-[#ffffff] transition-colors text-sm font-medium bg-[#000000]/30 backdrop-blur-sm px-4 py-2 rounded-full border border-[#ffffff]/10"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        Back
-                    </Link>
-                </div>
-
-                {/* Content Overlay */}
-                <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none">
-                    <div className="w-full max-w-[1800px] mx-auto px-6 md:px-12 pb-8 md:pb-16 pt-32 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent pointer-events-auto">
-                        {/* Title Group */}
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8 items-end">
-                            <div className="lg:col-span-9">
-                                <h1 className="text-[10vw] md:text-[8vw] font-black uppercase tracking-tighter leading-[0.85] text-[#ffffff]">
-                                    {project.title}
-                                </h1>
+                    {project.featured_image && (
+                        <figure className="featured-media">
+                            <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
+                                <Image
+                                    src={project.featured_image}
+                                    alt={project.title}
+                                    width={1400}
+                                    height={1000}
+                                    style={{ width: "100%", height: "auto", display: "block" }}
+                                    priority
+                                    quality={95}
+                                />
                             </div>
+                            <figcaption>{project.title} feature</figcaption>
+                        </figure>
+                    )}
 
-                            {/* Minimal Meta */}
-                            <div className="lg:col-span-3 flex lg:flex-col gap-6 lg:gap-4 text-xs md:text-sm">
-                                <div>
-                                    <span className="block text-[#ffffff]/60 mb-1 font-mono uppercase tracking-widest">Type</span>
-                                    <span className="text-[#ffffff] font-medium">{project.category}</span>
-                                </div>
-                                <div>
-                                    <span className="block text-[#ffffff]/60 mb-1 font-mono uppercase tracking-widest">Year</span>
-                                    <span className="text-[#ffffff] font-medium">{project.year}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                    <article className="case-content">
+                        <RenderContent content={project.content} />
+                    </article>
 
-            {/* Content - Single Column */}
-            <section className="max-w-[900px] mx-auto px-6 md:px-12 py-24 md:py-32">
-                <article>
-                    <RenderContent content={project.content} />
-                </article>
-            </section>
+                    {nextProject && (
+                        <aside className="next-project">
+                            <span>Next project</span>
+                            <Link href={`/projects/${nextProject.slug}`}>{nextProject.title} <i>→</i></Link>
+                        </aside>
+                    )}
+                </main>
 
-            {/* Other Projects */}
-            {otherProjects && otherProjects.length > 0 && (
-                <section className="border-t border-white/10 py-24 md:py-32 bg-black">
-                    <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-                        <div className="flex items-end justify-between mb-16 md:mb-24">
-                            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-[0.9]">
-                                Next Case<br />Studies
-                            </h2>
-                            <Link
-                                href="/#projects"
-                                className="hidden md:flex items-center gap-2 text-white/60 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
-                            >
-                                View All Projects <ArrowUpRight className="w-4 h-4" />
-                            </Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                            {otherProjects.map((p) => (
-                                <Link
-                                    key={p.id}
-                                    href={`/projects/${p.slug}`}
-                                    className="group block"
-                                >
-                                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-white/5">
-                                        {p.featured_image && (
-                                            <Image
-                                                src={p.featured_image}
-                                                alt={p.title}
-                                                fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                                sizes="(max-width: 768px) 100vw, 50vw"
-                                                quality={90}
-                                            />
-                                        )}
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
-                                    </div>
-
-                                    <div className="flex justify-between items-start gap-4">
-                                        <div>
-                                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-accent transition-colors">
-                                                {p.title}
-                                            </h3>
-                                            <span className="text-white/50 text-sm uppercase tracking-widest">
-                                                {p.category}
-                                            </span>
-                                        </div>
-                                        <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-accent group-hover:text-black group-hover:border-transparent transition-all">
-                                            <ArrowUpRight className="w-5 h-5" />
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            <Footer />
-        </main>
+                <footer className="case-footer">
+                    <span>© {new Date().getFullYear()} Dimeji A.</span>
+                    <Link href="/#work">All projects</Link>
+                    <a href="#case-main">Back to top ↑</a>
+                </footer>
+            </div>
+        </div>
     );
 }

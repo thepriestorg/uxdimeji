@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Trash2, Loader2, RefreshCcw } from "lucide-react";
+import { Trash2, Loader2, RefreshCcw, Pencil, X, Check } from "lucide-react";
 import MediaUploader from "@/components/admin/MediaUploader";
 import Image from "next/image";
 import {
@@ -34,12 +34,23 @@ const getBlurUrl = (url: string) => {
     return url.replace('/upload/', '/upload/f_auto,q_10,w_20,e_blur:1000/');
 };
 
+interface ProjectOption {
+    id: string;
+    title: string;
+    slug: string;
+}
+
 export default function GalleryAdmin() {
     const supabase = createClient();
     const [images, setImages] = useState<any[]>([]);
+    const [projects, setProjects] = useState<ProjectOption[]>([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [savingOrder, setSavingOrder] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+    const [editProjectId, setEditProjectId] = useState<string>("");
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -53,29 +64,34 @@ export default function GalleryAdmin() {
         const { data, error } = await supabase
             .from('gallery_images')
             .select('*')
-            // Using display_order for sorting.
-            // If display_order is null, it might mess up, ideally it should have a default.
             .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
 
         if (error) {
             console.error('Error fetching images:', error);
         } else {
-            console.log("Fetched images:", data);
             setImages(data || []);
         }
         setLoading(false);
     };
 
+    const fetchProjects = async () => {
+        const { data } = await supabase
+            .from('projects')
+            .select('id, title, slug')
+            .order('order', { ascending: true });
+        if (data) setProjects(data);
+    };
+
     useEffect(() => {
         fetchImages();
+        fetchProjects();
     }, []);
 
     const handleAddImages = async (urls: string[]) => {
         if (!urls.length) return;
         setUploading(true);
 
-        // Get the current max display_order
         let maxOrder = 0;
         if (images.length > 0) {
             maxOrder = Math.max(...images.map(img => img.display_order || 0));
@@ -115,6 +131,45 @@ export default function GalleryAdmin() {
         }
     };
 
+    const startEditing = (img: any) => {
+        setEditingId(img.id);
+        setEditTitle(img.title || "");
+        setEditDescription(img.description || "");
+        setEditProjectId(img.project_id || "");
+    };
+
+    const cancelEditing = () => {
+        setEditingId(null);
+        setEditTitle("");
+        setEditDescription("");
+        setEditProjectId("");
+    };
+
+    const saveEditing = async () => {
+        if (!editingId) return;
+
+        const { error } = await supabase
+            .from('gallery_images')
+            .update({
+                title: editTitle || null,
+                description: editDescription || null,
+                project_id: editProjectId || null,
+            })
+            .eq('id', editingId);
+
+        if (error) {
+            console.error('Error updating image:', error);
+            alert("Failed to update image");
+        } else {
+            setImages(images.map(img =>
+                img.id === editingId
+                    ? { ...img, title: editTitle || null, description: editDescription || null, project_id: editProjectId || null }
+                    : img
+            ));
+            cancelEditing();
+        }
+    };
+
     const handleDragEnd = async (event: DragEndEvent) => {
         const { active, over } = event;
 
@@ -122,40 +177,18 @@ export default function GalleryAdmin() {
             setImages((items) => {
                 const oldIndex = items.findIndex((item) => item.id === active.id);
                 const newIndex = items.findIndex((item) => item.id === over?.id);
-
                 const newItems = arrayMove(items, oldIndex, newIndex);
-
-                // Persist the new order in the background
                 persistOrder(newItems);
-
                 return newItems;
             });
         }
     };
 
-    // Helper to persist order to Supabase
     const persistOrder = async (newItems: any[]) => {
         setSavingOrder(true);
-        const updates = newItems.map((item, index) => ({
-            id: item.id,
-            display_order: index,
-            // Keep other fields if necessary, or check if upsert works with partials (it usually expects all required fields or PK)
-            // gallery_images table structure matters. If I assume only ID and display_order are needed for update.
-            // Using rpc or simple upsert loop might be safer if we don't know constraints perfectly, 
-            // but loop is slow. Let's try upsert with just ID and display_order.
-            image_url: item.image_url // include this to be safe for upsert if needed, though update is better.
-        }));
-
-        // Supabase update doesn't support bulk update with different values easily in one query without RPC.
-        // We can loop for now since n is likely small (< 100), or use upsert. 
-        // Upsert requires all non-nullable columns if not providing defaults.
-
         try {
-            // Updating one by one is safest for now to avoid complexity, though slower.
-            // Or simpler: create an RPC for this later if it's too slow.
-            // For ~20 images, parallel promises are fine.
-            await Promise.all(updates.map(update =>
-                supabase.from('gallery_images').update({ display_order: update.display_order }).eq('id', update.id)
+            await Promise.all(newItems.map((item, index) =>
+                supabase.from('gallery_images').update({ display_order: index }).eq('id', item.id)
             ));
         } catch (error) {
             console.error("Error saving order:", error);
@@ -170,7 +203,7 @@ export default function GalleryAdmin() {
                     <h1 className="text-3xl font-black text-white tracking-tighter uppercase mb-2">
                         Gallery
                     </h1>
-                    <p className="text-white/60 text-sm">Manage images in the work gallery.</p>
+                    <p className="text-white/60 text-sm">Manage images in the work gallery. Add title and description for the Kinetic Wall display.</p>
                 </div>
                 <div className="flex items-center gap-2">
                     {savingOrder && <span className="text-xs text-white/50 animate-pulse">Saving order...</span>}
@@ -209,39 +242,106 @@ export default function GalleryAdmin() {
                         items={images.map(img => img.id)}
                         strategy={rectSortingStrategy}
                     >
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {images.map((img) => (
                                 <SortableGalleryItem key={img.id} id={img.id}>
-                                    <div className="group relative aspect-square rounded-xl overflow-hidden bg-black border border-white/10 h-full w-full">
-                                        <Image
-                                            src={getOptimizedUrl(img.image_url, 400)}
-                                            alt={`Gallery image`}
-                                            fill
-                                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
-                                            className="object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none" // pointer-events-none prevents dragging the image itself naturally
-                                            loading="lazy"
-                                            placeholder="blur"
-                                            blurDataURL={getBlurUrl(img.image_url)}
-                                        />
+                                    <div className="group relative rounded-xl overflow-hidden bg-black border border-white/10">
+                                        {/* Image */}
+                                        <div className="relative aspect-[4/3]">
+                                            <Image
+                                                src={getOptimizedUrl(img.image_url, 600)}
+                                                alt={img.title || 'Gallery image'}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                className="object-cover pointer-events-none"
+                                                loading="lazy"
+                                                placeholder="blur"
+                                                blurDataURL={getBlurUrl(img.image_url)}
+                                            />
 
-                                        {/* Overlay */}
-                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            {/* Delete button needs to stop propagation to prevent drag start over it? No, sortable handle is usually the whole item. 
-                                                If we click the button, DndKit might start dragging. We should make the button interactive. 
-                                                Using class 'no-drag' if configured? Or simply onPointerDown stop propagation? 
-                                                Actually, button click works fine in dnd-kit usually if not heavily nested or if simple click.
-                                                But let's add onPointerDown={(e) => e.stopPropagation()} to be safe.
-                                            */}
-                                            <button
-                                                onClick={(e) => {
-                                                    // Prevent drag?
-                                                    handleDelete(img.id);
-                                                }}
-                                                onPointerDown={(e) => e.stopPropagation()} // Important to prevent dragging when trying to click delete
-                                                className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-full transform scale-90 group-hover:scale-100 transition-all duration-300 cursor-pointer"
-                                            >
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
+                                            {/* Action buttons overlay */}
+                                            <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => startEditing(img)}
+                                                    onPointerDown={(e) => e.stopPropagation()}
+                                                    className="p-2 bg-white/90 hover:bg-white text-black rounded-full transition-colors cursor-pointer"
+                                                >
+                                                    <Pencil className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(img.id)}
+                                                    onPointerDown={(e) => e.stopPropagation()}
+                                                    className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors cursor-pointer"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Meta info */}
+                                        <div className="p-3 border-t border-white/10">
+                                            {editingId === img.id ? (
+                                                /* ── Editing mode ─── */
+                                                <div className="flex flex-col gap-2" onPointerDown={(e) => e.stopPropagation()}>
+                                                    <input
+                                                        type="text"
+                                                        value={editTitle}
+                                                        onChange={(e) => setEditTitle(e.target.value)}
+                                                        placeholder="Title (e.g., Financial overview)"
+                                                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-accent"
+                                                    />
+                                                    <textarea
+                                                        value={editDescription}
+                                                        onChange={(e) => setEditDescription(e.target.value)}
+                                                        placeholder="Description"
+                                                        rows={2}
+                                                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-accent resize-none"
+                                                    />
+                                                    <select
+                                                        value={editProjectId}
+                                                        onChange={(e) => setEditProjectId(e.target.value)}
+                                                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-accent"
+                                                    >
+                                                        <option value="">No linked project</option>
+                                                        {projects.map((p) => (
+                                                            <option key={p.id} value={p.id}>
+                                                                {p.title}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="flex gap-2 justify-end">
+                                                        <button
+                                                            onClick={cancelEditing}
+                                                            className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                                                        >
+                                                            <X className="w-4 h-4 text-white/60" />
+                                                        </button>
+                                                        <button
+                                                            onClick={saveEditing}
+                                                            className="p-2 bg-accent hover:bg-accent/80 rounded-lg transition-colors cursor-pointer"
+                                                        >
+                                                            <Check className="w-4 h-4 text-white" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                /* ── Display mode ─── */
+                                                <div className="min-h-[40px]">
+                                                    <p className="text-white text-sm font-medium truncate">
+                                                        {img.title || <span className="text-white/25 italic">No title</span>}
+                                                    </p>
+                                                    {img.description && (
+                                                        <p className="text-white/50 text-xs mt-1 line-clamp-2">
+                                                            {img.description}
+                                                        </p>
+                                                    )}
+                                                    {img.project_id && (
+                                                        <span className="inline-block mt-1.5 px-2 py-0.5 bg-accent/20 text-accent text-[10px] rounded-full font-mono uppercase tracking-wider">
+                                                            Linked to project
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </SortableGalleryItem>

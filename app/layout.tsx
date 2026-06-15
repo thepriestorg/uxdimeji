@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { cn } from "@/lib/utils"; // We'll need to create this util or remove if not using yet
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
+const manrope = localFont({
+  src: "../public/assets/Manrope-Variable.ttf",
+  variable: "--font-manrope",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://uxdimeji.com'),
@@ -42,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${jakarta.variable} ${playfair.variable} font-sans bg-background text-secondary antialiased`}>
+      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} font-sans bg-background text-secondary antialiased`}>
         {children}
       </body>
     </html>
