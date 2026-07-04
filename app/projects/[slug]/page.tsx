@@ -17,7 +17,7 @@ function RenderContent({ content }: { content: string | null }) {
         let currentTextBlock: any[] = [];
         
         doc.content.forEach((child: any, i: number) => {
-            if (child.type === "image" || child.type === "youtube") {
+            if (child.type === "image" || child.type === "figure" || child.type === "youtube") {
                 if (currentTextBlock.length > 0) {
                     blocks.push(
                         <section key={`text-${i}`} className="text-block">
@@ -26,7 +26,24 @@ function RenderContent({ content }: { content: string | null }) {
                     );
                     currentTextBlock = [];
                 }
-                if (child.type === "image") {
+                if (child.type === "figure") {
+                    // Custom captioned figure node
+                    blocks.push(
+                        <figure key={`fig-${i}`} className="media-block">
+                            <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
+                                <Image
+                                    src={child.attrs?.src as string}
+                                    alt={(child.attrs?.alt as string) || "Project media"}
+                                    width={1400}
+                                    height={1000}
+                                    style={{ width: "100%", height: "auto", display: "block" }}
+                                    quality={95}
+                                />
+                            </div>
+                            {child.attrs?.caption && <figcaption>{child.attrs.caption}</figcaption>}
+                        </figure>
+                    );
+                } else if (child.type === "image") {
                     blocks.push(
                         <figure key={`img-${i}`} className="media-block">
                             <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
@@ -130,6 +147,10 @@ function renderNode(node: any, key: number): React.ReactNode {
         );
     }
 
+    if (node.type === "horizontalRule") {
+        return <hr key={key} style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.1)", margin: "2rem 0" }} />;
+    }
+
     return null;
 }
 
@@ -138,9 +159,12 @@ function renderInline(node: any, key: number): React.ReactNode {
         let text: React.ReactNode = node.text;
         if (node.marks) {
             node.marks.forEach((mark: any) => {
-                if (mark.type === "bold") text = <strong key={key}>{text}</strong>;
-                if (mark.type === "italic") text = <em key={key}>{text}</em>;
-                if (mark.type === "link") text = <a key={key} href={mark.attrs?.href as string} style={{ textDecoration: "underline" }}>{text}</a>;
+                if (mark.type === "bold")      text = <strong key={key}>{text}</strong>;
+                if (mark.type === "italic")    text = <em key={key}>{text}</em>;
+                if (mark.type === "underline") text = <u key={key}>{text}</u>;
+                if (mark.type === "strike")    text = <s key={key}>{text}</s>;
+                if (mark.type === "code")      text = <code key={key}>{text}</code>;
+                if (mark.type === "link")      text = <a key={key} href={mark.attrs?.href as string} target="_blank" rel="noopener noreferrer">{text}</a>;
             });
         }
         return <span key={key}>{text}</span>;
