@@ -26,20 +26,12 @@ export default function NewProjectPage() {
         order: 0,
     });
 
-    const generateSlug = (title: string) => {
-        return title
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/(^-|-$)/g, "");
-    };
+    const generateSlug = (title: string) =>
+        title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const title = e.target.value;
-        setFormData((prev) => ({
-            ...prev,
-            title,
-            slug: generateSlug(title),
-        }));
+        setFormData((prev) => ({ ...prev, title, slug: generateSlug(title) }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -53,7 +45,8 @@ export default function NewProjectPage() {
             setError(error.message);
             setSaving(false);
         } else {
-            router.push("/admin/projects");
+            // Stay in editor — go to the edit page for the newly created project
+            router.push(`/admin/projects/${formData.slug}`);
             router.refresh();
         }
     };

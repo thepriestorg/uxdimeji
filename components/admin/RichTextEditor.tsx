@@ -327,6 +327,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     const [youtubeUrl, setYoutubeUrl] = useState("");
     const [uploading, setUploading] = useState(false);
     const [uploadQueue, setUploadQueue] = useState<{ file: File; preview: string; caption: string }[]>([]);
+    const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const editor = useEditor({
@@ -581,10 +582,29 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
 
                         {/* Drop zone */}
                         <div
-                            className="border-2 border-dashed border-white/10 hover:border-accent/50 rounded-xl p-6 text-center cursor-pointer transition-colors mb-4"
+                            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all mb-4 ${
+                                dragOver
+                                    ? "border-accent bg-accent/10 scale-[0.99]"
+                                    : "border-white/10 hover:border-accent/50"
+                            }`}
                             onClick={() => fileInputRef.current?.click()}
+                            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                            onDragEnter={(e) => { e.preventDefault(); setDragOver(true); }}
+                            onDragLeave={() => setDragOver(false)}
+                            onDrop={(e) => {
+                                e.preventDefault();
+                                setDragOver(false);
+                                const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+                                if (files.length > 0) {
+                                    setUploadQueue((prev) => [...prev, ...files.map((f) => ({
+                                        file: f,
+                                        preview: URL.createObjectURL(f),
+                                        caption: "",
+                                    }))]);
+                                }
+                            }}
                         >
-                            <Upload className="w-7 h-7 text-white/30 mx-auto mb-2" />
+                            <Upload className={`w-7 h-7 mx-auto mb-2 transition-colors ${dragOver ? "text-accent" : "text-white/30"}`} />
                             <p className="text-white/50 text-sm">Click or drag to add images <span className="text-accent font-medium">(multiple OK)</span></p>
                             <p className="text-white/25 text-xs mt-1">JPG, PNG, GIF, WebP</p>
                         </div>
