@@ -212,6 +212,18 @@ export default function V2ScrollEffects() {
     window.addEventListener("load", refresh, { once: true });
     const refreshTimer = window.setTimeout(refresh, 1200);
 
+    // Fix: when switching back to this tab the browser may have paused
+    // scroll-position updates, causing ScrollTrigger to mis-calculate which
+    // animations have already fired (they haven't — they're still hidden).
+    // Re-measuring on visibility restore ensures every "once: true" trigger
+    // that hasn't fired yet gets a fresh chance to do so.
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        ScrollTrigger.refresh();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     document.querySelectorAll("[data-year]").forEach((element) => {
       element.textContent = String(new Date().getFullYear());
     });
@@ -221,6 +233,7 @@ export default function V2ScrollEffects() {
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("portfolio:layout", refresh);
       window.removeEventListener("load", refresh);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       context.revert();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
