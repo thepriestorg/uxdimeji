@@ -10,9 +10,12 @@ interface MediaUploaderProps {
     onBatchComplete?: (urls: string[]) => void;
     label?: string;
     multiple?: boolean;
+    acceptVideo?: boolean;
 }
 
-export default function MediaUploader({ value, onChange, onBatchComplete, label = "Featured Image", multiple = false }: MediaUploaderProps) {
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
+
+export default function MediaUploader({ value, onChange, onBatchComplete, label = "Featured Image", multiple = false, acceptVideo = false }: MediaUploaderProps) {
     const [uploading, setUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +57,7 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setDragOver(false);
-        const droppedFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+        const droppedFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/") || (acceptVideo && f.type.startsWith("video/")));
         if (droppedFiles.length > 0) {
             if (!multiple && droppedFiles.length > 1) {
                 // If not multiple, just take the first
@@ -80,7 +83,11 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
 
             {!multiple && value ? (
                 <div className="relative rounded-2xl overflow-hidden group">
-                    <img src={value} alt="Preview" className="w-full h-48 object-cover" />
+                    {isVideoUrl(value) ? (
+                        <video src={value} className="w-full h-48 object-cover" muted autoPlay loop playsInline />
+                    ) : (
+                        <img src={value} alt="Preview" className="w-full h-48 object-cover" />
+                    )}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <button
                             type="button"
@@ -117,7 +124,7 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
                         <>
                             <Upload className="w-8 h-8 text-white/30 mx-auto mb-2" />
                             <p className="text-white/50 text-sm">
-                                {multiple ? "Drop images here or click to upload" : "Drop image here or click to upload"}
+                                {multiple ? "Drop images here or click to upload" : acceptVideo ? "Drop an image or video here" : "Drop image here or click to upload"}
                             </p>
                         </>
                     )}
@@ -127,7 +134,7 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
             <input
                 ref={inputRef}
                 type="file"
-                accept="image/*"
+                accept={acceptVideo ? "image/*,video/mp4,video/webm,video/quicktime" : "image/*"}
                 multiple={multiple}
                 onChange={handleFileSelect}
                 className="hidden"

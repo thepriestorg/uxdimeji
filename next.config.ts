@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Landing-page screen recordings are uploaded through the admin panel.
+    proxyClientMaxBodySize: '100mb',
+  },
   images: {
     remotePatterns: [
       {

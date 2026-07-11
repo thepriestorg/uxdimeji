@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /* ── Types ──────────────────────────────────────── */
 interface Project {
@@ -32,9 +32,20 @@ interface VibeProject {
   is_featured?: boolean;
 }
 
+interface LandingPage {
+  id: string;
+  title: string;
+  category: string | null;
+  description: string | null;
+  image_url: string;
+  live_url: string | null;
+  figma_url: string | null;
+}
+
 interface V2SelectedWorkClientProps {
   projects: Project[];
   vibeProjects: VibeProject[];
+  landingPages: LandingPage[];
 }
 
 /* ── Helpers ────────────────────────────────────── */
@@ -42,6 +53,25 @@ const getOptimizedUrl = (url: string, width: number = 1200) => {
   if (!url || !url.includes("cloudinary.com")) return url;
   return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width},dpr_auto/`);
 };
+
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
+const getOptimizedVideoUrl = (url: string) =>
+  url.includes("cloudinary.com") && url.includes("/video/upload/")
+    ? url.replace("/video/upload/", "/video/upload/q_auto:eco/")
+    : url;
+const getVideoPoster = (url: string) => {
+  if (!url.includes("cloudinary.com") || !url.includes("/video/upload/")) return undefined;
+  return url
+    .replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/")
+    .replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2");
+};
+// Only existing V2 design-system colors—no gallery-only palette.
+const landingCardThemes = [
+  { background: "#355f52", foreground: "#f4f3ef" },
+  { background: "#d15632", foreground: "#f4f3ef" },
+  { background: "#e8e8e3", foreground: "#181816" },
+  { background: "#f4f3ef", foreground: "#181816" },
+];
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -98,7 +128,10 @@ const getProjectSummary = (contentJsonString?: string): string => {
 export default function V2SelectedWorkClient({
   projects,
   vibeProjects,
+  landingPages,
 }: V2SelectedWorkClientProps) {
+  const [activeCollection, setActiveCollection] = useState<"projects" | "landing">("projects");
+  const [selectedLanding, setSelectedLanding] = useState<LandingPage | null>(null);
   const hasDesignProjects = projects.length > 0;
   const hasVibeProjects = vibeProjects.length > 0;
 
@@ -123,7 +156,18 @@ export default function V2SelectedWorkClient({
     };
   }, [projects, vibeProjects]);
 
-  if (!hasDesignProjects && !hasVibeProjects) return null;
+  useEffect(() => {
+    if (!selectedLanding) return;
+    const close = (event: KeyboardEvent) => event.key === "Escape" && setSelectedLanding(null);
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", close);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", close);
+    };
+  }, [selectedLanding]);
+
+  if (!hasDesignProjects && !hasVibeProjects && !landingPages.length) return null;
 
   return (
     <section className="selected-work" id="work">
@@ -135,10 +179,29 @@ export default function V2SelectedWorkClient({
         </div>
       </header>
 
+      <div className="work-tabs" role="tablist" aria-label="Work collections">
+        <button
+          role="tab"
+          aria-selected={activeCollection === "projects"}
+          className={activeCollection === "projects" ? "active" : ""}
+          onClick={() => setActiveCollection("projects")}
+        >
+          <span>01</span> Projects + live work
+        </button>
+        <button
+          role="tab"
+          aria-selected={activeCollection === "landing"}
+          className={activeCollection === "landing" ? "active" : ""}
+          onClick={() => setActiveCollection("landing")}
+        >
+          <span>02</span> Landing pages <i>{landingPages.length}</i>
+        </button>
+      </div>
+
       {/* ── Design projects ─────────────────────────── */}
-      <div className="projects-grid">
+      {activeCollection === "projects" && <div className="projects-grid work-panel" role="tabpanel">
       {projects.map((project, index) => (
-        <article key={project.id} className="project-row reveal">
+        <article key={project.id} className="project-row">
           <Link
             className={`project-visual visual-${project.slug}`}
             href={`/projects/${project.slug}`}
@@ -201,7 +264,7 @@ export default function V2SelectedWorkClient({
         );
 
         return (
-          <article key={project.id} className="project-row reveal">
+          <article key={project.id} className="project-row">
             {/* Visual */}
             {project.url ? (
               <a
@@ -314,7 +377,77 @@ export default function V2SelectedWorkClient({
           </article>
         );
       })}
-      </div>
+      </div>}
+
+      {activeCollection === "landing" && (
+        <div className="landing-work-panel work-panel" role="tabpanel">
+          <div className="landing-work-note"><span>Landing page reel</span><p>Sharp pages, built to make one idea impossible to miss.</p></div>
+          <div className="landing-gallery-grid">
+            {[0, 1].map((column) => (
+              <div className={`landing-gallery-column column-${column + 1}`} key={column}>
+                {landingPages.map((page, index) => ({ page, index })).filter(({ index }) => index % 2 === column).map(({ page, index }) => (
+                  <article
+                    className="landing-gallery-card"
+                    key={page.id}
+                    style={{
+                      backgroundColor: landingCardThemes[index % landingCardThemes.length].background,
+                      color: landingCardThemes[index % landingCardThemes.length].foreground,
+                      order: index,
+                    }}
+                  >
+                    <button className="landing-gallery-image" onClick={() => setSelectedLanding(page)} aria-label={`Open ${page.title}`}>
+                      {isVideoUrl(page.image_url) ? (
+                        <video
+                          src={getOptimizedVideoUrl(page.image_url)}
+                          poster={getVideoPoster(page.image_url)}
+                          muted autoPlay loop playsInline
+                          preload={index < 2 ? "auto" : "metadata"}
+                          onLoadedMetadata={(event) => {
+                            const video = event.currentTarget;
+                            if (video.videoWidth && video.videoHeight) video.parentElement?.style.setProperty("--reel-ratio", `${video.videoWidth} / ${video.videoHeight}`);
+                          }}
+                        />
+                      ) : (
+                        <Image src={getOptimizedUrl(page.image_url, 1400)} alt={`${page.title} landing page`} fill sizes="(max-width: 760px) calc(100vw - 36px), 46vw" quality={90} />
+                      )}
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <div className="landing-card-overlay"><b>Play full view</b><i>↗</i></div>
+                    </button>
+                    <div className="landing-gallery-meta">
+                      <div><p>{page.category || "Landing page"}</p><h3>{page.title}</h3></div>
+                      {page.live_url && <a className="landing-card-live" href={page.live_url} target="_blank" rel="noreferrer">Visit live <span>↗</span></a>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ))}
+            {!landingPages.length && <p className="landing-empty">Landing-page collection coming soon.</p>}
+          </div>
+        </div>
+      )}
+
+      {selectedLanding && (
+        <div className="landing-modal" role="dialog" aria-modal="true" aria-label={selectedLanding.title} onMouseDown={(event) => event.target === event.currentTarget && setSelectedLanding(null)}>
+          <div className="landing-modal-shell">
+            <button className="landing-modal-close" onClick={() => setSelectedLanding(null)} aria-label="Close">×</button>
+            <div className="landing-modal-media">
+              {isVideoUrl(selectedLanding.image_url) ? (
+                <video src={getOptimizedVideoUrl(selectedLanding.image_url)} poster={getVideoPoster(selectedLanding.image_url)} autoPlay loop muted playsInline controls preload="auto" />
+              ) : (
+                <Image src={getOptimizedUrl(selectedLanding.image_url, 1800)} alt={selectedLanding.title} fill sizes="90vw" quality={95} />
+              )}
+            </div>
+            <div className="landing-modal-info">
+              <div><span>{selectedLanding.category || "Landing page"}</span><h3>{selectedLanding.title}</h3></div>
+              {selectedLanding.description && <p>{selectedLanding.description}</p>}
+              <nav>
+                {selectedLanding.live_url && <a className="landing-live-link" href={selectedLanding.live_url} target="_blank" rel="noreferrer">Visit live site <b>↗</b></a>}
+                {selectedLanding.figma_url && <a className="landing-figma-link" href={selectedLanding.figma_url} target="_blank" rel="noreferrer">Figma ↗</a>}
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
