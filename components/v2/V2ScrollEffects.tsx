@@ -210,16 +210,66 @@ export default function V2ScrollEffects() {
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("portfolio:layout", refresh);
     window.addEventListener("load", refresh, { once: true });
-    const refreshTimer = window.setTimeout(refresh, 1200);
 
-    // Fix: when switching back to this tab the browser may have paused
-    // scroll-position updates, causing ScrollTrigger to mis-calculate which
-    // animations have already fired (they haven't — they're still hidden).
-    // Re-measuring on visibility restore ensures every "once: true" trigger
-    // that hasn't fired yet gets a fresh chance to do so.
+    // ─── Repair Pass ────────────────────────────────────────────────────────
+    // When a page loads in a background tab, browsers suspend layout/paint, so
+    // ScrollTrigger measures elements at wrong positions. With `once: true`,
+    // the trigger is permanently destroyed after firing — even if it fired with
+    // bad data and left the element stuck at opacity:0 / visibility:hidden.
+    //
+    // After every refresh we scan ALL GSAP-animated targets. If an element
+    // still has GSAP's inline opacity<0.5 or visibility:hidden, we know the
+    // animation never completed properly, so we force it in.
+    // This is the guaranteed safety net that makes the animations bulletproof.
+    const REPAIR_SELECTORS = [
+      ".section-intro .eyebrow",
+      ".section-intro h2",
+      ".project-visual",
+      ".project-copy > *",
+      ".profile-statement",
+      ".profile-detail p",
+      ".practice-list > div",
+      ".contact .eyebrow",
+      ".contact-main h2",
+      ".contact-main a",
+      ".contact-foot",
+      ".site-footer > *",
+    ];
+
+    const runRepairPass = () => {
+      REPAIR_SELECTORS.forEach((sel) => {
+        document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
+          const opacity = parseFloat(el.style.opacity ?? "");
+          const isHidden =
+            el.style.visibility === "hidden" ||
+            (!isNaN(opacity) && opacity < 0.5);
+          if (isHidden) {
+            gsap.to(el, {
+              autoAlpha: 1,
+              y: 0,
+              x: 0,
+              rotate: 0,
+              clipPath: "inset(0 0 0% 0)",
+              duration: 0.55,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+        });
+      });
+    };
+
+    // Run after initial settle — catches pages that loaded while tab was hidden
+    const refreshTimer = window.setTimeout(() => {
+      ScrollTrigger.refresh();
+      window.setTimeout(runRepairPass, 400);
+    }, 1200);
+
+    // Run every time the user switches back to this tab
     const onVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         ScrollTrigger.refresh();
+        window.setTimeout(runRepairPass, 400);
       }
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
