@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ArrowUpRight, X } from "lucide-react";
 
 /* ── Types ──────────────────────────────────────── */
 interface Project {
@@ -411,11 +412,11 @@ export default function V2SelectedWorkClient({
                         <Image src={getOptimizedUrl(page.image_url, 1400)} alt={`${page.title} landing page`} fill sizes="(max-width: 760px) calc(100vw - 36px), 46vw" quality={90} />
                       )}
                       <span>{String(index + 1).padStart(2, "0")}</span>
-                      <div className="landing-card-overlay"><b>Play full view</b><i>↗</i></div>
+                      <div className="landing-card-overlay"><b>Play full view</b><ArrowUpRight aria-hidden="true" /></div>
                     </button>
                     <div className="landing-gallery-meta">
                       <div><p>{page.category || "Landing page"}</p><h3>{page.title}</h3></div>
-                      {page.live_url && <a className="landing-card-live" href={page.live_url} target="_blank" rel="noreferrer">Visit live <span>↗</span></a>}
+                      {page.live_url && <a className="landing-card-live" href={page.live_url} target="_blank" rel="noreferrer">Visit live <ArrowUpRight aria-hidden="true" /></a>}
                     </div>
                   </article>
                 ))}
@@ -429,7 +430,7 @@ export default function V2SelectedWorkClient({
       {selectedLanding && (
         <div className="landing-modal" role="dialog" aria-modal="true" aria-label={selectedLanding.title} onMouseDown={(event) => event.target === event.currentTarget && setSelectedLanding(null)}>
           <div className="landing-modal-shell">
-            <button className="landing-modal-close" onClick={() => setSelectedLanding(null)} aria-label="Close">×</button>
+            <button className="landing-modal-close" onClick={() => setSelectedLanding(null)} aria-label="Close"><X aria-hidden="true" /></button>
             <div className="landing-modal-media">
               {isVideoUrl(selectedLanding.image_url) ? (
                 <video src={getOptimizedVideoUrl(selectedLanding.image_url)} poster={getVideoPoster(selectedLanding.image_url)} autoPlay loop muted playsInline controls preload="auto" />
@@ -441,8 +442,8 @@ export default function V2SelectedWorkClient({
               <div><span>{selectedLanding.category || "Landing page"}</span><h3>{selectedLanding.title}</h3></div>
               {selectedLanding.description && <p>{selectedLanding.description}</p>}
               <nav>
-                {selectedLanding.live_url && <a className="landing-live-link" href={selectedLanding.live_url} target="_blank" rel="noreferrer">Visit live site <b>↗</b></a>}
-                {selectedLanding.figma_url && <a className="landing-figma-link" href={selectedLanding.figma_url} target="_blank" rel="noreferrer">Figma ↗</a>}
+                {selectedLanding.live_url && <a className="landing-live-link" href={selectedLanding.live_url} target="_blank" rel="noreferrer">Visit live site <ArrowUpRight aria-hidden="true" /></a>}
+                {selectedLanding.figma_url && <a className="landing-figma-link" href={selectedLanding.figma_url} target="_blank" rel="noreferrer">Figma <ArrowUpRight aria-hidden="true" /></a>}
               </nav>
             </div>
           </div>

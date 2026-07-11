@@ -377,7 +377,8 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .landing-work-note p { max-width: 680px; font-size: clamp(24px, 3.4vw, 52px); line-height: 1.05; letter-spacing: -.045em; }
 .v2-design .landing-card-overlay { position: absolute; inset: auto 0 0; padding: 42px 18px 16px; color: white; background: linear-gradient(transparent,rgba(0,0,0,.72)); opacity: 0; transform: translateY(8px); transition: .3s ease; display: flex; align-items: end; justify-content: space-between; text-align: left; }
 .v2-design .landing-card-overlay b { font: 10px/1 monospace; text-transform: uppercase; letter-spacing: .12em; }
-.v2-design .landing-card-overlay i { font: normal 22px/1 sans-serif; }
+.v2-design .landing-card-overlay svg { width: 22px; height: 22px; stroke-width: 1.5; transition: transform .25s ease; }
+.v2-design .landing-gallery-card:hover .landing-card-overlay svg { transform: translate(2px, -2px); }
 .v2-design .landing-gallery-card:hover .landing-card-overlay { opacity: 1; transform: none; }
 .v2-design .landing-empty { grid-column: 1/-1; padding: 70px 0; opacity: .5; }
 .v2-design .landing-gallery {
@@ -445,11 +446,13 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .landing-gallery-meta nav { display: flex; gap: 22px; margin-top: 20px; }
 .v2-design .landing-gallery-meta a { font-size: 13px; font-weight: 700; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
 .v2-design .landing-card-live { flex: 0 0 auto; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 18px; white-space: nowrap; }
-.v2-design .landing-card-live span { font-size: 18px; font-weight: 400; }
+.v2-design .landing-card-live svg { width: 17px; height: 17px; stroke-width: 1.6; transition: transform .25s ease; }
+.v2-design .landing-card-live:hover svg { transform: translate(2px, -2px); }
 
 .v2-design .landing-modal { position: fixed; inset: 0; z-index: 1000; padding: clamp(10px, 2vw, 28px); display: grid; place-items: center; background: rgba(5,5,5,.86); backdrop-filter: blur(18px); animation: modalFade .25s ease both; }
 .v2-design .landing-modal-shell { position: relative; width: min(1380px, 100%); max-height: calc(100vh - 30px); overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 30px 100px rgba(0,0,0,.5); font-family: inherit; }
 .v2-design .landing-modal-close { position: absolute; z-index: 4; top: 14px; right: 14px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper); font: 25px/1 sans-serif; }
+.v2-design .landing-modal-close svg { width: 19px; height: 19px; stroke-width: 1.6; }
 .v2-design .landing-modal-media { position: relative; width: 100%; aspect-ratio: 16/9; max-height: 72vh; overflow: hidden; background: #090909; }
 .v2-design .landing-modal-media video { width: 100%; height: 100%; object-fit: contain; }
 .v2-design .landing-modal-media img { object-fit: contain; }
@@ -459,8 +462,9 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .landing-modal-info p { max-width: 520px; line-height: 1.55; opacity: .65; }
 .v2-design .landing-modal-info nav { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
 .v2-design .landing-live-link { padding: 15px 18px; background: var(--accent); color: var(--paper); font-size: 13px; font-weight: 700; }
-.v2-design .landing-live-link b { margin-left: 22px; }
-.v2-design .landing-figma-link { font-size: 12px; padding: 12px; }
+.v2-design .landing-live-link svg { width: 17px; height: 17px; margin-left: 22px; stroke-width: 1.6; }
+.v2-design .landing-figma-link { font-size: 12px; padding: 12px; display: inline-flex; align-items: center; gap: 8px; }
+.v2-design .landing-figma-link svg { width: 15px; height: 15px; stroke-width: 1.6; }
 @keyframes modalFade { from { opacity: 0; } }
 
 @media (max-width: 760px) {

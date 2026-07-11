@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Eye, EyeOff, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Eye, EyeOff, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import MediaUploader from "@/components/admin/MediaUploader";
 import { createClient } from "@/lib/supabase/client";
 
@@ -139,8 +139,8 @@ export default function LandingPagesAdmin() {
                 <p className="text-accent text-[10px] uppercase tracking-widest">{page.category || "Landing page"}</p>
                 <h3 className="text-white font-bold text-lg mt-1 truncate">{page.title}</h3>
                 <div className="flex gap-2 mt-4">
-                  <button onClick={() => move(index, -1)} disabled={index === 0} className="admin-icon">↑</button>
-                  <button onClick={() => move(index, 1)} disabled={index === pages.length - 1} className="admin-icon">↓</button>
+                  <button onClick={() => move(index, -1)} disabled={index === 0} className="admin-icon" aria-label="Move up"><ChevronUp size={16} /></button>
+                  <button onClick={() => move(index, 1)} disabled={index === pages.length - 1} className="admin-icon" aria-label="Move down"><ChevronDown size={16} /></button>
                   <button onClick={() => toggleVisibility(page)} className="admin-icon" title="Toggle visibility">{page.is_visible ? <Eye size={16} /> : <EyeOff size={16} />}</button>
                   <button onClick={() => edit(page)} className="admin-icon ml-auto"><Pencil size={16} /></button>
                   <button onClick={() => remove(page.id)} className="admin-icon text-red-400"><Trash2 size={16} /></button>
