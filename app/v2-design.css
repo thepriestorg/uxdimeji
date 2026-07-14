@@ -136,18 +136,35 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .vibe-status span { font-size: 8px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 
 /* Profile */
-.v2-design .profile { padding: clamp(80px, 8vw, 110px) var(--gutter); background: #e9e8e3; }
-.v2-design .profile-grid { margin-top: clamp(52px, 5vw, 72px); padding-top: 28px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1.15fr .85fr; gap: 10vw; }
-.v2-design .profile-statement { max-width: 770px; margin: 0; font-size: clamp(34px, 4.1vw, 62px); font-weight: 430; line-height: 1.12; letter-spacing: -.05em; }
-.v2-design .profile-detail { display: grid; gap: 22px; }
-.v2-design .profile-detail p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
-.v2-design .practice-list { margin-top: clamp(64px, 6vw, 84px); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); }
-.v2-design .practice-list > div { min-height: 270px; padding: 23px; border-right: 1px solid var(--line); display: flex; flex-direction: column; }
-.v2-design .practice-list > div:first-child { padding-left: 0; }
-.v2-design .practice-list > div:last-child { border-right: 0; }
-.v2-design .practice-list span { color: var(--muted); font-size: 8px; }
-.v2-design .practice-list h3 { margin: auto 0 13px; font-size: 25px; font-weight: 520; letter-spacing: -.04em; }
-.v2-design .practice-list p { min-height: 58px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.v2-design .profile { position: relative; overflow: hidden; padding: clamp(82px, 7vw, 112px) var(--gutter); background: #f0efe9; }
+.v2-design .profile::before { content: ""; position: absolute; width: 48vw; aspect-ratio: 1; right: -22vw; top: 5%; border-radius: 50%; background: radial-gradient(circle, rgba(209,86,50,.075), transparent 68%); pointer-events: none; }
+.v2-design .profile-header { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.v2-design .profile-grid { margin-top: clamp(46px, 5vw, 72px); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .62fr); gap: clamp(45px, 8vw, 125px); align-items: start; }
+.v2-design .profile-statement { max-width: 780px; margin: 0; font-size: clamp(36px, 4.1vw, 62px); font-weight: 430; line-height: 1.07; letter-spacing: -.055em; }
+.v2-design .profile-signature { margin: 24px 0 0; color: var(--muted); font-size: 8px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; }
+.v2-design .profile-detail { padding-left: 22px; border-left: 1px solid var(--line); display: grid; gap: 18px; }
+.v2-design .profile-detail p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.v2-design .profile-journey { position: relative; min-height: 190px; margin-top: clamp(50px, 5vw, 72px); padding-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(30px, 6vw, 100px); }
+.v2-design .profile-journey svg { position: absolute; inset: 0; width: 100%; height: 100px; overflow: visible; }
+.v2-design .profile-journey path { fill: none; stroke: rgba(24,24,22,.2); stroke-width: 1; stroke-dasharray: 4 7; vector-effect: non-scaling-stroke; }
+.v2-design .journey-point { position: relative; padding-top: 22px; }
+.v2-design .journey-point:nth-of-type(2) { transform: translateY(28px); }
+.v2-design .journey-point:nth-of-type(3) { transform: translateY(4px); }
+.v2-design .journey-point::before { content: ""; position: absolute; left: 0; top: 0; width: 7px; height: 7px; border-radius: 50%; background: #a7a59e; }
+.v2-design .journey-point.is-current::before { background: var(--signal); box-shadow: 0 0 0 8px rgba(209,86,50,.12), 0 0 24px 8px rgba(209,86,50,.28); animation: current-node-pulse 2.4s ease-in-out infinite; }
+@keyframes current-node-pulse { 50% { box-shadow: 0 0 0 11px rgba(209,86,50,.07), 0 0 32px 10px rgba(209,86,50,.34); } }
+.v2-design .journey-point span { display: block; margin-bottom: 10px; color: var(--muted); font-size: 8px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+.v2-design .journey-point strong { display: block; font-size: clamp(27px, 3vw, 44px); font-weight: 470; line-height: .95; letter-spacing: -.055em; }
+.v2-design .journey-point time { display: block; margin-top: 9px; color: var(--ink); font-size: 8px; font-weight: 680; letter-spacing: .06em; text-transform: uppercase; }
+.v2-design .journey-point p { max-width: 250px; margin: 7px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.v2-design .practice-section { margin-top: clamp(86px, 8vw, 120px); }
+.v2-design .practice-heading { padding-bottom: 18px; border-bottom: 1px solid var(--ink); display: grid; grid-template-columns: .42fr 1.58fr; gap: 5vw; }
+.v2-design .practice-heading > p:last-child { max-width: 430px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.v2-design .practice-list { display: block; }
+.v2-design .practice-list > div { min-height: 128px; padding: 23px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(54px, .25fr) minmax(230px, .72fr) minmax(260px, 1fr); gap: clamp(20px, 4vw, 70px); align-items: center; }
+.v2-design .practice-list span { color: var(--signal); font-size: 9px; font-weight: 700; }
+.v2-design .practice-list h3 { margin: 0; font-size: clamp(27px, 2.7vw, 42px); font-weight: 500; line-height: 1; letter-spacing: -.05em; }
+.v2-design .practice-list p { max-width: 460px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
 
 /* Contact */
 .v2-design .contact { padding: 135px var(--gutter) 42px; color: #fff; background: #242a27; }
@@ -214,7 +231,8 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .projects-grid { grid-template-columns: 1fr; row-gap: 0; }
   .v2-design .project-row { padding: 65px 0; gap: 45px; }
   .v2-design .project-copy { min-height: 0; }
-  .v2-design .profile-grid { grid-template-columns: 1fr; gap: 55px; }
+  .v2-design .profile-grid { grid-template-columns: 1fr; gap: 38px; }
+  .v2-design .profile-detail { max-width: 620px; margin-left: auto; }
 }
 
 @media (max-width: 700px) {
@@ -243,12 +261,21 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .project-copy h3 { font-size: 58px; }
   .v2-design .project-copy h3.project-title-long { font-size: 50px; }
   .v2-design .project-lead { font-size: 15px; }
-  .v2-design .profile { padding-top: 72px; padding-bottom: 72px; }
-  .v2-design .profile-grid { margin-top: 24px; padding-top: 18px; gap: 20px; }
+  .v2-design .profile { padding-top: 38px; padding-bottom: 72px; }
+  .v2-design .profile-header { display: none; }
+  .v2-design .profile-grid { margin-top: 0; gap: 28px; }
   .v2-design .profile-statement { font-size: 34px; }
-  .v2-design .practice-list { margin-top: 75px; grid-template-columns: 1fr; }
-  .v2-design .practice-list > div { min-height: 210px; padding: 22px 0; border-right: 0; border-bottom: 1px solid var(--line); }
-  .v2-design .practice-list p { min-height: 0; }
+  .v2-design .profile-detail { margin-left: 0; padding: 0; border-left: 0; }
+  .v2-design .profile-journey { min-height: 0; margin-top: 58px; padding: 0 0 0 24px; grid-template-columns: 1fr; grid-auto-rows: 125px; gap: 16px; }
+  .v2-design .profile-journey::before { content: ""; position: absolute; left: 4px; top: 5px; bottom: 5px; border-left: 1px dashed rgba(24,24,22,.2); }
+  .v2-design .profile-journey svg { display: none; }
+  .v2-design .journey-point { padding-top: 0; }
+  .v2-design .journey-point:nth-of-type(2), .v2-design .journey-point:nth-of-type(3) { transform: none; }
+  .v2-design .journey-point::before { left: -24px; top: 4px; }
+  .v2-design .practice-section { margin-top: 76px; }
+  .v2-design .practice-heading { grid-template-columns: 1fr; gap: 13px; }
+  .v2-design .practice-list > div { min-height: 0; padding: 26px 0; grid-template-columns: 34px 1fr; gap: 10px; }
+  .v2-design .practice-list > div p { grid-column: 2; }
   .v2-design .contact { padding-top: 90px; }
   .v2-design .contact-main { min-height: 430px; }
   .v2-design .contact-main h2 { font-size: 16vw; }

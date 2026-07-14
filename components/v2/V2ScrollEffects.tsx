@@ -140,7 +140,7 @@ export default function V2ScrollEffects() {
         }
       });
 
-      gsap.set(".profile-statement, .profile-detail, .practice-list", {
+      gsap.set(".profile-statement, .profile-detail, .profile-journey, .practice-list", {
         autoAlpha: 1,
         y: 0,
       });
@@ -161,7 +161,24 @@ export default function V2ScrollEffects() {
         stagger: 0.13,
         ease: "power3.out",
         immediateRender: false,
-        scrollTrigger: { trigger: ".profile-detail", start: "top 78%", once: true },
+        scrollTrigger: { trigger: ".profile-detail", start: "top 82%", once: true },
+      });
+
+      gsap.from(".profile-journey path", {
+        strokeDashoffset: 420,
+        duration: 1.45,
+        ease: "power2.out",
+        scrollTrigger: { trigger: ".profile-journey", start: "top 84%", once: true },
+      });
+
+      gsap.from(".journey-point", {
+        autoAlpha: 0,
+        y: 26,
+        duration: 0.75,
+        stagger: 0.14,
+        ease: "power3.out",
+        immediateRender: false,
+        scrollTrigger: { trigger: ".profile-journey", start: "top 82%", once: true },
       });
 
       gsap.from(".practice-list > div", {
@@ -170,7 +187,7 @@ export default function V2ScrollEffects() {
         duration: 0.85,
         stagger: 0.12,
         ease: "power3.out",
-        scrollTrigger: { trigger: ".practice-list", start: "top 78%", once: true },
+        scrollTrigger: { trigger: ".practice-list", start: "top 84%", once: true },
       });
 
       gsap.set(".contact .eyebrow, .contact-main", { autoAlpha: 1, y: 0 });
@@ -228,6 +245,7 @@ export default function V2ScrollEffects() {
       ".project-copy > *",
       ".profile-statement",
       ".profile-detail p",
+      ".journey-point",
       ".practice-list > div",
       ".contact .eyebrow",
       ".contact-main h2",
