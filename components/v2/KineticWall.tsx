@@ -171,6 +171,7 @@ export default function KineticWall() {
   const wheelUnlockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wheelTransitionEndRef = useRef(0);
   const scrollAnimationRef = useRef<number | null>(null);
+  const snapIndexRef = useRef<number | null>(null);
 
   /* ── Fetch gallery_images with projects join ──── */
   useEffect(() => {
@@ -233,7 +234,9 @@ export default function KineticWall() {
     const amount = clamp(localScroll / distance);
 
     const rawIndex = amount * (items.length - 1);
-    const selectedIndex = Math.round(rawIndex);
+    // During a discrete wheel transition, focus the destination immediately
+    // instead of waiting for rawIndex to cross the rounding midpoint.
+    const selectedIndex = snapIndexRef.current ?? Math.round(rawIndex);
 
     // Update number display
     if (numberRef.current) {
@@ -302,8 +305,8 @@ export default function KineticWall() {
     window.addEventListener("touchmove", onScroll, { passive: true });
     window.visualViewport?.addEventListener("resize", onScroll);
     window.visualViewport?.addEventListener("scroll", onScroll);
-    // Initial calculation
-    animate();
+    // Initial calculation runs on the next frame so layout is fully settled.
+    rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -348,6 +351,7 @@ export default function KineticWall() {
         // Finish on the exact index position so the selected card receives the
         // full active state instead of a rounded, in-between state.
         window.scrollTo(0, targetTop);
+        snapIndexRef.current = null;
         animate();
         root.style.scrollBehavior = previousScrollBehavior;
         scrollAnimationRef.current = null;
@@ -409,6 +413,7 @@ export default function KineticWall() {
 
       wheelLockedRef.current = true;
       wheelTransitionEndRef.current = performance.now() + WALL_TRANSITION_MS;
+      snapIndexRef.current = nextIndex;
       scheduleWheelUnlock();
       animateScrollTo(targetTop);
     };
@@ -426,6 +431,7 @@ export default function KineticWall() {
         scrollAnimationRef.current = null;
         document.documentElement.style.scrollBehavior = "";
       }
+      snapIndexRef.current = null;
       wheelLockedRef.current = false;
     };
   }, [animate, items]);

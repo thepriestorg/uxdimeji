@@ -14,11 +14,21 @@ export default function V2Footer() {
         >
           LinkedIn
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          Read.cv
+        <a href="https://x.com/uxdimeji" target="_blank" rel="noopener noreferrer">
+          X
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          Dribbble
+        <a href="https://www.instagram.com/uxdimeji" target="_blank" rel="noopener noreferrer">
+          Instagram
+        </a>
+        <a href="https://www.tiktok.com/@uxdimeji" target="_blank" rel="noopener noreferrer">
+          TikTok
+        </a>
+        <a
+          href="https://drive.google.com/file/d/1NQHC9WVrEMB62b6PTBHhSxjHtKH9iGFb/view?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Read CV
         </a>
       </div>
       <a href="#top">

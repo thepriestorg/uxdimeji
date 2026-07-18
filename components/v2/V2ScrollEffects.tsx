@@ -35,38 +35,60 @@ export default function V2ScrollEffects() {
 
       opening
         .fromTo(
-          ".page-intro-mark",
-          { autoAlpha: 0, y: 18 },
-          { autoAlpha: 1, y: 0, duration: 0.65 }
+          ".page-intro-orb-wrap",
+          { autoAlpha: 0, scale: 0.65, rotate: -12 },
+          { autoAlpha: 1, scale: 1, rotate: 0, duration: 0.6, ease: "back.out(1.8)" }
         )
-        .to(".page-intro-line", { scaleX: 1, duration: 0.75 }, 0.12)
+        .fromTo(
+          ".page-intro-mark",
+          { autoAlpha: 0, y: 14 },
+          { autoAlpha: 1, y: 0, duration: 0.5 },
+          0.12
+        )
+        .from(
+          ".page-intro-title span",
+          { autoAlpha: 0, yPercent: 115, rotate: 2, duration: 0.55, stagger: 0.08 },
+          0.22
+        )
+        .from(
+          ".page-intro-chip",
+          { autoAlpha: 0, y: 10, scale: 0.94, duration: 0.38, stagger: 0.06 },
+          0.42
+        )
+        .fromTo(
+          ".page-intro-footer",
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.4 },
+          0.45
+        )
+        .to(".page-intro-line", { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 0.18)
         .to(".page-intro", {
           yPercent: -100,
-          duration: 1.05,
+          duration: 0.95,
           ease: "expo.inOut",
-        }, 0.82)
+        }, 1.08)
         .set(".page-intro", { display: "none" })
         .from(".site-header", {
           autoAlpha: 0,
           y: -24,
           duration: 0.75,
-        }, 1.35)
-        .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.7 }, 1.42)
+        }, 1.58)
+        .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.7 }, 1.65)
         .to(".hero-line-inner", {
           yPercent: 0,
           rotate: 0,
           duration: 1.15,
           stagger: 0.12,
           ease: "expo.out",
-        }, 1.48)
-        .to(".hero-support", { autoAlpha: 1, y: 0, duration: 0.8 }, 1.88)
-        .to(".hero-capabilities", { autoAlpha: 1, y: 0, duration: 0.75 }, 2)
+        }, 1.71)
+        .to(".hero-support", { autoAlpha: 1, y: 0, duration: 0.8 }, 2.08)
+        .to(".hero-capabilities", { autoAlpha: 1, y: 0, duration: 0.75 }, 2.2)
         .from(".hero-capabilities span", {
           autoAlpha: 0,
           y: 12,
           duration: 0.55,
           stagger: 0.08,
-        }, 2.05);
+        }, 2.25);
 
       gsap.to(".hero-copy", {
         yPercent: -10,
@@ -310,8 +332,29 @@ export default function V2ScrollEffects() {
   return (
     <>
       <div className="page-intro" aria-hidden="true">
-        <div className="page-intro-mark">
-          Oladimeji Abubakar / Product designer
+        <div className="page-intro-scene">
+          <div className="page-intro-orb-wrap">
+            <div className="page-intro-orb">
+              <strong>OA</strong>
+              <i />
+            </div>
+          </div>
+          <div className="page-intro-mark">Hey, I&apos;m Oladimeji</div>
+          <div className="page-intro-title">
+            <span>Getting the good stuff ready.</span>
+            <span>
+              Easy does it <em>✦</em>
+            </span>
+          </div>
+          <div className="page-intro-chips">
+            <span className="page-intro-chip">Strategy</span>
+            <span className="page-intro-chip">Pixels</span>
+            <span className="page-intro-chip">Good energy</span>
+          </div>
+        </div>
+        <div className="page-intro-footer">
+          <span>Loading portfolio</span>
+          <span>Made with care in Kwara</span>
         </div>
         <div className="page-intro-line" />
       </div>

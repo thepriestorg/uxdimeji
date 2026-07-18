@@ -92,8 +92,9 @@ export default function RootLayout({
     },
     sameAs: [
       "https://www.linkedin.com/in/uiuxoladimeji/",
-      "https://www.instagram.com/oladimeji.exe",
-      "https://x.com/olasdimejiuiux",
+      "https://www.instagram.com/uxdimeji",
+      "https://x.com/uxdimeji",
+      "https://www.tiktok.com/@uxdimeji",
     ],
   };
 

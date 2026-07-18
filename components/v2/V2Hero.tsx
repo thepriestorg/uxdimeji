@@ -1,6 +1,48 @@
 "use client";
 
+import { ArrowUpRight, Instagram, Linkedin, Music2 } from "lucide-react";
+
+const socialLinks = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/uiuxoladimeji/",
+    icon: Linkedin,
+  },
+  {
+    label: "X",
+    href: "https://x.com/uxdimeji",
+    icon: null,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/uxdimeji",
+    icon: Instagram,
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@uxdimeji",
+    icon: Music2,
+  },
+];
+
 export default function V2Hero() {
+  const jumpToSelectedWork = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    const section = document.getElementById("work");
+    if (!section) return;
+
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, section.offsetTop);
+    window.history.pushState(null, "", "#work");
+
+    requestAnimationFrame(() => {
+      root.style.scrollBehavior = previousBehavior;
+    });
+  };
+
   return (
     <section className="hero" id="top">
       <div className="hero-index reveal">
@@ -20,10 +62,39 @@ export default function V2Hero() {
             I do not stop at Figma. I take products through strategy,
             interaction design, interface systems, and functional builds.
           </p>
-          <a href="#work">
-            View selected work
-            <span className="arrow-icon arrow-down" aria-hidden="true" />
-          </a>
+          <div className="hero-actions">
+            <a
+              className="hero-work-link"
+              href="#work"
+              onClick={jumpToSelectedWork}
+            >
+              View selected work
+              <span className="arrow-icon arrow-down" aria-hidden="true" />
+            </a>
+            <a
+              className="hero-cv-button"
+              href="https://drive.google.com/file/d/1NQHC9WVrEMB62b6PTBHhSxjHtKH9iGFb/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read CV
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+          </div>
+          <nav className="hero-socials" aria-label="Social profiles">
+            {socialLinks.map(({ label, href, icon: Icon }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                title={label}
+                key={label}
+              >
+                {Icon ? <Icon aria-hidden="true" /> : <b aria-hidden="true">X</b>}
+              </a>
+            ))}
+          </nav>
         </div>
       </div>
       <div className="hero-capabilities reveal" aria-label="Core capabilities">
