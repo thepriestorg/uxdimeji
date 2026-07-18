@@ -70,7 +70,10 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .page-intro-footer { position: absolute; right: var(--gutter); bottom: 49px; left: var(--gutter); display: flex; justify-content: space-between; color: rgba(24,24,22,.48); font-size: 8px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; }
 .v2-design .page-intro-line { position: absolute; right: var(--gutter); bottom: 38px; left: var(--gutter); height: 2px; background: var(--signal); transform: scaleX(0); transform-origin: left; }
 @keyframes intro-orb-float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
-@media (prefers-reduced-motion: reduce) { .v2-design .page-intro-orb { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .v2-design .page-intro-orb { animation: none; }
+  .v2-design .wall-card { transition: none; }
+}
 
 .v2-design .site-header {
   position: fixed;
@@ -229,7 +232,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
 .v2-design .wall-copy.changing strong, .v2-design .wall-copy.changing p, .v2-design .wall-copy.changing a { animation: wall-copy-in .34s cubic-bezier(.22,1,.36,1); }
 @keyframes wall-copy-in { from { opacity: 0; transform: translateY(10px); } }
 .v2-design .wall-stage { position: absolute; z-index: 10; inset: 0; transform-style: preserve-3d; pointer-events: none; }
-.v2-design .wall-card { --wx: 0px; --wy: 0px; --wz: 0px; --ws: .5; --wrx: 0deg; --wry: 0deg; --wrz: 0deg; --wo: 0; position: absolute; left: 64%; top: 54%; width: var(--wall-card-width, min(680px, 48vw)); height: var(--wall-card-height, 440px); display: block; opacity: var(--wo); transform: translate(-50%,-50%) translate3d(var(--wx),var(--wy),var(--wz)) rotateX(var(--wrx)) rotateY(var(--wry)) rotateZ(var(--wrz)) scale(var(--ws)); transform-style: preserve-3d; will-change: transform, opacity; pointer-events: auto; }
+.v2-design .wall-card { --wx: 0px; --wy: 0px; --wz: 0px; --ws: .5; --wrx: 0deg; --wry: 0deg; --wrz: 0deg; --wo: 0; position: absolute; left: 64%; top: 54%; width: var(--wall-card-width, min(680px, 48vw)); height: var(--wall-card-height, 440px); display: block; opacity: var(--wo); transform: translate(-50%,-50%) translate3d(var(--wx),var(--wy),var(--wz)) rotateX(var(--wrx)) rotateY(var(--wry)) rotateZ(var(--wrz)) scale(var(--ws)); transform-style: preserve-3d; transition: transform .52s cubic-bezier(.22,1,.36,1), opacity .38s ease; will-change: transform, opacity; pointer-events: auto; }
 .v2-design .wall-surface { width: 100%; height: 100%; overflow: visible; color: var(--ink); background: transparent; box-shadow: none; transform: rotateX(var(--pointer-y, 0deg)) rotateY(var(--pointer-x, 0deg)); transition: transform .18s ease; }
 .v2-design .wall-image-surface { position: relative; border-radius: 0; }
 .v2-design .wall-image-surface img { object-fit: contain; }
@@ -332,7 +335,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .wall-copy strong { margin-top: 7px; font-size: 26px; }
   .v2-design .wall-copy p { max-width: 340px; margin-top: 7px; font-size: 10px; line-height: 1.4; }
   .v2-design .wall-copy a { margin-top: 9px; font-size: 8px; }
-  .v2-design .wall-card { left: 50%; top: var(--wall-card-top, 69%); }
+  .v2-design .wall-card { left: 50%; top: var(--wall-card-top, 69%); transition: none; }
   .v2-design .wall-gallery-card { width: var(--wall-card-width, 320px); height: var(--wall-card-height, 220px); }
   .v2-design .wall-status { top: 36px; right: 18px; }
   .v2-design .wall-status i { width: 56px; }

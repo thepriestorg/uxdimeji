@@ -36,8 +36,7 @@ const getOptimizedUrl = (url: string, width: number = 800) => {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-const WALL_TRANSITION_MS = 700;
-const WHEEL_QUIET_MS = 140;
+const WHEEL_GESTURE_GAP_MS = 110;
 
 const applyWallImageRatio = (image: HTMLImageElement | null) => {
   if (!image?.naturalWidth || !image.naturalHeight) return;
@@ -167,11 +166,8 @@ export default function KineticWall() {
   const numberRef = useRef<HTMLDivElement>(null);
   const currentRef = useRef<HTMLSpanElement>(null);
   const progressRef = useRef<HTMLElement>(null);
-  const wheelLockedRef = useRef(false);
-  const wheelUnlockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const wheelTransitionEndRef = useRef(0);
-  const scrollAnimationRef = useRef<number | null>(null);
-  const snapIndexRef = useRef<number | null>(null);
+  const wheelGestureActiveRef = useRef(false);
+  const wheelGestureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ── Fetch gallery_images with projects join ──── */
   useEffect(() => {
@@ -234,9 +230,7 @@ export default function KineticWall() {
     const amount = clamp(localScroll / distance);
 
     const rawIndex = amount * (items.length - 1);
-    // During a discrete wheel transition, focus the destination immediately
-    // instead of waiting for rawIndex to cross the rounding midpoint.
-    const selectedIndex = snapIndexRef.current ?? Math.round(rawIndex);
+    const selectedIndex = Math.round(rawIndex);
 
     // Update number display
     if (numberRef.current) {
@@ -322,57 +316,15 @@ export default function KineticWall() {
   useEffect(() => {
     if (items.length < 2) return;
 
-    const animateScrollTo = (targetTop: number) => {
-      if (scrollAnimationRef.current !== null) {
-        cancelAnimationFrame(scrollAnimationRef.current);
+    const scheduleGestureEnd = () => {
+      if (wheelGestureTimerRef.current) {
+        clearTimeout(wheelGestureTimerRef.current);
       }
 
-      const root = document.documentElement;
-      const previousScrollBehavior = root.style.scrollBehavior;
-      const startTop = window.scrollY;
-      const distanceToTarget = targetTop - startTop;
-      const startedAt = performance.now();
-
-      // The global stylesheet enables smooth scrolling. Disable it while this
-      // animation owns the scroll position so every frame remains deterministic.
-      root.style.scrollBehavior = "auto";
-
-      const step = (now: number) => {
-        const progress = clamp((now - startedAt) / WALL_TRANSITION_MS);
-        const eased = 1 - Math.pow(1 - progress, 4);
-        window.scrollTo(0, startTop + distanceToTarget * eased);
-        animate();
-
-        if (progress < 1) {
-          scrollAnimationRef.current = requestAnimationFrame(step);
-          return;
-        }
-
-        // Finish on the exact index position so the selected card receives the
-        // full active state instead of a rounded, in-between state.
-        window.scrollTo(0, targetTop);
-        snapIndexRef.current = null;
-        animate();
-        root.style.scrollBehavior = previousScrollBehavior;
-        scrollAnimationRef.current = null;
-      };
-
-      scrollAnimationRef.current = requestAnimationFrame(step);
-    };
-
-    const scheduleWheelUnlock = () => {
-      if (wheelUnlockTimerRef.current) {
-        clearTimeout(wheelUnlockTimerRef.current);
-      }
-
-      const transitionRemaining = Math.max(
-        0,
-        wheelTransitionEndRef.current - performance.now()
-      );
-      wheelUnlockTimerRef.current = setTimeout(() => {
-        wheelLockedRef.current = false;
-        wheelUnlockTimerRef.current = null;
-      }, Math.max(WHEEL_QUIET_MS, transitionRemaining));
+      wheelGestureTimerRef.current = setTimeout(() => {
+        wheelGestureActiveRef.current = false;
+        wheelGestureTimerRef.current = null;
+      }, WHEEL_GESTURE_GAP_MS);
     };
 
     const handleWheel = (event: WheelEvent) => {
@@ -392,16 +344,17 @@ export default function KineticWall() {
       const leavingAtStart = direction < 0 && currentIndex === 0;
       const leavingAtEnd = direction > 0 && currentIndex === items.length - 1;
 
-      // At either end, return control to normal page scrolling.
-      if (!wheelLockedRef.current && (leavingAtStart || leavingAtEnd)) return;
-
-      event.preventDefault();
-
-      // Consume the inertial tail of the same wheel/trackpad gesture.
-      if (wheelLockedRef.current) {
-        scheduleWheelUnlock();
+      // Consume only the repeated events from the same physical gesture.
+      if (wheelGestureActiveRef.current) {
+        event.preventDefault();
+        scheduleGestureEnd();
         return;
       }
+
+      // At the ends, return control to normal page scrolling.
+      if (leavingAtStart || leavingAtEnd) return;
+
+      event.preventDefault();
 
       const nextIndex = clamp(
         currentIndex + direction,
@@ -411,28 +364,30 @@ export default function KineticWall() {
       const targetTop =
         section.offsetTop + (nextIndex / (items.length - 1)) * distance;
 
-      wheelLockedRef.current = true;
-      wheelTransitionEndRef.current = performance.now() + WALL_TRANSITION_MS;
-      snapIndexRef.current = nextIndex;
-      scheduleWheelUnlock();
-      animateScrollTo(targetTop);
+      wheelGestureActiveRef.current = true;
+      scheduleGestureEnd();
+
+      // Jump the page to the exact index. Card transforms animate in CSS,
+      // keeping the wheel logic deterministic and the visual motion fluid.
+      const root = document.documentElement;
+      const previousBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, targetTop);
+      animate();
+      requestAnimationFrame(() => {
+        root.style.scrollBehavior = previousBehavior;
+      });
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
-      if (wheelUnlockTimerRef.current) {
-        clearTimeout(wheelUnlockTimerRef.current);
-        wheelUnlockTimerRef.current = null;
+      if (wheelGestureTimerRef.current) {
+        clearTimeout(wheelGestureTimerRef.current);
+        wheelGestureTimerRef.current = null;
       }
-      if (scrollAnimationRef.current !== null) {
-        cancelAnimationFrame(scrollAnimationRef.current);
-        scrollAnimationRef.current = null;
-        document.documentElement.style.scrollBehavior = "";
-      }
-      snapIndexRef.current = null;
-      wheelLockedRef.current = false;
+      wheelGestureActiveRef.current = false;
     };
   }, [animate, items]);
 
