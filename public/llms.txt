@@ -1,0 +1,22 @@
+# Oladimeji Abubakar
+
+> Oladimeji Abubakar is an independent product designer based in Kwara, Nigeria, working with teams worldwide.
+
+Oladimeji designs intuitive digital products, scalable interface systems, and functional prototypes across B2C, SaaS, fintech, healthcare, and marketplace products.
+
+## Canonical website
+
+- [Portfolio](https://uxdimeji.com/): Selected work, approach, profile, and contact details.
+- [Sitemap](https://uxdimeji.com/sitemap.xml): Canonical index of public pages and case studies.
+
+## Expertise
+
+- Product strategy
+- UX and interaction design
+- Interface and design systems
+- Functional prototyping and builds
+
+## Contact
+
+- Email: oladimejiuiux@gmail.com
+- LinkedIn: https://www.linkedin.com/in/uiuxoladimeji/

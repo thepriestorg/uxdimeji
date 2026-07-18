@@ -9,9 +9,12 @@ import V2Contact from "@/components/v2/V2Contact";
 import V2Footer from "@/components/v2/V2Footer";
 
 export const metadata: Metadata = {
-  title: "Dimeji A. — Product Designer",
+  title: { absolute: "Oladimeji Abubakar — Product Designer" },
   description:
-    "Dimeji is a product designer creating clear digital products and systems.",
+    "Oladimeji Abubakar is a product designer creating intuitive digital products, scalable systems, and thoughtful experiences for B2C and SaaS teams.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function Home() {

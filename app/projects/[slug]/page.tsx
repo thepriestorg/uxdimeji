@@ -194,11 +194,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
 
     return {
-        title: `${project.title} - Oladimeji Abubakar`,
+        title: `${project.title} — Product Design Case Study`,
         description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+        alternates: {
+            canonical: `/projects/${slug}`,
+        },
         openGraph: {
-            title: `${project.title} - Oladimeji Abubakar`,
+            title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
             description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+            url: `/projects/${slug}`,
             images: project.featured_image ? [
                 {
                     url: project.featured_image,
@@ -210,7 +214,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         },
         twitter: {
             card: "summary_large_image",
-            title: `${project.title} - Oladimeji Abubakar`,
+            title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
             description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
             images: project.featured_image ? [project.featured_image] : [],
         },
@@ -248,7 +252,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <div className={themeClass} style={{ minHeight: "100vh", position: "relative" }}>
                 <div className="case-progress" data-case-progress aria-hidden="true" style={{ transform: "scaleX(1)" }}></div>
                 <nav className="case-nav scrolled">
-                    <Link className="case-brand" href="/">Dimeji A.</Link>
+                    <Link className="case-brand" href="/">Oladimeji Abubakar</Link>
                     <Link href="/#work">All work</Link>
                     {nextProject && (
                         <Link href={`/projects/${nextProject.slug}`}>Next project <span>→</span></Link>
@@ -291,7 +295,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 </main>
 
                 <footer className="case-footer">
-                    <span>© {new Date().getFullYear()} Dimeji A.</span>
+                    <span>© {new Date().getFullYear()} Oladimeji Abubakar</span>
                     <Link href="/#work">All projects</Link>
                     <a href="#case-main">Back to top ↑</a>
                 </footer>

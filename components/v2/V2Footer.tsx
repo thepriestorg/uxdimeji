@@ -4,7 +4,7 @@ export default function V2Footer() {
   return (
     <footer className="site-footer">
       <span>
-        &copy; <span data-year>{new Date().getFullYear()}</span> Dimeji A.
+        &copy; <span data-year>{new Date().getFullYear()}</span> Oladimeji Abubakar
       </span>
       <div>
         <a

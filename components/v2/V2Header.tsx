@@ -42,8 +42,8 @@ export default function V2Header() {
   return (
     <>
       <header className={headerClasses}>
-        <Link className="identity" href="/" aria-label="Dimeji A., home">
-          <strong>Dimeji A.</strong>
+        <Link className="identity" href="/" aria-label="Oladimeji Abubakar, home">
+          <strong>Oladimeji Abubakar</strong>
           <span>Product designer</span>
         </Link>
         <p className="header-status">

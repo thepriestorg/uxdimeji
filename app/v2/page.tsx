@@ -10,8 +10,15 @@ import Footer from "@/components/Footer";
 import V2Animations from "@/components/dev/V2Animations";
 
 export const metadata: Metadata = {
-  title: "Oladimeji Abubakar - Light Mode",
+  title: "Light Portfolio",
   description: "A light-mode version of Oladimeji Abubakar's portfolio homepage.",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function V2Home() {

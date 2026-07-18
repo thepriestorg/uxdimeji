@@ -2,11 +2,6 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-const size = {
-  width: 1200,
-  height: 630,
-};
-
 export async function GET() {
   return new ImageResponse(
     (
@@ -14,92 +9,109 @@ export async function GET() {
         style={{
           width: "100%",
           height: "100%",
-          position: "relative",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#181816",
-          color: "#ffffff",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "62px 68px 56px",
+          color: "#161616",
+          background: "#ffffff",
           fontFamily: "Arial, sans-serif",
         }}
       >
         <div
           style={{
-            position: "absolute",
-            top: 190,
-            left: 426,
-            width: 348,
-            height: 240,
-            borderRadius: 180,
-            background: "rgba(255,255,255,0.035)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingBottom: 24,
+            borderBottom: "1px solid #d8d8d5",
+            fontSize: 14,
+            fontWeight: 650,
+            letterSpacing: ".12em",
+            textTransform: "uppercase",
           }}
-        />
+        >
+          <span>Independent product designer</span>
+          <span style={{ color: "#696965" }}>Portfolio / 2026</span>
+        </div>
+
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            gap: 70,
           }}
         >
           <div
             style={{
-              fontSize: 26,
-              fontWeight: 650,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
+              display: "flex",
+              flexDirection: "column",
+              fontSize: 86,
+              fontWeight: 560,
+              lineHeight: .92,
+              letterSpacing: "-.055em",
             }}
           >
-            Oladimeji Abubakar / Product designer
+            <span>Oladimeji</span>
+            <span>Abubakar</span>
           </div>
+
           <div
             style={{
-              width: 150,
-              height: 1,
-              marginTop: 18,
-              background: "rgba(255,255,255,0.52)",
+              width: 350,
+              display: "flex",
+              flexDirection: "column",
+              paddingBottom: 7,
             }}
-          />
+          >
+            <span
+              style={{
+                marginBottom: 18,
+                fontSize: 26,
+                fontWeight: 620,
+                letterSpacing: "-.025em",
+              }}
+            >
+              Product Designer
+            </span>
+            <span
+              style={{
+                color: "#696965",
+                fontSize: 19,
+                fontWeight: 430,
+                lineHeight: 1.45,
+              }}
+            >
+              I design how digital products think, move, and work.
+            </span>
+          </div>
         </div>
+
         <div
           style={{
-            position: "absolute",
-            right: 72,
-            bottom: 58,
-            left: 72,
-            height: 1,
-            background: "rgba(255,255,255,0.42)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            left: 72,
-            bottom: 80,
-            color: "rgba(255,255,255,0.44)",
-            fontSize: 14,
-            fontWeight: 650,
-            letterSpacing: "0.12em",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: 22,
+            borderTop: "1px solid #161616",
+            fontSize: 13,
+            fontWeight: 620,
+            letterSpacing: ".09em",
             textTransform: "uppercase",
           }}
         >
-          Portfolio / Interface archive
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            right: 72,
-            bottom: 80,
-            color: "rgba(255,255,255,0.44)",
-            fontSize: 14,
-            fontWeight: 650,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-          }}
-        >
-          uxdimeji.com
+          <span>Kwara, Nigeria / Working worldwide</span>
+          <span>uxdimeji.com</span>
         </div>
       </div>
     ),
-    size
+    {
+      width: 1200,
+      height: 630,
+      headers: {
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      },
+    }
   );
 }

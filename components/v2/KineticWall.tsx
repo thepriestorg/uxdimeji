@@ -36,6 +36,9 @@ const getOptimizedUrl = (url: string, width: number = 800) => {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
+const WALL_TRANSITION_MS = 700;
+const WHEEL_QUIET_MS = 140;
+
 const applyWallImageRatio = (image: HTMLImageElement | null) => {
   if (!image?.naturalWidth || !image.naturalHeight) return;
 
@@ -164,6 +167,10 @@ export default function KineticWall() {
   const numberRef = useRef<HTMLDivElement>(null);
   const currentRef = useRef<HTMLSpanElement>(null);
   const progressRef = useRef<HTMLElement>(null);
+  const wheelLockedRef = useRef(false);
+  const wheelUnlockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wheelTransitionEndRef = useRef(0);
+  const scrollAnimationRef = useRef<number | null>(null);
 
   /* ── Fetch gallery_images with projects join ──── */
   useEffect(() => {
@@ -305,6 +312,121 @@ export default function KineticWall() {
       window.visualViewport?.removeEventListener("resize", onScroll);
       window.visualViewport?.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(rafId);
+    };
+  }, [animate, items]);
+
+  /* One wheel gesture advances exactly one gallery item. */
+  useEffect(() => {
+    if (items.length < 2) return;
+
+    const animateScrollTo = (targetTop: number) => {
+      if (scrollAnimationRef.current !== null) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+
+      const root = document.documentElement;
+      const previousScrollBehavior = root.style.scrollBehavior;
+      const startTop = window.scrollY;
+      const distanceToTarget = targetTop - startTop;
+      const startedAt = performance.now();
+
+      // The global stylesheet enables smooth scrolling. Disable it while this
+      // animation owns the scroll position so every frame remains deterministic.
+      root.style.scrollBehavior = "auto";
+
+      const step = (now: number) => {
+        const progress = clamp((now - startedAt) / WALL_TRANSITION_MS);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        window.scrollTo(0, startTop + distanceToTarget * eased);
+        animate();
+
+        if (progress < 1) {
+          scrollAnimationRef.current = requestAnimationFrame(step);
+          return;
+        }
+
+        // Finish on the exact index position so the selected card receives the
+        // full active state instead of a rounded, in-between state.
+        window.scrollTo(0, targetTop);
+        animate();
+        root.style.scrollBehavior = previousScrollBehavior;
+        scrollAnimationRef.current = null;
+      };
+
+      scrollAnimationRef.current = requestAnimationFrame(step);
+    };
+
+    const scheduleWheelUnlock = () => {
+      if (wheelUnlockTimerRef.current) {
+        clearTimeout(wheelUnlockTimerRef.current);
+      }
+
+      const transitionRemaining = Math.max(
+        0,
+        wheelTransitionEndRef.current - performance.now()
+      );
+      wheelUnlockTimerRef.current = setTimeout(() => {
+        wheelLockedRef.current = false;
+        wheelUnlockTimerRef.current = null;
+      }, Math.max(WHEEL_QUIET_MS, transitionRemaining));
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      const section = sectionRef.current;
+      if (!section || Math.abs(event.deltaY) < 2) return;
+
+      const viewH = window.visualViewport?.height ?? window.innerHeight;
+      const distance = section.offsetHeight - viewH;
+      if (distance <= 0) return;
+
+      const localScroll = window.scrollY - section.offsetTop;
+      const withinWall = localScroll >= -1 && localScroll <= distance + 1;
+      if (!withinWall) return;
+
+      const direction = event.deltaY > 0 ? 1 : -1;
+      const currentIndex = activeIndexRef.current;
+      const leavingAtStart = direction < 0 && currentIndex === 0;
+      const leavingAtEnd = direction > 0 && currentIndex === items.length - 1;
+
+      // At either end, return control to normal page scrolling.
+      if (!wheelLockedRef.current && (leavingAtStart || leavingAtEnd)) return;
+
+      event.preventDefault();
+
+      // Consume the inertial tail of the same wheel/trackpad gesture.
+      if (wheelLockedRef.current) {
+        scheduleWheelUnlock();
+        return;
+      }
+
+      const nextIndex = clamp(
+        currentIndex + direction,
+        0,
+        items.length - 1
+      );
+      const targetTop =
+        section.offsetTop + (nextIndex / (items.length - 1)) * distance;
+
+      wheelLockedRef.current = true;
+      wheelTransitionEndRef.current = performance.now() + WALL_TRANSITION_MS;
+      scheduleWheelUnlock();
+      animateScrollTo(targetTop);
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      if (wheelUnlockTimerRef.current) {
+        clearTimeout(wheelUnlockTimerRef.current);
+        wheelUnlockTimerRef.current = null;
+      }
+      if (scrollAnimationRef.current !== null) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+        scrollAnimationRef.current = null;
+        document.documentElement.style.scrollBehavior = "";
+      }
+      wheelLockedRef.current = false;
     };
   }, [animate, items]);
 
