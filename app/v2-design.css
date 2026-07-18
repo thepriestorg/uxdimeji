@@ -335,7 +335,7 @@ html, body { overflow-x: clip !important; max-width: 100vw; }
   .v2-design .wall-copy strong { margin-top: 7px; font-size: 26px; }
   .v2-design .wall-copy p { max-width: 340px; margin-top: 7px; font-size: 10px; line-height: 1.4; }
   .v2-design .wall-copy a { margin-top: 9px; font-size: 8px; }
-  .v2-design .wall-card { left: 50%; top: var(--wall-card-top, 69%); transition: none; }
+  .v2-design .wall-card { left: 50%; top: var(--wall-card-top, 69%); }
   .v2-design .wall-gallery-card { width: var(--wall-card-width, 320px); height: var(--wall-card-height, 220px); }
   .v2-design .wall-status { top: 36px; right: 18px; }
   .v2-design .wall-status i { width: 56px; }

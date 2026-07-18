@@ -296,7 +296,6 @@ export default function KineticWall() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
-    window.addEventListener("touchmove", onScroll, { passive: true });
     window.visualViewport?.addEventListener("resize", onScroll);
     window.visualViewport?.addEventListener("scroll", onScroll);
     // Initial calculation runs on the next frame so layout is fully settled.
@@ -305,7 +304,6 @@ export default function KineticWall() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      window.removeEventListener("touchmove", onScroll);
       window.visualViewport?.removeEventListener("resize", onScroll);
       window.visualViewport?.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(rafId);
@@ -315,6 +313,39 @@ export default function KineticWall() {
   /* One wheel gesture advances exactly one gallery item. */
   useEffect(() => {
     if (items.length < 2) return;
+
+    const getWallMetrics = () => {
+      const section = sectionRef.current;
+      if (!section) return null;
+
+      const viewH = window.visualViewport?.height ?? window.innerHeight;
+      const distance = section.offsetHeight - viewH;
+      const localScroll = window.scrollY - section.offsetTop;
+
+      return {
+        section,
+        distance,
+        withinWall: distance > 0 && localScroll >= -1 && localScroll <= distance + 1,
+      };
+    };
+
+    const goToIndex = (
+      index: number,
+      section: HTMLElement,
+      distance: number
+    ) => {
+      const targetTop =
+        section.offsetTop + (index / (items.length - 1)) * distance;
+      const root = document.documentElement;
+      const previousBehavior = root.style.scrollBehavior;
+
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, targetTop);
+      animate();
+      requestAnimationFrame(() => {
+        root.style.scrollBehavior = previousBehavior;
+      });
+    };
 
     const scheduleGestureEnd = () => {
       if (wheelGestureTimerRef.current) {
@@ -328,16 +359,9 @@ export default function KineticWall() {
     };
 
     const handleWheel = (event: WheelEvent) => {
-      const section = sectionRef.current;
-      if (!section || Math.abs(event.deltaY) < 2) return;
-
-      const viewH = window.visualViewport?.height ?? window.innerHeight;
-      const distance = section.offsetHeight - viewH;
-      if (distance <= 0) return;
-
-      const localScroll = window.scrollY - section.offsetTop;
-      const withinWall = localScroll >= -1 && localScroll <= distance + 1;
-      if (!withinWall) return;
+      const metrics = getWallMetrics();
+      if (!metrics?.withinWall || Math.abs(event.deltaY) < 2) return;
+      const { section, distance } = metrics;
 
       const direction = event.deltaY > 0 ? 1 : -1;
       const currentIndex = activeIndexRef.current;
@@ -361,28 +385,86 @@ export default function KineticWall() {
         0,
         items.length - 1
       );
-      const targetTop =
-        section.offsetTop + (nextIndex / (items.length - 1)) * distance;
-
       wheelGestureActiveRef.current = true;
       scheduleGestureEnd();
+      goToIndex(nextIndex, section, distance);
+    };
 
-      // Jump the page to the exact index. Card transforms animate in CSS,
-      // keeping the wheel logic deterministic and the visual motion fluid.
-      const root = document.documentElement;
-      const previousBehavior = root.style.scrollBehavior;
-      root.style.scrollBehavior = "auto";
-      window.scrollTo(0, targetTop);
-      animate();
-      requestAnimationFrame(() => {
-        root.style.scrollBehavior = previousBehavior;
-      });
+    let touchTracking = false;
+    let touchCaptured = false;
+    let touchStartY = 0;
+    let touchLastY = 0;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return;
+      const metrics = getWallMetrics();
+      if (!metrics?.withinWall) return;
+
+      touchTracking = true;
+      touchCaptured = false;
+      touchStartY = event.touches[0].clientY;
+      touchLastY = touchStartY;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchTracking || event.touches.length !== 1) return;
+
+      touchLastY = event.touches[0].clientY;
+      const delta = touchStartY - touchLastY;
+      if (Math.abs(delta) < 10) return;
+
+      const direction = delta > 0 ? 1 : -1;
+      const currentIndex = activeIndexRef.current;
+      const leavingAtStart = direction < 0 && currentIndex === 0;
+      const leavingAtEnd = direction > 0 && currentIndex === items.length - 1;
+
+      // Let the browser handle swipes that leave either end of the gallery.
+      if (leavingAtStart || leavingAtEnd) {
+        touchTracking = false;
+        touchCaptured = false;
+        return;
+      }
+
+      touchCaptured = true;
+      event.preventDefault();
+    };
+
+    const handleTouchEnd = () => {
+      if (!touchTracking) return;
+
+      const delta = touchStartY - touchLastY;
+      const metrics = getWallMetrics();
+      if (touchCaptured && Math.abs(delta) >= 36 && metrics?.withinWall) {
+        const direction = delta > 0 ? 1 : -1;
+        const nextIndex = clamp(
+          activeIndexRef.current + direction,
+          0,
+          items.length - 1
+        );
+        goToIndex(nextIndex, metrics.section, metrics.distance);
+      }
+
+      touchTracking = false;
+      touchCaptured = false;
+    };
+
+    const handleTouchCancel = () => {
+      touchTracking = false;
+      touchCaptured = false;
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", handleTouchCancel, { passive: true });
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchcancel", handleTouchCancel);
       if (wheelGestureTimerRef.current) {
         clearTimeout(wheelGestureTimerRef.current);
         wheelGestureTimerRef.current = null;
