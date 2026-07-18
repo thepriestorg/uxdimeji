@@ -24,7 +24,7 @@ export default function V2Footer() {
           TikTok
         </a>
         <a
-          href="https://drive.google.com/file/d/1NQHC9WVrEMB62b6PTBHhSxjHtKH9iGFb/view?usp=sharing"
+          href="https://drive.google.com/file/d/1IsLsaqiIbkBeLbse-dz8QaVgegscdreC/view?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
         >
