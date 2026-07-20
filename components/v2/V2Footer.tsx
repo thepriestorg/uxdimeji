@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function V2Footer() {
   return (
     <footer className="site-footer">
@@ -7,6 +9,7 @@ export default function V2Footer() {
         &copy; <span data-year>{new Date().getFullYear()}</span> Oladimeji Abubakar
       </span>
       <div>
+        <Link href="/blog">Writing</Link>
         <a
           href="https://www.linkedin.com/in/uiuxoladimeji/"
           target="_blank"

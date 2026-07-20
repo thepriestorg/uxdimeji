@@ -4,12 +4,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, FolderKanban, LogOut, Settings, Image as ImageIcon, Menu, X, Sparkles, PanelsTopLeft } from "lucide-react";
+import { LayoutDashboard, FolderKanban, LogOut, Settings, Image as ImageIcon, Menu, X, Sparkles, PanelsTopLeft, BookOpen, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/projects", label: "Projects", icon: FolderKanban },
+    { href: "/admin/blog", label: "Writing", icon: BookOpen },
+    { href: "/admin/comments", label: "Comments", icon: MessageCircle },
     { href: "/admin/vibe-projects", label: "Vibe Projects", icon: Sparkles },
     { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
     { href: "/admin/landing-pages", label: "Landing Pages", icon: PanelsTopLeft },

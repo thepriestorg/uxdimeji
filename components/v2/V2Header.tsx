@@ -51,8 +51,9 @@ export default function V2Header() {
           Kwara, Nigeria / Available worldwide
         </p>
         <nav className="desktop-nav" aria-label="Primary navigation">
-          <a href="#work">Work</a>
-          <a href="#about">Profile</a>
+          <Link href="/#work">Work</Link>
+          <Link href="/#about">Profile</Link>
+          <Link href="/blog">Writing</Link>
           <a href="mailto:oladimejiuiux@gmail.com">Email</a>
         </nav>
         <button
@@ -71,14 +72,17 @@ export default function V2Header() {
         id="mobile-menu"
         aria-label="Mobile navigation"
       >
-        <a href="#work" onClick={closeMenu}>
+        <Link href="/#work" onClick={closeMenu}>
           <span>01</span>Selected work
-        </a>
-        <a href="#about" onClick={closeMenu}>
+        </Link>
+        <Link href="/#about" onClick={closeMenu}>
           <span>02</span>Profile
-        </a>
+        </Link>
+        <Link href="/blog" onClick={closeMenu}>
+          <span>03</span>Writing
+        </Link>
         <a href="mailto:oladimejiuiux@gmail.com" onClick={closeMenu}>
-          <span>03</span>Get in touch
+          <span>04</span>Get in touch
         </a>
       </nav>
     </>
