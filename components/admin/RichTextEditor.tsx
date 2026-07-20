@@ -17,6 +17,7 @@ import {
     Minus, Upload, X, Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { uploadToCloudinary } from "@/lib/cloudinary-upload";
 import { useState, useCallback, useRef } from "react";
 
 const lowlight = createLowlight(common);
@@ -326,6 +327,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     const [imageCaption, setImageCaption] = useState("");
     const [youtubeUrl, setYoutubeUrl] = useState("");
     const [uploading, setUploading] = useState(false);
+    const [uploadError, setUploadError] = useState("");
     const [uploadQueue, setUploadQueue] = useState<{ file: File; preview: string; caption: string }[]>([]);
     const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -372,26 +374,24 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     const insertQueuedImages = useCallback(async () => {
         if (!editor || uploadQueue.length === 0) return;
         setUploading(true);
+        setUploadError("");
         try {
             for (const item of uploadQueue) {
-                const fd = new FormData();
-                fd.append("file", item.file);
-                const res = await fetch("/api/upload", { method: "POST", body: fd });
-                const data = await res.json();
-                if (data.url) {
-                    editor.chain().focus().insertContent({
-                        type: "figure",
-                        attrs: { src: data.url, alt: item.file.name, caption: item.caption },
-                    }).run();
-                }
+                const data = await uploadToCloudinary(item.file);
+                editor.chain().focus().insertContent({
+                    type: "figure",
+                    attrs: { src: data.url, alt: item.file.name, caption: item.caption },
+                }).run();
             }
         } catch (err) {
             console.error("Upload failed:", err);
+            setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
+            return;
         } finally {
             setUploading(false);
-            setUploadQueue([]);
-            setShowImageModal(false);
         }
+        setUploadQueue([]);
+        setShowImageModal(false);
     }, [editor, uploadQueue]);
 
     // ── Insert image by URL ───────────────────────────────────────────────────
@@ -677,6 +677,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                                 </button>
                             )}
                         </div>
+                        {uploadError && <p className="mt-3 text-sm text-red-400" role="alert">{uploadError}</p>}
                     </div>
                 </div>
             )}

@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { uploadToCloudinary } from "@/lib/cloudinary-upload";
 
 interface MediaUploaderProps {
     value?: string;
@@ -18,26 +19,18 @@ const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.i
 export default function MediaUploader({ value, onChange, onBatchComplete, label = "Featured Image", multiple = false, acceptVideo = false }: MediaUploaderProps) {
     const [uploading, setUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
+    const [uploadError, setUploadError] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleUpload = async (files: File[]) => {
         setUploading(true);
+        setUploadError("");
         const uploadedUrls: string[] = [];
 
         try {
-            // Upload all files in parallel
             await Promise.all(files.map(async (file) => {
-                const formData = new FormData();
-                formData.append("file", file);
-
-                const res = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData,
-                });
-                const data = await res.json();
-                if (data.url) {
-                    uploadedUrls.push(data.url);
-                }
+                const data = await uploadToCloudinary(file);
+                uploadedUrls.push(data.url);
             }));
 
             if (uploadedUrls.length > 0) {
@@ -49,6 +42,7 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
             }
         } catch (err) {
             console.error("Upload failed:", err);
+            setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
         } finally {
             setUploading(false);
         }
@@ -139,6 +133,7 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
                 onChange={handleFileSelect}
                 className="hidden"
             />
+            {uploadError && <p className="mt-3 text-sm text-red-400" role="alert">{uploadError}</p>}
         </div>
     );
 }
