@@ -14,11 +14,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = await getPublishedPost(slug);
   if (!post) return { title: "Post not found" };
+  const shareImage = post.cover_image || "/og-image";
   return {
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: { title: post.title, description: post.excerpt, type: "article", images: post.cover_image ? [post.cover_image] : undefined },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      url: `/blog/${post.slug}`,
+      publishedTime: post.published_at || undefined,
+      modifiedTime: post.updated_at,
+      authors: ["Oladimeji Abubakar"],
+      images: [{ url: shareImage, alt: post.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      creator: "@uxdimeji",
+      images: [shareImage],
+    },
   };
 }
 
