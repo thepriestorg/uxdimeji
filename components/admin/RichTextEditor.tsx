@@ -99,6 +99,7 @@ interface RichTextEditorProps {
     content: string;
     onChange: (content: string) => void;
     placeholder?: string;
+    outputFormat?: "json" | "html";
 }
 
 // ─── WYSIWYG editor styles (injected once) ───────────────────────────────────
@@ -318,7 +319,7 @@ const EDITOR_STYLES = `
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function RichTextEditor({ content, onChange, placeholder = "Start writing..." }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder = "Start writing...", outputFormat = "json" }: RichTextEditorProps) {
     const [showLinkModal, setShowLinkModal] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
     const [showYoutubeModal, setShowYoutubeModal] = useState(false);
@@ -360,7 +361,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             catch { return content || ""; }
         })(),
         onUpdate: ({ editor }) => {
-            onChange(JSON.stringify(editor.getJSON()));
+            onChange(outputFormat === "html" ? editor.getHTML() : JSON.stringify(editor.getJSON()));
         },
         editorProps: {
             attributes: {

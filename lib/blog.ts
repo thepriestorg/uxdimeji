@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { richTextToPlainText } from "@/lib/rich-text";
 
 export type BlogPost = {
   id: string;
@@ -47,6 +48,6 @@ export function formatPostDate(date: string | null) {
 }
 
 export function readingTime(html: string) {
-  const words = html.replace(/<[^>]+>/g, " ").trim().split(/\s+/).filter(Boolean).length;
+  const words = richTextToPlainText(html).split(/\s+/).filter(Boolean).length;
   return `${Math.max(1, Math.ceil(words / 220))} min read`;
 }

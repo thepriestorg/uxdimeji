@@ -8,6 +8,7 @@ import ArticleAudio from "@/components/blog/ArticleAudio";
 import QuoteTools from "@/components/blog/QuoteTools";
 import CommentSection from "@/components/blog/CommentSection";
 import { formatPostDate, getPublishedPost, readingTime } from "@/lib/blog";
+import { richTextToHtml, richTextToPlainText } from "@/lib/rich-text";
 import "../blog.css";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -43,13 +44,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const post = await getPublishedPost(slug);
   if (!post) notFound();
-  const spokenText = post.content
-    .replace(/<figcaption[^>]*>[\s\S]*?<\/figcaption>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "and")
-    .replace(/\s+/g, " ")
-    .trim();
+  const renderedContent = richTextToHtml(post.content);
+  const spokenText = richTextToPlainText(post.content);
 
   return (
     <main className="v2-design blog-page article-page" id="top">
@@ -70,7 +66,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {post.cover_image && <div className="article-cover"><Image src={post.cover_image} alt="" fill sizes="100vw" unoptimized /></div>}
         <div className="article-layout">
           <aside><span>Share</span><a href={`https://x.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://uxdimeji.com/blog/${post.slug}`)}`} target="_blank" rel="noreferrer">X</a><a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://uxdimeji.com/blog/${post.slug}`)}`} target="_blank" rel="noreferrer">In</a></aside>
-          <div className="article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className="article-body" dangerouslySetInnerHTML={{ __html: renderedContent }} />
           <QuoteTools />
         </div>
         <CommentSection postSlug={post.slug} />
