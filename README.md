@@ -37,12 +37,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Portfolio analytics
 
-The site includes first-party analytics at `/admin/analytics`. It records anonymous
-page views, sessions, engagement, outbound clicks, downloads, referrers, campaign
-tags, countries, devices, browsers, and recent visits. Admin reporting requires an
-authenticated Supabase user; raw analytics rows are not publicly readable.
+The site includes first-party analytics at `/admin/analytics`. It supports today,
+yesterday, rolling ranges, all-time and custom date ranges; previous-period
+comparison; page, country, device and source filters; hourly through monthly trend
+aggregation; acquisition, audience and behavior breakdowns; page performance; and
+filtered CSV exports. Admin reporting requires an authenticated Supabase user; raw
+analytics rows are not publicly readable.
 
-Before deploying this version, apply
-`supabase/migrations/20260729_add_portfolio_analytics.sql` to the connected Supabase
-project (with `supabase db push`, or by running it in the Supabase SQL editor).
-Tracking starts automatically after the migration is live.
+Before deploying this version, apply both `20260729_add_portfolio_analytics.sql`
+and `20260729_upgrade_portfolio_analytics.sql` from `supabase/migrations` to the
+connected Supabase project (with `supabase db push`, or in filename order using the
+Supabase SQL editor). Tracking starts automatically after the migrations are live.
