@@ -47,8 +47,11 @@ const applyWallImageRatio = (image: HTMLImageElement | null) => {
   const ratio = image.naturalWidth / image.naturalHeight;
   const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
   const mobile = window.innerWidth <= 700;
+  // Wide hero screenshots hit the mobile width cap first. Keep a deliberate
+  // phone gutter so they still feel framed at their largest size.
+  const horizontalGutter = 24;
   const maxWidth = mobile
-    ? Math.min(window.innerWidth - 32, 380)
+    ? Math.min(window.innerWidth - horizontalGutter * 2, 380)
     : Math.min(window.innerWidth * 0.48, 720);
   let maxHeight = Math.min(viewportHeight * 0.62, 620);
 
