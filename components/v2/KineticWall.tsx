@@ -36,8 +36,7 @@ const getOptimizedUrl = (url: string, width: number = 800) => {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-const GALLERY_TRANSITION_MS = 950;
-const WHEEL_GESTURE_GAP_MS = GALLERY_TRANSITION_MS + 150;
+const WHEEL_GESTURE_GAP_MS = 110;
 
 const applyWallImageRatio = (image: HTMLImageElement | null) => {
   if (!image?.naturalWidth || !image.naturalHeight) return;
@@ -172,8 +171,6 @@ export default function KineticWall() {
   const progressRef = useRef<HTMLElement>(null);
   const wheelGestureActiveRef = useRef(false);
   const wheelGestureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scrollAnimationRef = useRef<number | null>(null);
-  const galleryTransitionActiveRef = useRef(false);
 
   /* ── Fetch gallery_images with projects join ──── */
   useEffect(() => {
@@ -340,42 +337,17 @@ export default function KineticWall() {
       section: HTMLElement,
       distance: number
     ) => {
-      if (galleryTransitionActiveRef.current) return;
-
       const targetTop =
         section.offsetTop + (index / (items.length - 1)) * distance;
-      const startTop = window.scrollY;
-      const scrollDistance = targetTop - startTop;
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const root = document.documentElement;
+      const previousBehavior = root.style.scrollBehavior;
 
-      galleryTransitionActiveRef.current = true;
-
-      if (reduceMotion) {
-        window.scrollTo(0, targetTop);
-        animate();
-        galleryTransitionActiveRef.current = false;
-        return;
-      }
-
-      const startTime = performance.now();
-      const step = (time: number) => {
-        const progress = clamp((time - startTime) / GALLERY_TRANSITION_MS);
-        const eased = 1 - Math.pow(1 - progress, 4);
-
-        window.scrollTo(0, startTop + scrollDistance * eased);
-        animate();
-
-        if (progress < 1) {
-          scrollAnimationRef.current = requestAnimationFrame(step);
-        } else {
-          window.scrollTo(0, targetTop);
-          animate();
-          scrollAnimationRef.current = null;
-          galleryTransitionActiveRef.current = false;
-        }
-      };
-
-      scrollAnimationRef.current = requestAnimationFrame(step);
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, targetTop);
+      animate();
+      requestAnimationFrame(() => {
+        root.style.scrollBehavior = previousBehavior;
+      });
     };
 
     const scheduleGestureEnd = () => {
@@ -501,11 +473,6 @@ export default function KineticWall() {
         wheelGestureTimerRef.current = null;
       }
       wheelGestureActiveRef.current = false;
-      if (scrollAnimationRef.current !== null) {
-        cancelAnimationFrame(scrollAnimationRef.current);
-        scrollAnimationRef.current = null;
-      }
-      galleryTransitionActiveRef.current = false;
     };
   }, [animate, items]);
 
