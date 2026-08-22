@@ -24,9 +24,10 @@
   align-items: center;
   color: #181816;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(255,255,255,.76), rgba(242,243,239,.54));
+  background: linear-gradient(135deg, rgba(255,255,255,.52), rgba(242,243,239,.30));
   box-shadow: 0 18px 55px rgba(22,28,25,.12), inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.28);
-  backdrop-filter: blur(26px) saturate(155%);
+  -webkit-backdrop-filter: blur(28px) saturate(165%);
+  backdrop-filter: blur(28px) saturate(165%);
   pointer-events: auto;
 }
 
@@ -78,7 +79,7 @@
 .desktopNav a:hover { color: #181816; }
 .desktopNav a.active { color: #181816; background: rgba(255,255,255,.82); box-shadow: 0 4px 12px rgba(24,24,22,.1), inset 0 1px 0 #fff; }
 
-.contact {
+.shell .contact {
   min-height: 46px;
   padding: 0 16px;
   border-radius: 11px;
@@ -94,7 +95,7 @@
   white-space: nowrap;
 }
 
-.contact svg, .mobileContact svg { width: 14px; height: 14px; stroke-width: 1.7; }
+.shell .contact svg, .mobilePanel .mobileContact svg { width: 14px; height: 14px; stroke-width: 1.7; }
 .menuButton { display: none; }
 .mobilePanel { display: none; }
 
@@ -106,14 +107,14 @@
   .header { padding: 0 16px; }
   .shell { grid-template-columns: minmax(115px, 1fr) auto minmax(115px, 1fr); gap: 10px; }
   .desktopNav a { padding: 0 12px; font-size: 12px; }
-  .contact { padding: 0 13px; gap: 10px; font-size: 12px; }
+  .shell .contact { padding: 0 13px; gap: 10px; font-size: 12px; }
 }
 
 @media (max-width: 760px) {
   .header { top: 10px; padding: 0 10px; }
-  .shell { min-height: 58px; padding: 7px 7px 7px 15px; grid-template-columns: 1fr auto; gap: 10px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,255,255,.82), rgba(242,243,239,.62)); }
+  .shell { min-height: 58px; padding: 7px 7px 7px 15px; grid-template-columns: 1fr auto; gap: 10px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,255,255,.58), rgba(242,243,239,.34)); -webkit-backdrop-filter: blur(30px) saturate(170%); backdrop-filter: blur(30px) saturate(170%); }
   .wordmark { font-size: 19px; }
-  .desktopNav, .contact { display: none; }
+  .desktopNav, .shell .contact { display: none; }
   .menuButton {
     width: 42px;
     height: 42px;
@@ -148,5 +149,5 @@
   .mobilePanel nav a { min-height: 72px; border-bottom: 1px solid rgba(255,255,255,.1); display: grid; grid-template-columns: 40px 1fr; align-items: center; font-size: 29px; letter-spacing: -.045em; }
   .mobilePanel nav a:last-child { border-bottom: 0; }
   .mobilePanel nav span { color: rgba(255,255,255,.38); font-size: 10px; letter-spacing: .08em; }
-  .mobileContact { min-height: 58px; padding: 0 18px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; color: #181816; background: #f4f3ef; font-size: 12px; font-weight: 700; }
+  .mobilePanel .mobileContact { min-height: 58px; padding: 0 18px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; color: #181816; background: #f4f3ef; font-size: 12px; font-weight: 700; }
 }

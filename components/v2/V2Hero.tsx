@@ -25,11 +25,11 @@ export default function V2Hero() {
 
   return (
     <section className={`hero ${styles.hero}`} id="top">
-      <div className={`hero-index reveal ${styles.badge}`}>
-        <span>Independent product designer</span>
-        <span>5 years in practice</span>
-      </div>
       <div className={`hero-copy ${styles.copy}`}>
+        <div className={`hero-index reveal ${styles.badge}`}>
+          <span>Independent product designer</span>
+          <span>5 years in practice</span>
+        </div>
         <h1 className={`reveal ${styles.title}`}>
           <span className="hero-line hero-line-primary"><span className={`hero-line-inner ${styles.glitchLine}`} data-text="Hi, I'm Oladimeji. I design products,">Hi, I&apos;m Oladimeji. I design products,</span></span>
           <span className="hero-line hero-line-secondary"><span className={`hero-line-inner ${styles.glitchLine}`} data-text="and help bring them to life.">and help bring them to life.</span></span>

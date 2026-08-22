@@ -35,15 +35,15 @@ export default function V2ScrollEffects() {
       });
 
       opening
-        .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.7 }, 0.08)
+        .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.38 }, 0)
         .to(".hero-line-inner", {
           yPercent: 0,
           rotate: 0,
-          duration: 1.15,
-          stagger: 0.12,
+          duration: 0.62,
+          stagger: 0.06,
           ease: "expo.out",
-        }, 0.14)
-        .to(".hero-support", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.95, ease: "power3.out" }, 0.48);
+        }, 0.04)
+        .to(".hero-support", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.52, ease: "power3.out" }, 0.2);
 
       gsap.to(".hero-copy", {
         yPercent: -10,
