@@ -179,7 +179,7 @@ export default function V2SelectedWorkClient({
   return (
     <section className="selected-work" id="work">
       {/* Section intro */}
-      <header className="section-intro reveal">
+      <header className="section-intro">
         <p className="eyebrow">Selected work / 2023-Now</p>
         <div>
           <h2 id="work-title">Ideas get interesting when they become useful.</h2>

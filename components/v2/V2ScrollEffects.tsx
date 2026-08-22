@@ -34,7 +34,7 @@ export default function V2ScrollEffects() {
       });
 
       opening
-        .from(".site-header", {
+        .from(".header-shell", {
           autoAlpha: 0,
           y: -24,
           duration: 0.75,

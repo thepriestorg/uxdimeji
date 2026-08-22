@@ -1218,7 +1218,7 @@ body.menu-open { overflow: hidden; }
   left: 0;
   right: 0;
   width: 100%;
-  transform: none;
+  transform: none !important;
 }
 .v2-design .hero-actions {
   width: auto;
