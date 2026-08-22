@@ -56,6 +56,7 @@ const getOptimizedUrl = (url: string, width: number = 1200) => {
 };
 
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
+const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url) || /[?&,]f_gif(?:[,&]|$)/i.test(url);
 const getOptimizedVideoUrl = (url: string) =>
   url.includes("cloudinary.com") && url.includes("/video/upload/")
     ? url.replace("/video/upload/", "/video/upload/q_auto:eco/")
@@ -219,7 +220,7 @@ export default function V2SelectedWorkClient({
                 isVideoUrl(project.featured_image) ? (
                 <video
                   className="project-visual-media"
-                  src={getOptimizedVideoUrl(project.featured_image)}
+                  src={project.featured_image}
                   poster={getVideoPoster(project.featured_image)}
                   muted
                   autoPlay
@@ -231,11 +232,12 @@ export default function V2SelectedWorkClient({
                 ) : (
                 <Image
                   className="project-visual-media"
-                  src={getOptimizedUrl(project.featured_image)}
+                  src={isGifUrl(project.featured_image) ? project.featured_image : getOptimizedUrl(project.featured_image)}
                   alt={project.title}
                   fill
                   priority={index < 2}
                   quality={90}
+                  unoptimized={isGifUrl(project.featured_image)}
                   sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                   ref={(image) => {
                     if (image?.complete) applyProjectMediaRatio(image);
@@ -300,7 +302,7 @@ export default function V2SelectedWorkClient({
                     isVideoUrl(project.image) ? (
                     <video
                       className="project-visual-media"
-                      src={getOptimizedVideoUrl(project.image)}
+                      src={project.image}
                       poster={getVideoPoster(project.image)}
                       muted autoPlay loop playsInline preload="metadata"
                       onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
@@ -308,10 +310,11 @@ export default function V2SelectedWorkClient({
                     ) : (
                     <Image
                       className="project-visual-media"
-                      src={getOptimizedUrl(project.image)}
+                      src={isGifUrl(project.image) ? project.image : getOptimizedUrl(project.image)}
                       alt={project.title}
                       fill
                       quality={90}
+                      unoptimized={isGifUrl(project.image)}
                       sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
                         if (image?.complete) applyProjectMediaRatio(image);
@@ -336,7 +339,7 @@ export default function V2SelectedWorkClient({
                     isVideoUrl(project.image) ? (
                     <video
                       className="project-visual-media"
-                      src={getOptimizedVideoUrl(project.image)}
+                      src={project.image}
                       poster={getVideoPoster(project.image)}
                       muted autoPlay loop playsInline preload="metadata"
                       onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
@@ -344,10 +347,11 @@ export default function V2SelectedWorkClient({
                     ) : (
                     <Image
                       className="project-visual-media"
-                      src={getOptimizedUrl(project.image)}
+                      src={isGifUrl(project.image) ? project.image : getOptimizedUrl(project.image)}
                       alt={project.title}
                       fill
                       quality={90}
+                      unoptimized={isGifUrl(project.image)}
                       sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
                         if (image?.complete) applyProjectMediaRatio(image);

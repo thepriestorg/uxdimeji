@@ -34,17 +34,30 @@ const getOptimizedUrl = (url: string, width: number = 800) => {
   return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width},dpr_auto/`);
 };
 
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
+const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url);
+const getVideoPoster = (url: string) => {
+  if (!url.includes("cloudinary.com") || !url.includes("/video/upload/")) return undefined;
+  return url
+    .replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/")
+    .replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2");
+};
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
 const WHEEL_GESTURE_GAP_MS = 110;
 
-const applyWallImageRatio = (image: HTMLImageElement | null) => {
-  if (!image?.naturalWidth || !image.naturalHeight) return;
+const applyWallMediaRatio = (media: HTMLImageElement | HTMLVideoElement | null) => {
+  if (!media) return;
 
-  const card = image.closest<HTMLElement>(".wall-card");
+  const mediaWidth = media instanceof HTMLVideoElement ? media.videoWidth : media.naturalWidth;
+  const mediaHeight = media instanceof HTMLVideoElement ? media.videoHeight : media.naturalHeight;
+  if (!mediaWidth || !mediaHeight) return;
+
+  const card = media.closest<HTMLElement>(".wall-card");
   if (!card) return;
 
-  const ratio = image.naturalWidth / image.naturalHeight;
+  const ratio = mediaWidth / mediaHeight;
   const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
   const mobile = window.innerWidth <= 700;
   // Wide hero screenshots hit the mobile width cap first. Keep a deliberate
@@ -481,15 +494,15 @@ export default function KineticWall() {
       .map((card) => card?.querySelector<HTMLImageElement>("img"))
       .filter((image): image is HTMLImageElement => Boolean(image));
     const syncRatio = (event: Event) =>
-      applyWallImageRatio(event.currentTarget as HTMLImageElement);
+      applyWallMediaRatio(event.currentTarget as HTMLImageElement);
 
     images.forEach((image) => {
       image.addEventListener("load", syncRatio);
-      if (image.complete) applyWallImageRatio(image);
+      if (image.complete) applyWallMediaRatio(image);
     });
 
     const syncAllRatios = () => {
-      images.forEach((image) => applyWallImageRatio(image));
+      images.forEach((image) => applyWallMediaRatio(image));
     };
 
     window.addEventListener("resize", syncAllRatios, { passive: true });
@@ -615,19 +628,34 @@ export default function KineticWall() {
               <div
                 className="wall-surface wall-image-surface"
               >
-                <Image
-                  src={getOptimizedUrl(item.image_url, 1200)}
-                  alt={item.title || "Gallery work"}
-                  fill
-                  className="object-contain"
-                  quality={90}
-                  priority={index === 0}
-                  sizes="(max-width: 700px) calc(100vw - 32px), 48vw"
-                  ref={(image) => {
-                    if (image?.complete) applyWallImageRatio(image);
-                  }}
-                  onLoad={(event) => applyWallImageRatio(event.currentTarget)}
-                />
+                {isVideoUrl(item.image_url) ? (
+                  <video
+                    src={item.image_url}
+                    poster={getVideoPoster(item.image_url)}
+                    aria-label={item.title || "Gallery work"}
+                    muted
+                    autoPlay
+                    loop
+                    playsInline
+                    preload={index === 0 ? "auto" : "metadata"}
+                    onLoadedMetadata={(event) => applyWallMediaRatio(event.currentTarget)}
+                  />
+                ) : (
+                  <Image
+                    src={isGifUrl(item.image_url) ? item.image_url : getOptimizedUrl(item.image_url, 1200)}
+                    alt={item.title || "Gallery work"}
+                    fill
+                    className="object-contain"
+                    quality={90}
+                    unoptimized={isGifUrl(item.image_url)}
+                    priority={index === 0}
+                    sizes="(max-width: 700px) calc(100vw - 32px), 48vw"
+                    ref={(image) => {
+                      if (image?.complete) applyWallMediaRatio(image);
+                    }}
+                    onLoad={(event) => applyWallMediaRatio(event.currentTarget)}
+                  />
+                )}
               </div>
             );
 

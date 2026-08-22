@@ -28,6 +28,9 @@ const getOptimizedUrl = (url: string, width: number = 400) => {
     return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
 };
 
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes('/video/upload/');
+const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url);
+
 // Generate a tiny blur placeholder URL
 const getBlurUrl = (url: string) => {
     if (!url || !url.includes('cloudinary.com')) return url;
@@ -232,8 +235,9 @@ export default function GalleryAdmin() {
                 <div className="max-w-md">
                     <MediaUploader
                         multiple={true}
+                        acceptVideo
                         onBatchComplete={handleAddImages}
-                        label="Upload New Images (Drag & Drop Multiple)"
+                        label="Upload New Media (Images, GIFs, or Videos)"
                     />
                 </div>
             </div>
@@ -263,8 +267,18 @@ export default function GalleryAdmin() {
                                     <div className="group relative rounded-xl overflow-hidden bg-black border border-white/10">
                                         {/* Image */}
                                         <div className="relative aspect-[4/3]">
+                                            {isVideoUrl(img.image_url) ? (
+                                            <video
+                                                src={img.image_url}
+                                                aria-label={img.title || 'Gallery media'}
+                                                className="h-full w-full object-cover pointer-events-none"
+                                                muted
+                                                playsInline
+                                                preload="metadata"
+                                            />
+                                            ) : (
                                             <Image
-                                                src={getOptimizedUrl(img.image_url, 600)}
+                                                src={isGifUrl(img.image_url) ? img.image_url : getOptimizedUrl(img.image_url, 600)}
                                                 alt={img.title || 'Gallery image'}
                                                 fill
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -272,7 +286,9 @@ export default function GalleryAdmin() {
                                                 loading="lazy"
                                                 placeholder="blur"
                                                 blurDataURL={getBlurUrl(img.image_url)}
+                                                unoptimized={isGifUrl(img.image_url)}
                                             />
+                                            )}
 
                                             {/* Action buttons overlay */}
                                             <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

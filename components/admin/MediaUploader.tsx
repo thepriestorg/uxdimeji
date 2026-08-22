@@ -118,7 +118,7 @@ export default function MediaUploader({ value, onChange, onBatchComplete, label 
                         <>
                             <Upload className="w-8 h-8 text-white/30 mx-auto mb-2" />
                             <p className="text-white/50 text-sm">
-                                {multiple ? "Drop images here or click to upload" : acceptVideo ? "Drop an image, GIF, or video here" : "Drop image here or click to upload"}
+                                {multiple && acceptVideo ? "Drop images, GIFs, or videos here" : multiple ? "Drop images here or click to upload" : acceptVideo ? "Drop an image, GIF, or video here" : "Drop image here or click to upload"}
                             </p>
                         </>
                     )}
