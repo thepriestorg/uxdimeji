@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
+import { ViewportGif, ViewportVideo } from "./ViewportMedia";
 
 /* ── Types ──────────────────────────────────────── */
 interface Project {
@@ -146,7 +147,7 @@ export default function V2SelectedWorkClient({
   useEffect(() => {
     const images = Array.from(
       document.querySelectorAll<HTMLImageElement>(
-        ".selected-work .project-visual img"
+        ".selected-work .project-visual img:not([data-viewport-gif])"
       )
     );
     const syncRatio = (event: Event) =>
@@ -182,6 +183,7 @@ export default function V2SelectedWorkClient({
         <p className="eyebrow">Selected work / 2023-Now</p>
         <div>
           <h2 id="work-title">Ideas get interesting when they become useful.</h2>
+          <p>Selected product work spanning strategy, interaction design, interface systems, and functional delivery.</p>
         </div>
       </header>
 
@@ -218,26 +220,29 @@ export default function V2SelectedWorkClient({
             <div className="project-visual-inner">
               {project.featured_image ? (
                 isVideoUrl(project.featured_image) ? (
-                <video
+                <ViewportVideo
                   className="project-visual-media"
                   src={project.featured_image}
                   poster={getVideoPoster(project.featured_image)}
-                  muted
-                  autoPlay
-                  loop
-                  playsInline
-                  preload={index < 2 ? "auto" : "metadata"}
-                  onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
+                  ariaLabel={project.title}
+                  eager={index < 2}
+                  onMetadata={applyProjectMediaRatio}
+                />
+                ) : isGifUrl(project.featured_image) ? (
+                <ViewportGif
+                  className="project-visual-media"
+                  src={project.featured_image}
+                  alt={project.title}
+                  onMediaLoad={applyProjectMediaRatio}
                 />
                 ) : (
                 <Image
                   className="project-visual-media"
-                  src={isGifUrl(project.featured_image) ? project.featured_image : getOptimizedUrl(project.featured_image)}
+                  src={getOptimizedUrl(project.featured_image)}
                   alt={project.title}
                   fill
                   priority={index < 2}
                   quality={90}
-                  unoptimized={isGifUrl(project.featured_image)}
                   sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                   ref={(image) => {
                     if (image?.complete) applyProjectMediaRatio(image);
@@ -300,21 +305,27 @@ export default function V2SelectedWorkClient({
                 <div className="project-visual-inner">
                   {project.image ? (
                     isVideoUrl(project.image) ? (
-                    <video
+                    <ViewportVideo
                       className="project-visual-media"
                       src={project.image}
                       poster={getVideoPoster(project.image)}
-                      muted autoPlay loop playsInline preload="metadata"
-                      onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
+                      ariaLabel={project.title}
+                      onMetadata={applyProjectMediaRatio}
+                    />
+                    ) : isGifUrl(project.image) ? (
+                    <ViewportGif
+                      className="project-visual-media"
+                      src={project.image}
+                      alt={project.title}
+                      onMediaLoad={applyProjectMediaRatio}
                     />
                     ) : (
                     <Image
                       className="project-visual-media"
-                      src={isGifUrl(project.image) ? project.image : getOptimizedUrl(project.image)}
+                      src={getOptimizedUrl(project.image)}
                       alt={project.title}
                       fill
                       quality={90}
-                      unoptimized={isGifUrl(project.image)}
                       sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
                         if (image?.complete) applyProjectMediaRatio(image);
@@ -337,21 +348,27 @@ export default function V2SelectedWorkClient({
                 <div className="project-visual-inner">
                   {project.image ? (
                     isVideoUrl(project.image) ? (
-                    <video
+                    <ViewportVideo
                       className="project-visual-media"
                       src={project.image}
                       poster={getVideoPoster(project.image)}
-                      muted autoPlay loop playsInline preload="metadata"
-                      onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
+                      ariaLabel={project.title}
+                      onMetadata={applyProjectMediaRatio}
+                    />
+                    ) : isGifUrl(project.image) ? (
+                    <ViewportGif
+                      className="project-visual-media"
+                      src={project.image}
+                      alt={project.title}
+                      onMediaLoad={applyProjectMediaRatio}
                     />
                     ) : (
                     <Image
                       className="project-visual-media"
-                      src={isGifUrl(project.image) ? project.image : getOptimizedUrl(project.image)}
+                      src={getOptimizedUrl(project.image)}
                       alt={project.title}
                       fill
                       quality={90}
-                      unoptimized={isGifUrl(project.image)}
                       sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
                         if (image?.complete) applyProjectMediaRatio(image);
