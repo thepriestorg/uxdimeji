@@ -28,17 +28,13 @@ export default function V2ScrollEffects() {
         autoAlpha: 0,
         y: 24,
       });
+      gsap.set(".hero-support", { filter: "blur(10px)" });
 
       const opening = gsap.timeline({
         defaults: { ease: "power3.out" },
       });
 
       opening
-        .from(".header-shell", {
-          autoAlpha: 0,
-          y: -24,
-          duration: 0.75,
-        }, 0)
         .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.7 }, 0.08)
         .to(".hero-line-inner", {
           yPercent: 0,
@@ -47,7 +43,7 @@ export default function V2ScrollEffects() {
           stagger: 0.12,
           ease: "expo.out",
         }, 0.14)
-        .to(".hero-support", { autoAlpha: 1, y: 0, duration: 0.8 }, 0.51);
+        .to(".hero-support", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.95, ease: "power3.out" }, 0.48);
 
       gsap.to(".hero-copy", {
         yPercent: -10,
