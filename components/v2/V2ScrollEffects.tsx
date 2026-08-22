@@ -24,7 +24,7 @@ export default function V2ScrollEffects() {
     const context = gsap.context(() => {
       gsap.set(".hero h1", { autoAlpha: 1, y: 0 });
       gsap.set(".hero-line-inner", { yPercent: 118, rotate: 1.5 });
-      gsap.set(".hero-index, .hero-support, .hero-capabilities", {
+      gsap.set(".hero-index, .hero-support", {
         autoAlpha: 0,
         y: 24,
       });
@@ -47,14 +47,7 @@ export default function V2ScrollEffects() {
           stagger: 0.12,
           ease: "expo.out",
         }, 0.14)
-        .to(".hero-support", { autoAlpha: 1, y: 0, duration: 0.8 }, 0.51)
-        .to(".hero-capabilities", { autoAlpha: 1, y: 0, duration: 0.75 }, 0.63)
-        .from(".hero-capabilities span", {
-          autoAlpha: 0,
-          y: 12,
-          duration: 0.55,
-          stagger: 0.08,
-        }, 0.68);
+        .to(".hero-support", { autoAlpha: 1, y: 0, duration: 0.8 }, 0.51);
 
       gsap.to(".hero-copy", {
         yPercent: -10,

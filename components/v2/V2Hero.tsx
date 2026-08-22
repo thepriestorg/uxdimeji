@@ -97,12 +97,6 @@ export default function V2Hero() {
           </nav>
         </div>
       </div>
-      <div className="hero-capabilities reveal" aria-label="Core capabilities">
-        <span>Product strategy</span>
-        <span>UX and interaction</span>
-        <span>Interface systems</span>
-        <span>Functional builds</span>
-      </div>
     </section>
   );
 }
