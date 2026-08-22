@@ -79,13 +79,17 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const hasLongWord = (title: string) =>
   title.split(/\s+/).some((word) => word.length >= 8);
 
-const applyProjectImageRatio = (image: HTMLImageElement | null) => {
-  if (!image?.naturalWidth || !image.naturalHeight) return;
+const applyProjectMediaRatio = (media: HTMLImageElement | HTMLVideoElement | null) => {
+  if (!media) return;
 
-  const visual = image.closest<HTMLElement>(".project-visual");
+  const width = media instanceof HTMLVideoElement ? media.videoWidth : media.naturalWidth;
+  const height = media instanceof HTMLVideoElement ? media.videoHeight : media.naturalHeight;
+  if (!width || !height) return;
+
+  const visual = media.closest<HTMLElement>(".project-visual");
   if (!visual) return;
 
-  const ratio = image.naturalWidth / image.naturalHeight;
+  const ratio = width / height;
   visual.style.setProperty("--project-media-ratio", String(ratio));
   window.dispatchEvent(new Event("portfolio:layout"));
 };
@@ -145,11 +149,11 @@ export default function V2SelectedWorkClient({
       )
     );
     const syncRatio = (event: Event) =>
-      applyProjectImageRatio(event.currentTarget as HTMLImageElement);
+      applyProjectMediaRatio(event.currentTarget as HTMLImageElement);
 
     images.forEach((image) => {
       image.addEventListener("load", syncRatio);
-      if (image.complete) applyProjectImageRatio(image);
+      if (image.complete) applyProjectMediaRatio(image);
     });
 
     return () => {
@@ -212,6 +216,19 @@ export default function V2SelectedWorkClient({
           >
             <div className="project-visual-inner">
               {project.featured_image ? (
+                isVideoUrl(project.featured_image) ? (
+                <video
+                  className="project-visual-media"
+                  src={getOptimizedVideoUrl(project.featured_image)}
+                  poster={getVideoPoster(project.featured_image)}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  preload={index < 2 ? "auto" : "metadata"}
+                  onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
+                />
+                ) : (
                 <Image
                   className="project-visual-media"
                   src={getOptimizedUrl(project.featured_image)}
@@ -221,10 +238,11 @@ export default function V2SelectedWorkClient({
                   quality={90}
                   sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                   ref={(image) => {
-                    if (image?.complete) applyProjectImageRatio(image);
+                    if (image?.complete) applyProjectMediaRatio(image);
                   }}
-                  onLoad={(event) => applyProjectImageRatio(event.currentTarget)}
+                  onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
                 />
+                )
               ) : (
                 <span className="project-visual-fallback">{project.title}</span>
               )}
@@ -279,6 +297,15 @@ export default function V2SelectedWorkClient({
               >
                 <div className="project-visual-inner">
                   {project.image ? (
+                    isVideoUrl(project.image) ? (
+                    <video
+                      className="project-visual-media"
+                      src={getOptimizedVideoUrl(project.image)}
+                      poster={getVideoPoster(project.image)}
+                      muted autoPlay loop playsInline preload="metadata"
+                      onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
+                    />
+                    ) : (
                     <Image
                       className="project-visual-media"
                       src={getOptimizedUrl(project.image)}
@@ -287,10 +314,11 @@ export default function V2SelectedWorkClient({
                       quality={90}
                       sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
-                        if (image?.complete) applyProjectImageRatio(image);
+                        if (image?.complete) applyProjectMediaRatio(image);
                       }}
-                      onLoad={(event) => applyProjectImageRatio(event.currentTarget)}
+                      onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
                     />
+                    )
                   ) : (
                     <span className="project-visual-fallback">{project.title}</span>
                   )}
@@ -305,6 +333,15 @@ export default function V2SelectedWorkClient({
               >
                 <div className="project-visual-inner">
                   {project.image ? (
+                    isVideoUrl(project.image) ? (
+                    <video
+                      className="project-visual-media"
+                      src={getOptimizedVideoUrl(project.image)}
+                      poster={getVideoPoster(project.image)}
+                      muted autoPlay loop playsInline preload="metadata"
+                      onLoadedMetadata={(event) => applyProjectMediaRatio(event.currentTarget)}
+                    />
+                    ) : (
                     <Image
                       className="project-visual-media"
                       src={getOptimizedUrl(project.image)}
@@ -313,10 +350,11 @@ export default function V2SelectedWorkClient({
                       quality={90}
                       sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
                       ref={(image) => {
-                        if (image?.complete) applyProjectImageRatio(image);
+                        if (image?.complete) applyProjectMediaRatio(image);
                       }}
-                      onLoad={(event) => applyProjectImageRatio(event.currentTarget)}
+                      onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
                     />
+                    )
                   ) : (
                     <span className="project-visual-fallback">{project.title}</span>
                   )}

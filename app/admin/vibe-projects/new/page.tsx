@@ -235,6 +235,8 @@ export default function NewVibeProjectPage() {
                     <MediaUploader
                         value={formData.image}
                         onChange={(url) => setFormData((prev) => ({ ...prev, image: url }))}
+                        label="Featured media"
+                        acceptVideo
                     />
                 </div>
 

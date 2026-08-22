@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Eye, FolderKanban } from "lucide-react";
 
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
+
 export default async function ProjectsPage() {
     const supabase = await createClient();
 
@@ -56,11 +58,21 @@ export default async function ProjectsPage() {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
                                                 {project.featured_image && (
+                                                    isVideoUrl(project.featured_image) ? (
+                                                    <video
+                                                        src={project.featured_image}
+                                                        aria-label={project.title}
+                                                        className="w-12 h-12 rounded-lg object-cover"
+                                                        muted
+                                                        playsInline
+                                                    />
+                                                    ) : (
                                                     <img
                                                         src={project.featured_image}
                                                         alt={project.title}
                                                         className="w-12 h-12 rounded-lg object-cover"
                                                     />
+                                                    )
                                                 )}
                                                 <span className="font-bold text-white">{project.title}</span>
                                             </div>

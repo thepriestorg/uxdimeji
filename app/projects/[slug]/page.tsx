@@ -177,6 +177,12 @@ function extractYoutubeId(url: string): string {
     return match?.[1] || "";
 }
 
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
+
+const getVideoPoster = (url: string) => url.includes("cloudinary.com") && url.includes("/video/upload/")
+    ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2")
+    : undefined;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const supabase = await createClient();
@@ -193,6 +199,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         };
     }
 
+    const socialImage = project.featured_image && isVideoUrl(project.featured_image)
+        ? getVideoPoster(project.featured_image)
+        : project.featured_image;
+
     return {
         title: `${project.title} — Product Design Case Study`,
         description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
@@ -203,9 +213,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
             description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
             url: `/projects/${slug}`,
-            images: project.featured_image ? [
+            images: socialImage ? [
                 {
-                    url: project.featured_image,
+                    url: socialImage,
                     width: 1200,
                     height: 630,
                     alt: project.title,
@@ -216,7 +226,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             card: "summary_large_image",
             title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
             description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
-            images: project.featured_image ? [project.featured_image] : [],
+            images: socialImage ? [socialImage] : [],
         },
     };
 }
@@ -268,6 +278,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     {project.featured_image && (
                         <figure className="featured-media">
                             <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
+                                {isVideoUrl(project.featured_image) ? (
+                                <video
+                                    src={project.featured_image}
+                                    poster={getVideoPoster(project.featured_image)}
+                                    aria-label={project.title}
+                                    muted
+                                    autoPlay
+                                    loop
+                                    playsInline
+                                    controls
+                                    preload="metadata"
+                                />
+                                ) : (
                                 <Image
                                     src={project.featured_image}
                                     alt={project.title}
@@ -277,6 +300,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                                     priority
                                     quality={95}
                                 />
+                                )}
                             </div>
                             <figcaption>{project.title} feature</figcaption>
                         </figure>

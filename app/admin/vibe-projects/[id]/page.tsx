@@ -310,6 +310,8 @@ export default function EditVibeProjectPage({ params }: { params: Promise<{ id: 
                     <MediaUploader
                         value={formData.image}
                         onChange={(url) => setFormData((prev) => ({ ...prev, image: url }))}
+                        label="Featured media"
+                        acceptVideo
                     />
                 </div>
 

@@ -205,6 +205,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ slug: st
                 <MediaUploader
                     value={formData.featured_image}
                     onChange={(url) => setFormData((prev) => ({ ...prev, featured_image: url }))}
+                    label="Featured media"
+                    acceptVideo
                 />
 
                 {/* Featured Toggle */}
