@@ -437,6 +437,12 @@ export default function V2SelectedWorkClient({
           </article>
         );
       })}
+      <div className="playground-project-cta">
+        <span>More interface explorations</span>
+        <Link href="/playground">
+          View UI shots <ArrowUpRight aria-hidden="true" />
+        </Link>
+      </div>
       </div>}
 
       {activeCollection === "landing" && (

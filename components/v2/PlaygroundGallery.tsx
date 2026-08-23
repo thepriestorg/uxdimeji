@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ViewportGif, ViewportVideo } from "./ViewportMedia";
+import styles from "@/app/playground/Playground.module.css";
 
 interface GalleryItem { id: string; image_url: string; title: string | null; }
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
@@ -22,18 +23,18 @@ export default function PlaygroundGallery() {
     };
     void load();
   }, []);
-  if (!loaded) return <div className="playground-loading" aria-label="Loading interface shots" />;
-  if (!items.length) return <p className="playground-empty">New interface shots are on the way.</p>;
+  if (!loaded) return <div className={styles.loading} aria-label="Loading interface shots"><i /><i /><i /><i /></div>;
+  if (!items.length) return <p className={styles.empty}>New interface shots are on the way.</p>;
   return (
-    <div className="playground-grid">
+    <section className={styles.gallery} aria-label="Interface studies">
       {items.map((item, index) => {
         const alt = item.title || "Interface design exploration";
         return (
-          <figure className="playground-shot" key={item.id}>
+          <figure className={styles.shot} key={item.id} style={{ "--shot-index": index } as React.CSSProperties}>
             {isVideoUrl(item.image_url) ? <ViewportVideo src={item.image_url} poster={poster(item.image_url)} ariaLabel={alt} eager={index < 2} /> : isGifUrl(item.image_url) ? <ViewportGif src={item.image_url} alt={alt} /> : <Image src={optimized(item.image_url)} alt={alt} fill quality={92} priority={index < 2} sizes="(max-width: 720px) 100vw, 50vw" />}
           </figure>
         );
       })}
-    </div>
+    </section>
   );
 }

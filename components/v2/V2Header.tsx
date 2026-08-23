@@ -8,6 +8,7 @@ import styles from "./V2Header.module.css";
 
 const navigation = [
   { label: "Work", href: "/#work" },
+  { label: "Playground", href: "/playground" },
   { label: "Profile", href: "/#about" },
   { label: "Writing", href: "/blog" },
 ];
@@ -21,8 +22,11 @@ export default function V2Header() {
     return () => document.body.classList.remove("menu-open");
   }, [menuOpen]);
 
-  const isActive = (href: string) =>
-    href === "/blog" ? pathname.startsWith("/blog") : href === "/#work" && pathname === "/";
+  const isActive = (href: string) => {
+    if (href === "/blog") return pathname.startsWith("/blog");
+    if (href === "/playground") return pathname.startsWith("/playground");
+    return href === "/#work" && pathname === "/";
+  };
 
   return (
     <>
