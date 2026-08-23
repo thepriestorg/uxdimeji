@@ -9,8 +9,9 @@ import styles from "@/app/playground/Playground.module.css";
 interface GalleryItem { id: string; image_url: string; title: string | null; }
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url);
-const optimized = (url: string) => url.includes("cloudinary.com") ? url.replace("/upload/", "/upload/f_auto,q_auto,w_1600,dpr_auto/") : url;
-const poster = (url: string) => url.includes("/video/upload/") ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1600/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2") : undefined;
+const optimized = (url: string) => url.includes("cloudinary.com") ? url.replace("/upload/", "/upload/f_auto,q_auto:eco,w_1000,c_limit/") : url;
+const optimizedVideo = (url: string) => url.includes("cloudinary.com") && url.includes("/video/upload/") ? url.replace("/video/upload/", "/video/upload/q_auto:eco,vc_auto,w_1000,c_limit/") : url;
+const poster = (url: string) => url.includes("/video/upload/") ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto:eco,w_1000,c_limit/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2") : undefined;
 
 export default function PlaygroundGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -31,7 +32,7 @@ export default function PlaygroundGallery() {
         const alt = item.title || "Interface design exploration";
         return (
           <figure className={styles.shot} key={item.id} style={{ "--shot-index": index } as React.CSSProperties}>
-            {isVideoUrl(item.image_url) ? <ViewportVideo src={item.image_url} poster={poster(item.image_url)} ariaLabel={alt} eager={index < 2} /> : isGifUrl(item.image_url) ? <ViewportGif src={item.image_url} alt={alt} /> : <Image src={optimized(item.image_url)} alt={alt} fill quality={92} priority={index < 2} sizes="(max-width: 720px) 100vw, 50vw" />}
+            {isVideoUrl(item.image_url) ? <ViewportVideo src={optimizedVideo(item.image_url)} poster={poster(item.image_url)} ariaLabel={alt} eager={index < 2} /> : isGifUrl(item.image_url) ? <ViewportGif src={optimized(item.image_url)} alt={alt} eager={index < 2} /> : <Image src={optimized(item.image_url)} alt={alt} fill quality={75} priority={index < 2} sizes="(max-width: 760px) calc(100vw - 20px), (max-width: 1480px) 50vw, 720px" />}
           </figure>
         );
       })}
