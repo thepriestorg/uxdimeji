@@ -8,9 +8,9 @@ import V2Contact from "@/components/v2/V2Contact";
 import V2Footer from "@/components/v2/V2Footer";
 
 export const metadata: Metadata = {
-  title: { absolute: "Oladimeji Abubakar — Product Designer" },
+  title: { absolute: "Oladimeji Abubakar — Product Designer in Nigeria" },
   description:
-    "Oladimeji Abubakar is a product designer creating intuitive digital products, scalable systems, and thoughtful experiences for B2C and SaaS teams.",
+    "Oladimeji Abubakar is a product and UI/UX designer in Nigeria creating intuitive digital products, scalable systems, and thoughtful B2C and SaaS experiences.",
   alternates: {
     canonical: "/",
   },

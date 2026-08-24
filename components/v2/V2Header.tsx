@@ -25,7 +25,7 @@ export default function V2Header() {
   const isActive = (href: string) => {
     if (href === "/blog") return pathname.startsWith("/blog");
     if (href === "/playground") return pathname.startsWith("/playground");
-    return href === "/#work" && pathname === "/";
+    return href === "/#work" && (pathname === "/" || pathname.startsWith("/projects/"));
   };
 
   return (

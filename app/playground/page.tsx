@@ -6,10 +6,10 @@ import V2Footer from "@/components/v2/V2Footer";
 import styles from "./Playground.module.css";
 
 export const metadata: Metadata = {
-  title: "Playground",
-  description: "Interface studies, product UI shots, motion experiments, and visual explorations by Oladimeji Abubakar.",
+  title: "UI/UX Design Playground",
+  description: "UI shots and product design explorations by Nigerian product and UI/UX designer Oladimeji Abubakar.",
   alternates: { canonical: "/playground" },
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function PlaygroundPage() {

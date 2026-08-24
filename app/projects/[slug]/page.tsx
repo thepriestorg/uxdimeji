@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import V2Header from "@/components/v2/V2Header";
 import "@/app/case-studies.css"; // The new case studies CSS
 
 // TipTap content renderer
@@ -261,13 +262,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="case-study-page">
             <div className={themeClass} style={{ minHeight: "100vh", position: "relative" }}>
                 <div className="case-progress" data-case-progress aria-hidden="true" style={{ transform: "scaleX(1)" }}></div>
-                <nav className="case-nav scrolled">
-                    <Link className="case-brand" href="/">Oladimeji Abubakar</Link>
-                    <Link href="/#work">All work</Link>
-                    {nextProject && (
-                        <Link href={`/projects/${nextProject.slug}`}>Next project <span>→</span></Link>
-                    )}
-                </nav>
+                <V2Header />
 
                 <main id="case-main" className="project-page">
                     <header className="project-header">

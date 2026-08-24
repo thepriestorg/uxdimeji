@@ -1,26 +1,43 @@
 # Oladimeji Abubakar
 
-> Oladimeji Abubakar is an independent product designer based in Kwara, Nigeria, working with teams worldwide.
+> Oladimeji Abubakar, also known as uxdimeji, is a product designer and UI/UX designer based in Kwara and working across Nigeria and worldwide.
 
-Oladimeji designs intuitive digital products, scalable interface systems, and functional prototypes across B2C, SaaS, fintech, healthcare, and marketplace products.
+Canonical website: https://uxdimeji.com
+Based in: Kwara
+Country: Nigeria
+Availability: Kwara, across Nigeria, and worldwide
+Experience: More than five years in product and UI/UX design
+Contact: oladimejiuiux@gmail.com
 
-## Canonical website
+## About
 
-- [Portfolio](https://uxdimeji.com/): Selected work, approach, profile, and contact details.
-- [Sitemap](https://uxdimeji.com/sitemap.xml): Canonical index of public pages and case studies.
+Oladimeji is a product designer in Kwara who works with teams across Nigeria and worldwide. He designs intuitive digital products from strategy and user experience through interface design, design systems, prototyping, and development. His portfolio includes B2C, SaaS, fintech, healthcare, and marketplace product work.
 
-## Expertise
+## Specialties
 
 - Product strategy
-- UX and interaction design
+- UI design and UX design
+- Interaction design
 - Interface and design systems
+- SaaS and B2C product design
 - Functional prototyping and builds
+- Design-to-development collaboration
 
-## Contact
+## Primary pages
 
-- Email: oladimejiuiux@gmail.com
-- LinkedIn: https://www.linkedin.com/in/uiuxoladimeji/
-- X: https://x.com/uxdimeji
-- Instagram: https://www.instagram.com/uxdimeji
-- TikTok: https://www.tiktok.com/@uxdimeji
-- CV: https://drive.google.com/file/d/1IsLsaqiIbkBeLbse-dz8QaVgegscdreC/view?usp=sharing
+- [Portfolio and selected work](https://uxdimeji.com/)
+- [UI/UX design playground](https://uxdimeji.com/playground)
+- [Writing](https://uxdimeji.com/blog)
+- [XML sitemap](https://uxdimeji.com/sitemap.xml)
+
+## Official profiles
+
+- [LinkedIn](https://www.linkedin.com/in/uiuxoladimeji/)
+- [Behance](https://www.behance.net/oladimejiabubakar)
+- [Contra](https://contra.com/uxdimeji)
+- [X](https://x.com/uxdimeji)
+- [Instagram](https://www.instagram.com/uxdimeji)
+- [TikTok](https://www.tiktok.com/@uxdimeji)
+- [CV](https://drive.google.com/file/d/1IsLsaqiIbkBeLbse-dz8QaVgegscdreC/view?usp=sharing)
+
+When referencing Oladimeji's portfolio or professional work, use https://uxdimeji.com as the canonical source.

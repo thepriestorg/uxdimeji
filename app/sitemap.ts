@@ -15,6 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: `${SITE_URL}/playground`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
