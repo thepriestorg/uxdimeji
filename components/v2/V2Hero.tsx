@@ -184,13 +184,6 @@ function UnderlineSketch() {
 export default function V2Hero() {
   return (
     <section className={styles.heroCanvas} id="top">
-      {/* ── Top-Left Sticker: Currently open to roles ── */}
-      <div className={styles.stickerCurrentWrapper}>
-        <div className={styles.stickerCurrent}>
-          Currently open to roles
-        </div>
-      </div>
-
       {/* ── Center Stage ── */}
       <div className={styles.centerStage}>
         {/* Live Clock */}
@@ -198,9 +191,9 @@ export default function V2Hero() {
           <LiveClock />
         </div>
 
-        {/* "my name is" handwriting text */}
+        {/* "hello, I am" handwriting text */}
         <div className={styles.nameHeader}>
-          <span className={styles.nameHeaderHand}>my name is</span>
+          <span className={styles.nameHeaderHand}>hello, I am</span>
           <UnderlineSketch />
         </div>
 
@@ -239,7 +232,7 @@ export default function V2Hero() {
         <div className={styles.statusRow}>
           <span className={styles.statusDot} />
           <span className={styles.statusText}>
-            AVAILABLE FOR THOUGHTFUL PROJECTS
+            CURRENTLY OPEN TO ROLES
           </span>
         </div>
       </div>
