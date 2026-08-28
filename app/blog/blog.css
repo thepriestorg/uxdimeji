@@ -20,7 +20,7 @@
 
 /* ── Centered Stream Container ── */
 .blog-stream-container {
-  max-width: 800px;
+  max-width: 880px;
   width: 100%;
   margin: 0 auto;
   padding: clamp(140px, 15vw, 190px) var(--gutter, 24px) clamp(80px, 10vw, 140px);
@@ -332,7 +332,7 @@
    ════════════════════════════════════════════════════════════ */
 
 .article-reader-container {
-  max-width: 680px;
+  max-width: 820px;
   width: 100%;
   margin: 0 auto;
   padding: clamp(130px, 14vw, 170px) var(--gutter, 24px) clamp(80px, 10vw, 140px);
@@ -588,6 +588,117 @@
   color: #f4f3ef;
   overflow-x: auto;
   margin: 2em 0;
+}
+
+/* ── Clear, Unmistakable In-Article Links ── */
+.article-reader-body a {
+  color: var(--signal, #d15632) !important;
+  font-weight: 600;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1.5px !important;
+  text-underline-offset: 3.5px !important;
+  text-decoration-color: rgba(209, 86, 50, 0.45) !important;
+  border-radius: 3px;
+  transition: color 0.15s ease, background 0.15s ease, text-decoration-color 0.15s ease;
+  padding: 1px 2px;
+}
+
+.article-reader-body a:hover {
+  color: #b84322 !important;
+  background: rgba(209, 86, 50, 0.09) !important;
+  text-decoration-color: currentColor !important;
+}
+
+/* ── Distinct In-Article Images & Captions ── */
+.article-reader-body img,
+.article-reader-body .cs-figure__img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(24, 24, 22, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  display: block;
+}
+
+.article-reader-body figure,
+.article-reader-body .cs-figure {
+  margin: 2.4em 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.article-reader-body figure img,
+.article-reader-body .cs-figure .cs-figure__img {
+  margin: 0;
+}
+
+.article-reader-body figcaption,
+.article-reader-body .cs-figure__caption {
+  margin-top: 10px;
+  padding: 0 12px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #71717a;
+  text-align: center;
+  font-style: italic;
+  font-weight: 500;
+  max-width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.article-reader-body figcaption::before,
+.article-reader-body .cs-figure__caption::before {
+  content: "—";
+  color: #a1a1aa;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.article-reader-body figcaption::after,
+.article-reader-body .cs-figure__caption::after {
+  content: "—";
+  color: #a1a1aa;
+  font-style: normal;
+  font-weight: 400;
+}
+
+/* Standalone paragraph captions right under image */
+.article-reader-body p:has(> img) + p > em:only-child,
+.article-reader-body p.caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: -1.2em;
+  margin-bottom: 2em;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #71717a;
+  text-align: center;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.article-reader-body p:has(> img) + p > em:only-child::before,
+.article-reader-body p.caption::before {
+  content: "—";
+  color: #a1a1aa;
+  font-style: normal;
+}
+
+.article-reader-body p:has(> img) + p > em:only-child::after,
+.article-reader-body p.caption::after {
+  content: "—";
+  color: #a1a1aa;
+  font-style: normal;
 }
 
 /* ════════════════════════════════════════════════════════════

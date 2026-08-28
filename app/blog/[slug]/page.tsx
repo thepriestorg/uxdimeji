@@ -202,10 +202,10 @@ export default async function BlogPostPage({
 
           <h2 className="signoff-headline">Thanks for spending time here.</h2>
           <p className="signoff-body">
-            I write about product craft, interaction nuance, and bridging the
-            gap between Figma and production code. If anything here resonated
-            with you, sparked a question, or you&apos;d like to collaborate, I&apos;d
-            love to hear from you.
+            I write about product design, craft, my journey in tech, life
+            observations, and other things I find interesting along the way. If
+            anything here resonated with you, sparked a question, or you&apos;d
+            like to chat, I&apos;d love to hear from you.
           </p>
 
           <div className="signoff-actions">

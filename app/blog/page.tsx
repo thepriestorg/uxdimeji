@@ -106,9 +106,9 @@ export default async function BlogPage() {
 
           {/* Intro Copy */}
           <p className="blog-intro-paragraph">
-            A quiet space where I share thoughts on product design, craft,
-            interface systems, design-to-code workflows, and lessons learned along
-            the way.
+            A quiet space where I share thoughts on product design, craft, my
+            journey in tech, life observations, and other things I find
+            interesting along the way.
           </p>
         </header>
 
