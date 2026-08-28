@@ -15,33 +15,41 @@ export type BlogPost = {
   updated_at: string;
 };
 
-export async function getPublishedPosts() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("published", true)
-    .order("published_at", { ascending: false });
+export async function getPublishedPosts(): Promise<BlogPost[]> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("published", true)
+      .order("published_at", { ascending: false });
 
-  return (data ?? []) as BlogPost[];
+    return (data ?? []) as BlogPost[];
+  } catch {
+    return [];
+  }
 }
 
-export async function getPublishedPost(slug: string) {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .eq("published", true)
-    .maybeSingle();
+export async function getPublishedPost(slug: string): Promise<BlogPost | null> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .eq("published", true)
+      .maybeSingle();
 
-  return data as BlogPost | null;
+    return (data as BlogPost) ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export function formatPostDate(date: string | null) {
   if (!date) return "Draft";
   return new Intl.DateTimeFormat("en", {
-    day: "2-digit",
+    day: "numeric",
     month: "short",
     year: "numeric",
   }).format(new Date(date));
