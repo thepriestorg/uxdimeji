@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import {
   Linkedin,
   Instagram,
@@ -10,7 +9,7 @@ import {
 } from "lucide-react";
 import styles from "./V2Hero.module.css";
 
-/* ─── Social & Resume Links (Email removed) ─────────────── */
+/* ─── Social & Resume Links ─────────────────────────────── */
 const socialLinks = [
   {
     label: "Resume",
@@ -181,72 +180,42 @@ function UnderlineSketch() {
   );
 }
 
-/* ─── Easing curve ──────────────────────────────────────── */
-const smoothSpring = {
-  duration: 0.85,
-  ease: [0.22, 1, 0.36, 1],
-};
-
 /* ─── Main Hero Component ───────────────────────────────── */
 export default function V2Hero() {
   return (
     <section className={styles.heroCanvas} id="top">
       {/* ── Top-Left Sticker: Currently open to roles ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -25, scale: 0.88 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ ...smoothSpring, delay: 0.15 }}
-        className={styles.stickerCurrentWrapper}
-      >
+      <div className={styles.stickerCurrentWrapper}>
         <div className={styles.stickerCurrent}>
           Currently open to roles
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Center Stage ── */}
       <div className={styles.centerStage}>
         {/* Live Clock */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...smoothSpring, delay: 0.1 }}
-        >
+        <div className={styles.liveClockWrapper}>
           <LiveClock />
-        </motion.div>
+        </div>
 
         {/* "my name is" handwriting text */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...smoothSpring, delay: 0.2 }}
-          className={styles.nameHeader}
-        >
+        <div className={styles.nameHeader}>
           <span className={styles.nameHeaderHand}>my name is</span>
           <UnderlineSketch />
-        </motion.div>
+        </div>
 
         {/* Figma Selection Box Container */}
         <div className={styles.selectionWrapper}>
           {/* Avatar Bubble - Left (OA) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...smoothSpring, delay: 0.45 }}
-            className={styles.avatarBubbleLeft}
-          >
+          <div className={styles.avatarBubbleLeft}>
             <div className={styles.avatarCircle}>
               <span>OA</span>
             </div>
             <div className={styles.bubbleTailLeft} />
-          </motion.div>
+          </div>
 
           {/* Figma Selection Box */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ ...smoothSpring, delay: 0.3 }}
-            className={styles.figmaBox}
-          >
+          <div className={styles.figmaBox}>
             {selectionHandles.map((pos, idx) => (
               <div
                 key={idx}
@@ -255,71 +224,46 @@ export default function V2Hero() {
               />
             ))}
             <h1 className={styles.designerName}>OLADIMEJI</h1>
-          </motion.div>
+          </div>
 
           {/* Avatar Bubble - Right (UX) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...smoothSpring, delay: 0.45 }}
-            className={styles.avatarBubbleRight}
-          >
+          <div className={styles.avatarBubbleRight}>
             <div className={styles.avatarCircle}>
               <span>UX</span>
             </div>
             <div className={styles.bubbleTailRight} />
-          </motion.div>
+          </div>
         </div>
 
         {/* Status Line: Cyan Dot + Text */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...smoothSpring, delay: 0.5 }}
-          className={styles.statusRow}
-        >
+        <div className={styles.statusRow}>
           <span className={styles.statusDot} />
           <span className={styles.statusText}>
             AVAILABLE FOR THOUGHTFUL PROJECTS
           </span>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── Floating Badge 1: PRODUCT DESIGNER ── */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, x: -30, y: 20 }}
-        animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-        transition={{ ...smoothSpring, delay: 0.6 }}
-        className={styles.badgeProductDesignerWrapper}
-      >
+      <div className={styles.badgeProductDesignerWrapper}>
         <div className={styles.badgeProductDesigner}>
           <span className={styles.badgeText}>PRODUCT DESIGNER</span>
           <YellowCursor />
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Floating Badge 2: KWARA, NIGERIA ── */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, x: 30, y: 20 }}
-        animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-        transition={{ ...smoothSpring, delay: 0.68 }}
-        className={styles.badgeLocationWrapper}
-      >
+      <div className={styles.badgeLocationWrapper}>
         <div className={styles.badgeLocation}>
           <PinkCursor />
           <span className={styles.badgeLocationText}>KWARA, NIGERIA</span>
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Bottom Section: Headline Copy + WORK WITH ME + Socials ── */}
       <div className={styles.bottomSection}>
         {/* 2-line balanced tagline */}
-        <motion.h2
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...smoothSpring, delay: 0.75 }}
-          className={styles.taglineHeading}
-        >
+        <h2 className={styles.taglineHeading}>
           <span className={styles.taglineRow}>
             <span>I design</span>
             <GreenSwirlIcon />
@@ -330,15 +274,10 @@ export default function V2Hero() {
             <PinkFlowerIcon />
             <span className={styles.taglinePeriod}>.</span>
           </span>
-        </motion.h2>
+        </h2>
 
         {/* CTA + Socials Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...smoothSpring, delay: 0.88 }}
-          className={styles.actionsRow}
-        >
+        <div className={styles.actionsRow}>
           {/* WORK WITH ME CTA Button */}
           <a
             href="mailto:oladimejiuiux@gmail.com"
@@ -351,7 +290,7 @@ export default function V2Hero() {
             <span className={styles.contactButtonText}>WORK WITH ME</span>
           </a>
 
-          {/* Rounded Social & Resume Links (Email removed) */}
+          {/* Rounded Social & Resume Links */}
           <nav className={styles.socialNav} aria-label="Social profiles and resume">
             {socialLinks.map(({ label, href, icon: Icon }) => (
               <a
@@ -371,7 +310,7 @@ export default function V2Hero() {
               </a>
             ))}
           </nav>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

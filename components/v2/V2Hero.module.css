@@ -1,6 +1,7 @@
 /* ════════════════════════════════════════════════════════════
    V2Hero — Exact Nudge Design Tool Aesthetic
    Typography: Flux Variable (Name) + Just Me Again (Script)
+   100% GPU Hardware-Accelerated (iOS Safari / WebKit Compatible)
    ════════════════════════════════════════════════════════════ */
 
 .heroCanvas {
@@ -16,6 +17,9 @@
   padding: 90px clamp(16px, 4vw, 60px) 44px;
   background: #fbfbf9;
   color: #181816;
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Subtle canvas background grid */
@@ -29,6 +33,7 @@
     linear-gradient(90deg, rgba(24, 24, 22, 0.04) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(circle at center, #000 65%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, #000 65%, transparent 100%);
   pointer-events: none;
 }
 
@@ -39,6 +44,9 @@
   left: clamp(16px, 6vw, 120px);
   z-index: 10;
   user-select: none;
+  -webkit-user-select: none;
+  animation: heroEntranceSlideDown 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  -webkit-animation: heroEntranceSlideDown 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
 .stickerCurrent {
@@ -53,7 +61,10 @@
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(168, 230, 207, 0.35);
   transform: rotate(-7deg);
+  -webkit-transform: rotate(-7deg);
   animation: gentleFloatSticker 6s ease-in-out infinite;
+  -webkit-animation: gentleFloatSticker 6s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* ── Center Stage ── */
@@ -67,6 +78,11 @@
 }
 
 /* Live Clock — centered directly above "my name is" */
+.liveClockWrapper {
+  animation: heroEntranceSlideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+  -webkit-animation: heroEntranceSlideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
 .liveClock {
   margin-bottom: 6px;
   font-family: var(--font-manrope), monospace;
@@ -75,6 +91,7 @@
   letter-spacing: 0.08em;
   color: rgba(24, 24, 22, 0.65);
   user-select: none;
+  -webkit-user-select: none;
 }
 
 /* "my name is" header with hand-drawn underline */
@@ -84,6 +101,9 @@
   align-items: center;
   margin-bottom: 10px;
   user-select: none;
+  -webkit-user-select: none;
+  animation: heroEntranceSlideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  -webkit-animation: heroEntranceSlideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
 .nameHeaderHand {
@@ -118,6 +138,9 @@
   justify-content: center;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: heroEntrancePop 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  -webkit-animation: heroEntrancePop 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 .figmaHandle {
@@ -142,6 +165,7 @@
   text-align: center;
   text-transform: uppercase;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Avatar Bubbles on the sides */
@@ -150,9 +174,12 @@
   left: clamp(-46px, -4.5vw, -60px);
   top: 50%;
   transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
   display: flex;
   align-items: center;
   z-index: 6;
+  animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+  -webkit-animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
 }
 
 .avatarBubbleRight {
@@ -160,9 +187,12 @@
   right: clamp(-46px, -4.5vw, -60px);
   top: 50%;
   transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
   display: flex;
   align-items: center;
   z-index: 6;
+  animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+  -webkit-animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
 }
 
 .avatarCircle {
@@ -185,6 +215,7 @@
   right: -5px;
   top: 50%;
   transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
   width: 0;
   height: 0;
   border-top: 4px solid transparent;
@@ -197,6 +228,7 @@
   left: -5px;
   top: 50%;
   transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
   width: 0;
   height: 0;
   border-top: 4px solid transparent;
@@ -210,6 +242,8 @@
   align-items: center;
   gap: 8px;
   margin-top: 18px;
+  animation: heroEntranceSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+  -webkit-animation: heroEntranceSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 
 .statusDot {
@@ -219,6 +253,7 @@
   background: #38bdf8;
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
   animation: dotPulse 2.4s ease-in-out infinite;
+  -webkit-animation: dotPulse 2.4s ease-in-out infinite;
   flex-shrink: 0;
 }
 
@@ -230,6 +265,7 @@
   text-transform: uppercase;
   color: rgba(24, 24, 22, 0.65);
   user-select: none;
+  -webkit-user-select: none;
 }
 
 /* ── Floating Badge 1: PRODUCT DESIGNER (Yellow) ── */
@@ -239,6 +275,9 @@
   bottom: clamp(140px, 22vh, 230px);
   z-index: 10;
   user-select: none;
+  -webkit-user-select: none;
+  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
 }
 
 .badgeProductDesigner {
@@ -249,8 +288,11 @@
   border: 1.8px solid #181816;
   border-radius: 999px;
   transform: rotate(-12deg);
+  -webkit-transform: rotate(-12deg);
   animation: driftAroundYellow 10s ease-in-out infinite;
+  -webkit-animation: driftAroundYellow 10s ease-in-out infinite;
   box-shadow: 0 4px 14px rgba(249, 182, 56, 0.28);
+  will-change: transform;
 }
 
 .badgeText {
@@ -269,6 +311,7 @@
   width: 16px;
   height: 18px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 /* ── Floating Badge 2: KWARA, NIGERIA (Magenta) ── */
@@ -278,6 +321,9 @@
   bottom: clamp(150px, 24vh, 250px);
   z-index: 10;
   user-select: none;
+  -webkit-user-select: none;
+  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
+  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
 }
 
 .badgeLocation {
@@ -288,8 +334,11 @@
   border: 1.8px solid #181816;
   border-radius: 999px;
   transform: rotate(12deg);
+  -webkit-transform: rotate(12deg);
   animation: driftAroundPink 11s ease-in-out infinite;
+  -webkit-animation: driftAroundPink 11s ease-in-out infinite;
   box-shadow: 0 4px 14px rgba(224, 30, 90, 0.3);
+  will-change: transform;
 }
 
 .badgeLocationText {
@@ -308,6 +357,7 @@
   width: 16px;
   height: 18px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 /* ── Bottom Section: 2-Line Headline + WORK WITH ME + Socials ── */
@@ -337,6 +387,8 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
+  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
+  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
 }
 
 .taglineRow {
@@ -372,6 +424,8 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 16px;
+  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.88s both;
+  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.88s both;
 }
 
 /* ── WORK WITH ME CTA Button (Refined Rounded Pill Design) ── */
@@ -387,10 +441,12 @@
   cursor: pointer !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+  -webkit-transition: -webkit-transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
 }
 
 .contactButton:hover {
   transform: translateY(-2px) !important;
+  -webkit-transform: translateY(-2px) !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
   background: #1c1c1a !important;
 }
@@ -441,11 +497,13 @@
   border: 1.5px solid rgba(24, 24, 22, 0.18);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: grid;
   place-items: center;
   color: rgba(24, 24, 22, 0.75) !important;
   text-decoration: none !important;
   transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+  -webkit-transition: color 0.2s, border-color 0.2s, background 0.2s, -webkit-transform 0.2s, box-shadow 0.2s;
 }
 
 .socialBtn:hover {
@@ -453,6 +511,7 @@
   border-color: #181816;
   background: #ffffff;
   transform: translateY(-2px);
+  -webkit-transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
@@ -462,49 +521,203 @@
   line-height: 1;
 }
 
+/* ── Universal Hardware-Accelerated Entrance Keyframes ── */
+@keyframes heroEntranceSlideDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -22px, 0);
+    -webkit-transform: translate3d(0, -22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+@-webkit-keyframes heroEntranceSlideDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -22px, 0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroEntrancePop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.94);
+    -webkit-transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@-webkit-keyframes heroEntrancePop {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 16px, 0) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroEntranceScale {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0);
+    -webkit-transform: translateY(-50%) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+    -webkit-transform: translateY(-50%) scale(1);
+  }
+}
+
+@-webkit-keyframes heroEntranceScale {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(-50%) scale(0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(-50%) scale(1);
+  }
+}
+
+@keyframes heroEntranceSlideUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    -webkit-transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+@-webkit-keyframes heroEntranceSlideUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
 /* ── Smooth Desktop Drift Animations ── */
 @keyframes driftAroundYellow {
   0% {
-    transform: rotate(-12deg) translate(0px, 0px);
+    transform: rotate(-12deg) translate3d(0px, 0px, 0);
+    -webkit-transform: rotate(-12deg) translate3d(0px, 0px, 0);
   }
   25% {
-    transform: rotate(-9deg) translate(14px, -12px);
+    transform: rotate(-9deg) translate3d(14px, -12px, 0);
+    -webkit-transform: rotate(-9deg) translate3d(14px, -12px, 0);
   }
   50% {
-    transform: rotate(-15deg) translate(-10px, 8px);
+    transform: rotate(-15deg) translate3d(-10px, 8px, 0);
+    -webkit-transform: rotate(-15deg) translate3d(-10px, 8px, 0);
   }
   75% {
-    transform: rotate(-11deg) translate(8px, 6px);
+    transform: rotate(-11deg) translate3d(8px, 6px, 0);
+    -webkit-transform: rotate(-11deg) translate3d(8px, 6px, 0);
   }
   100% {
-    transform: rotate(-12deg) translate(0px, 0px);
+    transform: rotate(-12deg) translate3d(0px, 0px, 0);
+    -webkit-transform: rotate(-12deg) translate3d(0px, 0px, 0);
+  }
+}
+
+@-webkit-keyframes driftAroundYellow {
+  0% {
+    -webkit-transform: rotate(-12deg) translate3d(0px, 0px, 0);
+  }
+  25% {
+    -webkit-transform: rotate(-9deg) translate3d(14px, -12px, 0);
+  }
+  50% {
+    -webkit-transform: rotate(-15deg) translate3d(-10px, 8px, 0);
+  }
+  75% {
+    -webkit-transform: rotate(-11deg) translate3d(8px, 6px, 0);
+  }
+  100% {
+    -webkit-transform: rotate(-12deg) translate3d(0px, 0px, 0);
   }
 }
 
 @keyframes driftAroundPink {
   0% {
-    transform: rotate(12deg) translate(0px, 0px);
+    transform: rotate(12deg) translate3d(0px, 0px, 0);
+    -webkit-transform: rotate(12deg) translate3d(0px, 0px, 0);
   }
   25% {
-    transform: rotate(15deg) translate(-12px, -10px);
+    transform: rotate(15deg) translate3d(-12px, -10px, 0);
+    -webkit-transform: rotate(15deg) translate3d(-12px, -10px, 0);
   }
   50% {
-    transform: rotate(9deg) translate(10px, 12px);
+    transform: rotate(9deg) translate3d(10px, 12px, 0);
+    -webkit-transform: rotate(9deg) translate3d(10px, 12px, 0);
   }
   75% {
-    transform: rotate(13deg) translate(-8px, 6px);
+    transform: rotate(13deg) translate3d(-8px, 6px, 0);
+    -webkit-transform: rotate(13deg) translate3d(-8px, 6px, 0);
   }
   100% {
-    transform: rotate(12deg) translate(0px, 0px);
+    transform: rotate(12deg) translate3d(0px, 0px, 0);
+    -webkit-transform: rotate(12deg) translate3d(0px, 0px, 0);
+  }
+}
+
+@-webkit-keyframes driftAroundPink {
+  0% {
+    -webkit-transform: rotate(12deg) translate3d(0px, 0px, 0);
+  }
+  25% {
+    -webkit-transform: rotate(15deg) translate3d(-12px, -10px, 0);
+  }
+  50% {
+    -webkit-transform: rotate(9deg) translate3d(10px, 12px, 0);
+  }
+  75% {
+    -webkit-transform: rotate(13deg) translate3d(-8px, 6px, 0);
+  }
+  100% {
+    -webkit-transform: rotate(12deg) translate3d(0px, 0px, 0);
   }
 }
 
 @keyframes gentleFloatSticker {
   0%, 100% {
-    transform: rotate(-7deg) translateY(0);
+    transform: rotate(-7deg) translate3d(0, 0, 0);
+    -webkit-transform: rotate(-7deg) translate3d(0, 0, 0);
   }
   50% {
-    transform: rotate(-6deg) translateY(-4px);
+    transform: rotate(-6deg) translate3d(0, -4px, 0);
+    -webkit-transform: rotate(-6deg) translate3d(0, -4px, 0);
+  }
+}
+
+@-webkit-keyframes gentleFloatSticker {
+  0%, 100% {
+    -webkit-transform: rotate(-7deg) translate3d(0, 0, 0);
+  }
+  50% {
+    -webkit-transform: rotate(-6deg) translate3d(0, -4px, 0);
   }
 }
 
@@ -517,21 +730,52 @@
   }
 }
 
-@keyframes gentleFloatMobileYellow {
+@-webkit-keyframes dotPulse {
   0%, 100% {
-    transform: rotate(-8deg) translate(0px, 0px);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
   }
   50% {
-    transform: rotate(-6deg) translate(2px, -5px);
+    box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.08);
+  }
+}
+
+@keyframes gentleFloatMobileYellow {
+  0%, 100% {
+    transform: rotate(-8deg) translate3d(0px, 0px, 0);
+    -webkit-transform: rotate(-8deg) translate3d(0px, 0px, 0);
+  }
+  50% {
+    transform: rotate(-6deg) translate3d(2px, -5px, 0);
+    -webkit-transform: rotate(-6deg) translate3d(2px, -5px, 0);
+  }
+}
+
+@-webkit-keyframes gentleFloatMobileYellow {
+  0%, 100% {
+    -webkit-transform: rotate(-8deg) translate3d(0px, 0px, 0);
+  }
+  50% {
+    -webkit-transform: rotate(-6deg) translate3d(2px, -5px, 0);
   }
 }
 
 @keyframes gentleFloatMobilePink {
   0%, 100% {
-    transform: rotate(8deg) translate(0px, 0px);
+    transform: rotate(8deg) translate3d(0px, 0px, 0);
+    -webkit-transform: rotate(8deg) translate3d(0px, 0px, 0);
   }
   50% {
-    transform: rotate(10deg) translate(-2px, -5px);
+    transform: rotate(10deg) translate3d(-2px, -5px, 0);
+    -webkit-transform: rotate(10deg) translate3d(-2px, -5px, 0);
+  }
+}
+
+@-webkit-keyframes gentleFloatMobilePink {
+  0%, 100% {
+    -webkit-transform: rotate(8deg) translate3d(0px, 0px, 0);
+  }
+  50% {
+    -webkit-transform: rotate(10deg) translate3d(-2px, -5px, 0);
   }
 }
 
@@ -559,7 +803,7 @@
 
   .avatarBubbleLeft,
   .avatarBubbleRight {
-    display: none;
+    display: none !important;
   }
 
   .nameHeaderHand {
@@ -589,7 +833,9 @@
   .badgeProductDesigner {
     padding: 7px 13px;
     transform: rotate(-8deg);
+    -webkit-transform: rotate(-8deg);
     animation: gentleFloatMobileYellow 8s ease-in-out infinite;
+    -webkit-animation: gentleFloatMobileYellow 8s ease-in-out infinite;
   }
 
   .badgeText,
@@ -606,8 +852,11 @@
   .badgeLocation {
     padding: 7px 13px;
     transform: rotate(8deg);
+    -webkit-transform: rotate(8deg);
     animation: gentleFloatMobilePink 8.5s ease-in-out infinite;
+    -webkit-animation: gentleFloatMobilePink 8.5s ease-in-out infinite;
   }
+
   .bottomSection {
     margin-top: 32px;
     margin-bottom: 55px;
