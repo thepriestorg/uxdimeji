@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+import { Plus_Jakarta_Sans, Playfair_Display, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import "./globals.css";
@@ -10,6 +10,17 @@ const manrope = localFont({
   src: "../public/assets/Manrope-Variable.ttf",
   variable: "--font-manrope",
 });
+const flux = localFont({
+  src: "../public/assets/Flux-Variable.woff2",
+  variable: "--font-flux",
+  display: "swap",
+});
+const handwriting = localFont({
+  src: "../public/assets/JustMeAgainDownHere.woff2",
+  variable: "--font-handwriting",
+  display: "swap",
+});
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://uxdimeji.com"),
@@ -148,7 +159,7 @@ export default function RootLayout({
 
   return (
     <html lang="en-NG" className="dark">
-      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} font-sans bg-background text-secondary antialiased`}>
+      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} font-sans bg-background text-secondary antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(seoJsonLd) }}
