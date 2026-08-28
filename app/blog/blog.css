@@ -555,6 +555,23 @@
   color: #3b3b36;
 }
 
+.article-reader-body blockquote p:last-of-type {
+  margin-bottom: 0;
+}
+
+.article-reader-body blockquote cite {
+  display: block;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(53, 95, 82, 0.14);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 0.74em;
+  font-style: normal;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: #777770;
+}
+
 .article-reader-body code {
   font-family: var(--font-manrope), monospace;
   font-size: 0.9em;

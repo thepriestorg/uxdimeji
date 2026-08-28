@@ -2,6 +2,7 @@
 
 import { useEditor, EditorContent, Node, mergeAttributes } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Blockquote from "@tiptap/extension-blockquote";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Youtube from "@tiptap/extension-youtube";
@@ -21,6 +22,71 @@ import { uploadToCloudinary } from "@/lib/cloudinary-upload";
 import { useState, useCallback, useRef } from "react";
 
 const lowlight = createLowlight(common);
+
+// ─── Blockquote with optional attribution ───────────────────────────────────
+
+const AttributedBlockquote = Blockquote.extend({
+    addAttributes() {
+        return {
+            attribution: {
+                default: "",
+                parseHTML: (element) =>
+                    element.getAttribute("data-attribution") ||
+                    element.querySelector("cite")?.textContent ||
+                    "",
+                renderHTML: (attributes) => attributes.attribution
+                    ? { "data-attribution": attributes.attribution }
+                    : {},
+            },
+        };
+    },
+
+    addNodeView() {
+        return ({ node, getPos, editor }) => {
+            let currentNode = node;
+            const dom = document.createElement("blockquote");
+            const contentDOM = document.createElement("div");
+            const attributionInput = document.createElement("input");
+
+            contentDOM.className = "rte-quote-content";
+            attributionInput.className = "rte-quote-attribution";
+            attributionInput.type = "text";
+            attributionInput.placeholder = "Optional attribution, e.g. Maya Angelou";
+            attributionInput.value = node.attrs.attribution || "";
+            attributionInput.setAttribute("aria-label", "Quote attribution");
+            attributionInput.contentEditable = "false";
+
+            const syncAttribution = () => {
+                const position = typeof getPos === "function" ? getPos() : undefined;
+                if (typeof position !== "number") return;
+                editor.view.dispatch(editor.view.state.tr.setNodeMarkup(position, undefined, {
+                    ...currentNode.attrs,
+                    attribution: attributionInput.value,
+                }));
+            };
+
+            attributionInput.addEventListener("input", syncAttribution);
+            dom.append(contentDOM, attributionInput);
+
+            return {
+                dom,
+                contentDOM,
+                update(updatedNode) {
+                    if (updatedNode.type.name !== currentNode.type.name) return false;
+                    currentNode = updatedNode;
+                    const nextAttribution = updatedNode.attrs.attribution || "";
+                    if (attributionInput.value !== nextAttribution) {
+                        attributionInput.value = nextAttribution;
+                    }
+                    return true;
+                },
+                stopEvent(event) {
+                    return event.target instanceof HTMLElement && attributionInput.contains(event.target);
+                },
+            };
+        };
+    },
+});
 
 // ─── Custom Figure Node (image + caption) ────────────────────────────────────
 
@@ -212,6 +278,22 @@ const EDITOR_STYLES = `
     border-radius: 0 8px 8px 0;
 }
 .rte-editor blockquote p { color: inherit; margin: 0; }
+.rte-editor .rte-quote-content { min-width: 0; }
+.rte-editor .rte-quote-attribution {
+    display: block;
+    width: 100%;
+    margin-top: 0.65rem;
+    padding: 0.45rem 0 0;
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+    color: rgba(255,255,255,0.45);
+    font: 500 0.78rem/1.5 var(--font-sans), sans-serif;
+    font-style: normal;
+    outline: none;
+}
+.rte-editor .rte-quote-attribution::placeholder { color: rgba(255,255,255,0.22); }
+.rte-editor .rte-quote-attribution:focus { color: rgba(255,255,255,0.7); }
 
 /* Lists */
 .rte-editor ul {
@@ -338,7 +420,9 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
         extensions: [
             StarterKit.configure({
                 codeBlock: false,
+                blockquote: false,
             }),
+            AttributedBlockquote,
             Underline,
             Image.configure({
                 HTMLAttributes: { class: "rounded-xl max-w-full" },

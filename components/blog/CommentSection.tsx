@@ -20,20 +20,30 @@ export default function CommentSection({ postSlug }: { postSlug: string }) {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    supabase
-      .from("blog_comments")
-      .select("id,name,body,created_at")
-      .eq("post_slug", postSlug)
-      .eq("approved", true)
-      .order("created_at", { ascending: true })
-      .then(({ data }) => {
+    let active = true;
+
+    const loadComments = async () => {
+      try {
+        const { data } = await supabase
+          .from("blog_comments")
+          .select("id,name,body,created_at")
+          .eq("post_slug", postSlug)
+          .eq("approved", true)
+          .order("created_at", { ascending: true });
+
+        if (!active) return;
         if (data) {
           setComments(data as Comment[]);
         }
-      })
-      .catch(() => {
-        setComments([]);
-      });
+      } catch {
+        if (active) setComments([]);
+      }
+    };
+
+    void loadComments();
+    return () => {
+      active = false;
+    };
   }, [postSlug, supabase]);
 
   async function submit(event: FormEvent) {

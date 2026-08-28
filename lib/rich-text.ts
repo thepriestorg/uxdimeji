@@ -52,7 +52,10 @@ function renderNode(node: RichNode): string {
   if (node.type === "bulletList") return `<ul>${children}</ul>`;
   if (node.type === "orderedList") return `<ol>${children}</ol>`;
   if (node.type === "listItem") return `<li>${children}</li>`;
-  if (node.type === "blockquote") return `<blockquote>${children}</blockquote>`;
+  if (node.type === "blockquote") {
+    const attribution = attr(node, "attribution");
+    return `<blockquote>${children}${attribution ? `<cite>${attribution}</cite>` : ""}</blockquote>`;
+  }
   if (node.type === "codeBlock") return `<pre><code>${children}</code></pre>`;
   if (node.type === "horizontalRule") return "<hr>";
   if (node.type === "hardBreak") return "<br>";
@@ -68,7 +71,13 @@ function renderNode(node: RichNode): string {
 export function richTextToHtml(content: string) {
   const trimmed = content.trim();
   if (!trimmed) return "";
-  if (trimmed.startsWith("<")) return trimmed;
+  if (trimmed.startsWith("<")) {
+    return trimmed.replace(
+      /<blockquote([^>]*?)\sdata-attribution=(['"])(.*?)\2([^>]*)>([\s\S]*?)<\/blockquote>/gi,
+      (_match, before, _quote, attribution, after, body) =>
+        `<blockquote${before}${after}>${body}<cite>${attribution}</cite></blockquote>`,
+    );
+  }
   try {
     const document = JSON.parse(trimmed) as RichNode;
     if (document.type === "doc") return renderNode(document);
