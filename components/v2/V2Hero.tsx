@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
-  Mail,
   Linkedin,
   Instagram,
   Music2,
@@ -10,43 +10,32 @@ import {
 } from "lucide-react";
 import styles from "./V2Hero.module.css";
 
-/* ─── Social & Resume Links ─────────────────────────────── */
+/* ─── Social & Resume Links (Email removed) ─────────────── */
 const socialLinks = [
   {
     label: "Resume",
     href: "https://drive.google.com/file/d/1IsLsaqiIbkBeLbse-dz8QaVgegscdreC/view?usp=sharing",
     icon: FileText,
-    isExternal: true,
-  },
-  {
-    label: "Email",
-    href: "mailto:oladimejiuiux@gmail.com",
-    icon: Mail,
-    isExternal: false,
   },
   {
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/uiuxoladimeji/",
     icon: Linkedin,
-    isExternal: true,
   },
   {
     label: "X",
     href: "https://x.com/uxdimeji",
     icon: null,
-    isExternal: true,
   },
   {
     label: "Instagram",
     href: "https://www.instagram.com/uxdimeji",
     icon: Instagram,
-    isExternal: true,
   },
   {
     label: "TikTok",
     href: "https://www.tiktok.com/@uxdimeji",
     icon: Music2,
-    isExternal: true,
   },
 ];
 
@@ -192,38 +181,72 @@ function UnderlineSketch() {
   );
 }
 
+/* ─── Easing curve ──────────────────────────────────────── */
+const smoothSpring = {
+  duration: 0.85,
+  ease: [0.22, 1, 0.36, 1],
+};
+
 /* ─── Main Hero Component ───────────────────────────────── */
 export default function V2Hero() {
   return (
     <section className={styles.heroCanvas} id="top">
       {/* ── Top-Left Sticker: Currently open to roles ── */}
-      <div className={styles.stickerCurrent}>
-        Currently open to roles
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: -25, scale: 0.88 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ ...smoothSpring, delay: 0.15 }}
+        className={styles.stickerCurrentWrapper}
+      >
+        <div className={styles.stickerCurrent}>
+          Currently open to roles
+        </div>
+      </motion.div>
 
       {/* ── Center Stage ── */}
       <div className={styles.centerStage}>
-        {/* Live Clock — sits directly above "my name is" */}
-        <LiveClock />
+        {/* Live Clock */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...smoothSpring, delay: 0.1 }}
+        >
+          <LiveClock />
+        </motion.div>
 
         {/* "my name is" handwriting text */}
-        <div className={styles.nameHeader}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...smoothSpring, delay: 0.2 }}
+          className={styles.nameHeader}
+        >
           <span className={styles.nameHeaderHand}>my name is</span>
           <UnderlineSketch />
-        </div>
+        </motion.div>
 
         {/* Figma Selection Box Container */}
         <div className={styles.selectionWrapper}>
-          {/* Avatar Bubble - Left (OA: Oladimeji Abubakar) */}
-          <div className={styles.avatarBubbleLeft}>
+          {/* Avatar Bubble - Left (OA) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ ...smoothSpring, delay: 0.45 }}
+            className={styles.avatarBubbleLeft}
+          >
             <div className={styles.avatarCircle}>
               <span>OA</span>
             </div>
             <div className={styles.bubbleTailLeft} />
-          </div>
+          </motion.div>
 
           {/* Figma Selection Box */}
-          <div className={styles.figmaBox}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ ...smoothSpring, delay: 0.3 }}
+            className={styles.figmaBox}
+          >
             {selectionHandles.map((pos, idx) => (
               <div
                 key={idx}
@@ -232,42 +255,71 @@ export default function V2Hero() {
               />
             ))}
             <h1 className={styles.designerName}>OLADIMEJI</h1>
-          </div>
+          </motion.div>
 
           {/* Avatar Bubble - Right (UX) */}
-          <div className={styles.avatarBubbleRight}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ ...smoothSpring, delay: 0.45 }}
+            className={styles.avatarBubbleRight}
+          >
             <div className={styles.avatarCircle}>
               <span>UX</span>
             </div>
             <div className={styles.bubbleTailRight} />
-          </div>
+          </motion.div>
         </div>
 
         {/* Status Line: Cyan Dot + Text */}
-        <div className={styles.statusRow}>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...smoothSpring, delay: 0.5 }}
+          className={styles.statusRow}
+        >
           <span className={styles.statusDot} />
           <span className={styles.statusText}>
             AVAILABLE FOR THOUGHTFUL PROJECTS
           </span>
+        </motion.div>
+      </div>
+
+      {/* ── Floating Badge 1: PRODUCT DESIGNER ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, x: -30, y: 20 }}
+        animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+        transition={{ ...smoothSpring, delay: 0.6 }}
+        className={styles.badgeProductDesignerWrapper}
+      >
+        <div className={styles.badgeProductDesigner}>
+          <span className={styles.badgeText}>PRODUCT DESIGNER</span>
+          <YellowCursor />
         </div>
-      </div>
+      </motion.div>
 
-      {/* ── Floating Badge 1: PRODUCT DESIGNER (Drifts smoothly) ── */}
-      <div className={styles.badgeProductDesigner}>
-        <span className={styles.badgeText}>PRODUCT DESIGNER</span>
-        <YellowCursor />
-      </div>
-
-      {/* ── Floating Badge 2: KWARA, NIGERIA (Drifts smoothly) ── */}
-      <div className={styles.badgeLocation}>
-        <PinkCursor />
-        <span className={styles.badgeLocationText}>KWARA, NIGERIA</span>
-      </div>
+      {/* ── Floating Badge 2: KWARA, NIGERIA ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, x: 30, y: 20 }}
+        animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+        transition={{ ...smoothSpring, delay: 0.68 }}
+        className={styles.badgeLocationWrapper}
+      >
+        <div className={styles.badgeLocation}>
+          <PinkCursor />
+          <span className={styles.badgeLocationText}>KWARA, NIGERIA</span>
+        </div>
+      </motion.div>
 
       {/* ── Bottom Section: Headline Copy + WORK WITH ME + Socials ── */}
       <div className={styles.bottomSection}>
-        {/* 2-line balanced tagline matching the reference structure */}
-        <h2 className={styles.taglineHeading}>
+        {/* 2-line balanced tagline */}
+        <motion.h2
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...smoothSpring, delay: 0.75 }}
+          className={styles.taglineHeading}
+        >
           <span className={styles.taglineRow}>
             <span>I design</span>
             <GreenSwirlIcon />
@@ -278,9 +330,15 @@ export default function V2Hero() {
             <PinkFlowerIcon />
             <span className={styles.taglinePeriod}>.</span>
           </span>
-        </h2>
+        </motion.h2>
 
-        <div className={styles.actionsRow}>
+        {/* CTA + Socials Row */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...smoothSpring, delay: 0.88 }}
+          className={styles.actionsRow}
+        >
           {/* WORK WITH ME CTA Button */}
           <a
             href="mailto:oladimejiuiux@gmail.com"
@@ -293,14 +351,14 @@ export default function V2Hero() {
             <span className={styles.contactButtonText}>WORK WITH ME</span>
           </a>
 
-          {/* Rounded Social & Resume Links */}
+          {/* Rounded Social & Resume Links (Email removed) */}
           <nav className={styles.socialNav} aria-label="Social profiles and resume">
-            {socialLinks.map(({ label, href, icon: Icon, isExternal }) => (
+            {socialLinks.map(({ label, href, icon: Icon }) => (
               <a
                 key={label}
                 href={href}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={label}
                 title={label}
                 className={styles.socialBtn}
@@ -313,7 +371,7 @@ export default function V2Hero() {
               </a>
             ))}
           </nav>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

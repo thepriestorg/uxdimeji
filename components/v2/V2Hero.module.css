@@ -33,11 +33,15 @@
 }
 
 /* ── Top-Left Sticker: Currently open to roles ── */
-.stickerCurrent {
+.stickerCurrentWrapper {
   position: absolute;
   top: clamp(80px, 11vw, 120px);
   left: clamp(16px, 6vw, 120px);
   z-index: 10;
+  user-select: none;
+}
+
+.stickerCurrent {
   padding: 8px 18px;
   border-radius: 4px;
   background: #a8e6cf;
@@ -50,7 +54,6 @@
   box-shadow: 0 2px 8px rgba(168, 230, 207, 0.35);
   transform: rotate(-7deg);
   animation: gentleFloatSticker 6s ease-in-out infinite;
-  user-select: none;
 }
 
 /* ── Center Stage ── */
@@ -230,11 +233,15 @@
 }
 
 /* ── Floating Badge 1: PRODUCT DESIGNER (Yellow) ── */
-.badgeProductDesigner {
+.badgeProductDesignerWrapper {
   position: absolute;
   left: clamp(20px, 9vw, 150px);
   bottom: clamp(140px, 22vh, 230px);
   z-index: 10;
+  user-select: none;
+}
+
+.badgeProductDesigner {
   display: inline-flex;
   align-items: center;
   padding: 9px 18px;
@@ -243,7 +250,6 @@
   border-radius: 999px;
   transform: rotate(-12deg);
   animation: driftAroundYellow 10s ease-in-out infinite;
-  user-select: none;
   box-shadow: 0 4px 14px rgba(249, 182, 56, 0.28);
 }
 
@@ -266,11 +272,15 @@
 }
 
 /* ── Floating Badge 2: KWARA, NIGERIA (Magenta) ── */
-.badgeLocation {
+.badgeLocationWrapper {
   position: absolute;
   right: clamp(20px, 9vw, 150px);
   bottom: clamp(150px, 24vh, 250px);
   z-index: 10;
+  user-select: none;
+}
+
+.badgeLocation {
   display: inline-flex;
   align-items: center;
   padding: 9px 18px;
@@ -279,7 +289,6 @@
   border-radius: 999px;
   transform: rotate(12deg);
   animation: driftAroundPink 11s ease-in-out infinite;
-  user-select: none;
   box-shadow: 0 4px 14px rgba(224, 30, 90, 0.3);
 }
 
@@ -520,9 +529,12 @@
     margin-bottom: 5px;
   }
 
-  .stickerCurrent {
+  .stickerCurrentWrapper {
     top: 70px;
     left: 12px;
+  }
+
+  .stickerCurrent {
     font-size: 11px;
     padding: 6px 12px;
   }
@@ -550,13 +562,16 @@
   }
 
   /* Badges moved down safely below the links */
-  .badgeProductDesigner {
+  .badgeProductDesignerWrapper {
     left: 10px;
     bottom: 30px;
+    z-index: 5;
+  }
+
+  .badgeProductDesigner {
     padding: 7px 13px;
     transform: rotate(-8deg);
     animation: none;
-    z-index: 5;
   }
 
   .badgeText,
@@ -564,13 +579,16 @@
     font-size: 10px;
   }
 
-  .badgeLocation {
+  .badgeLocationWrapper {
     right: 10px;
     bottom: 30px;
+    z-index: 5;
+  }
+
+  .badgeLocation {
     padding: 7px 13px;
     transform: rotate(8deg);
     animation: none;
-    z-index: 5;
   }
 
   .bottomSection {
