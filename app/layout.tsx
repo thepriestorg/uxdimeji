@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s | Oladimeji Abubakar",
   },
   description:
-    "Oladimeji Abubakar is a product and UI/UX designer based in Kwara and working across Nigeria and worldwide, creating intuitive digital products, scalable design systems, and thoughtful B2C and SaaS experiences.",
+    "Oladimeji Abubakar is a product and UI/UX designer based in Kwara and working across Nigeria and worldwide, creating intuitive digital products, scalable design systems, and thoughtful SaaS experiences.",
   keywords: [
     "Oladimeji Abubakar",
     "Product Designer Nigeria",
@@ -44,7 +44,6 @@ export const metadata: Metadata = {
     "Product Design Portfolio",
     "Design Systems",
     "SaaS Product Design",
-    "B2C Product Design",
   ],
   authors: [{ name: "Oladimeji Abubakar", url: "https://uxdimeji.com" }],
   creator: "Oladimeji Abubakar",
@@ -132,7 +131,6 @@ export default function RootLayout({
           "Interaction Design",
           "Design Systems",
           "SaaS Product Design",
-          "B2C Product Design",
           "Product Prototyping",
         ],
         sameAs: [

@@ -11,15 +11,14 @@ Contact: oladimejiuiux@gmail.com
 
 ## About
 
-Oladimeji is a product designer in Kwara who works with teams across Nigeria and worldwide. He designs intuitive digital products from strategy and user experience through interface design, design systems, prototyping, and development. His portfolio includes B2C, SaaS, fintech, healthcare, and marketplace product work.
+Oladimeji is a product designer in Kwara who works with teams across Nigeria and worldwide. He designs intuitive digital products from strategy and user experience through interface design, design systems, prototyping, and development. His portfolio includes SaaS, fintech, healthcare, and marketplace product work.
 
-## Specialties
-
-- Product strategy
-- UI design and UX design
-- Interaction design
-- Interface and design systems
-- SaaS and B2C product design
+## Core Specializations
+- Product design and UI/UX design
+- Design systems and component architecture
+- User research and journey mapping
+- Interaction design and prototyping
+- SaaS and digital product design
 - Functional prototyping and builds
 - Design-to-development collaboration
 

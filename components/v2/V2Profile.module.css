@@ -1,0 +1,477 @@
+/* ════════════════════════════════════════════════════════════
+   V2Profile — Centered Verified Profile Card Experience
+   With 100% GPU Hardware-Accelerated iOS/Mobile Animations
+   ════════════════════════════════════════════════════════════ */
+
+.profileSection {
+  position: relative;
+  width: 100%;
+  padding: clamp(80px, 9vw, 120px) var(--gutter, 24px);
+  background: #ffffff !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(24, 24, 22, 0.06);
+  border-bottom: 1px solid rgba(24, 24, 22, 0.06);
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.profileContainer {
+  max-width: 620px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* ── Section Header ── */
+.sectionHeader {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  opacity: 0;
+  transform: translate3d(0, -10px, 0);
+  -webkit-transform: translate3d(0, -10px, 0);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.sectionHeader.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+/* ── Avatar with Live Online Status ── */
+.avatarWrapper {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0) scale(0.92);
+  -webkit-transform: translate3d(0, 12px, 0) scale(0.92);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.06s;
+  will-change: opacity, transform;
+}
+
+.avatarWrapper.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+}
+
+.avatar {
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  background: #121313;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid rgba(24, 24, 22, 0.08);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Bright green online indicator dot */
+.onlineDot {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 15px;
+  height: 15px;
+  background: #22c55e;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+  animation: pulseBeacon 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseBeacon {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+  }
+}
+
+/* ── Name & Verified Badge ── */
+.nameRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  -webkit-transform: translate3d(0, 10px, 0);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+  will-change: opacity, transform;
+}
+
+.nameRow.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #181816;
+}
+
+.verifiedBadge {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* ── Role Title ── */
+.role {
+  margin: 4px 0 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 15px;
+  font-weight: 450;
+  color: #6b7280;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translate3d(0, 8px, 0);
+  -webkit-transform: translate3d(0, 8px, 0);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.16s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.16s;
+  will-change: opacity, transform;
+}
+
+.role.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+/* ── Bio Paragraph (Natural Flow & Preserved Spacing) ── */
+.bioText {
+  margin: 24px 0 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(15px, 1.6vw, 16.5px);
+  line-height: 1.7;
+  font-weight: 400;
+  color: #4b5563;
+  letter-spacing: -0.01em;
+  max-width: 590px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Word reveal animation token */
+.animatedWord {
+  display: inline;
+}
+
+/* Blinking typewriter cursor following live text */
+.typingCursor {
+  display: inline-block;
+  width: 2px;
+  height: 15px;
+  background: var(--accent, #355f52);
+  margin-left: 2px;
+  vertical-align: -2px;
+  animation: cursorBlink 0.65s ease-in-out infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Inline SVG Badges ── */
+.inlineBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: -2px;
+  margin: 0 3px;
+  line-height: 1;
+  animation: badgePop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes badgePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.flagSvg {
+  display: block;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.figmaInlineSvg {
+  display: block;
+  width: 13px;
+  height: 15px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.codeInlineSvg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
+}
+
+/* ── Press C to copy email Widget ── */
+.copyActionRow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+  color: #6b7280;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14.5px;
+  font-weight: 450;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  -webkit-transform: translate3d(0, 10px, 0);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s, color 0.15s ease;
+  will-change: opacity, transform;
+}
+
+.copyActionRow.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.copyActionRow:hover {
+  color: #181816;
+}
+
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-family: var(--font-manrope), monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
+}
+
+.copyActionRow:hover .kbd {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  color: #111827;
+  transform: translateY(-1px);
+}
+
+.copyActionRow:active .kbd,
+.kbdActive {
+  background: #d1d5db !important;
+  border-color: #6b7280 !important;
+  transform: scale(0.92) !important;
+}
+
+/* ── Toast Notification ── */
+.toast {
+  position: absolute;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  -webkit-transform: translate3d(-50%, 0, 0);
+  top: calc(100% + 8px);
+  padding: 5px 12px;
+  background: #181816;
+  color: #ffffff;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  animation: toastFadeIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 20;
+}
+
+@keyframes toastFadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, -4px, 0);
+    -webkit-transform: translate3d(-50%, -4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* ── Stack Subsection (Centered Minimal Dock) ── */
+.stackSection {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  -webkit-transform: translate3d(0, 12px, 0);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.38s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.38s;
+  will-change: opacity, transform;
+}
+
+.stackSection.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.stackHeader {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin: 0 0 14px 0;
+  user-select: none;
+}
+
+/* Centered Tool Dock */
+.stackDock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 16px;
+  background: #fbfbf9;
+  border: 1px solid rgba(24, 24, 22, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  flex-wrap: wrap;
+}
+
+.stackIconTile {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(24, 24, 22, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stackIconTile:hover {
+  transform: translateY(-3px) scale(1.08);
+  border-color: rgba(24, 24, 22, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.09);
+  z-index: 5;
+}
+
+.stackTooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: #181816;
+  color: #ffffff;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  z-index: 20;
+}
+
+.stackIconTile:hover .stackTooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .profileSection {
+    padding: 56px var(--gutter, 20px);
+  }
+
+  .avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+  }
+
+  .name {
+    font-size: 21px;
+  }
+
+  .bioText {
+    font-size: 15px;
+    line-height: 1.62;
+  }
+
+  .stackDock {
+    gap: 8px;
+    padding: 6px;
+  }
+
+  .stackIconTile {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+}

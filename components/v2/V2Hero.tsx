@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Linkedin,
   Instagram,
@@ -199,10 +200,16 @@ export default function V2Hero() {
 
         {/* Figma Selection Box Container */}
         <div className={styles.selectionWrapper}>
-          {/* Avatar Bubble - Left (OA) */}
+          {/* Avatar Bubble - Left (Portrait) */}
           <div className={styles.avatarBubbleLeft}>
-            <div className={styles.avatarCircle}>
-              <span>OA</span>
+            <div className={styles.avatarCirclePhoto}>
+              <Image
+                src="/images/oladimeji.png"
+                alt="Oladimeji Abubakar"
+                width={34}
+                height={34}
+                className={styles.avatarHeroPhoto}
+              />
             </div>
             <div className={styles.bubbleTailLeft} />
           </div>
