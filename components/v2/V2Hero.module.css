@@ -517,6 +517,24 @@
   }
 }
 
+@keyframes gentleFloatMobileYellow {
+  0%, 100% {
+    transform: rotate(-8deg) translate(0px, 0px);
+  }
+  50% {
+    transform: rotate(-6deg) translate(2px, -5px);
+  }
+}
+
+@keyframes gentleFloatMobilePink {
+  0%, 100% {
+    transform: rotate(8deg) translate(0px, 0px);
+  }
+  50% {
+    transform: rotate(10deg) translate(-2px, -5px);
+  }
+}
+
 /* ── Mobile Responsive Adjustments (Boosted Font Sizes & Clearances) ── */
 @media (max-width: 768px) {
   .heroCanvas {
@@ -561,7 +579,7 @@
     letter-spacing: 0.13em;
   }
 
-  /* Badges moved down safely below the links */
+  /* Badges moved down safely below the links with gentle floating motion */
   .badgeProductDesignerWrapper {
     left: 10px;
     bottom: 30px;
@@ -571,7 +589,7 @@
   .badgeProductDesigner {
     padding: 7px 13px;
     transform: rotate(-8deg);
-    animation: none;
+    animation: gentleFloatMobileYellow 8s ease-in-out infinite;
   }
 
   .badgeText,
@@ -588,9 +606,8 @@
   .badgeLocation {
     padding: 7px 13px;
     transform: rotate(8deg);
-    animation: none;
+    animation: gentleFloatMobilePink 8.5s ease-in-out infinite;
   }
-
   .bottomSection {
     margin-top: 32px;
     margin-bottom: 55px;
