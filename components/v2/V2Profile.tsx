@@ -280,19 +280,23 @@ export default function V2Profile() {
   const sectionRef = useRef<HTMLElement>(null);
   const email = "oladimejiuiux@gmail.com";
 
-  const handleCopy = useCallback((triggerType: "click" | "keyboard_c" = "click") => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(email);
-      setCopied(true);
-      trackCustomEvent("outbound_click", {
-        label: "Copied Email (Press C / Click)",
-        action: "copy_email",
-        trigger: triggerType,
-        email,
-      });
-      setTimeout(() => setCopied(false), 2400);
-    }
-  }, [email]);
+  const handleCopy = useCallback(
+    (triggerType: "click" | "keyboard_c" | React.MouseEvent | React.KeyboardEvent = "click") => {
+      const trigger = typeof triggerType === "string" ? triggerType : "click";
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(email);
+        setCopied(true);
+        trackCustomEvent("outbound_click", {
+          label: "Copied Email (Press C / Click)",
+          action: "copy_email",
+          trigger,
+          email,
+        });
+        setTimeout(() => setCopied(false), 2400);
+      }
+    },
+    [email]
+  );
 
   /* ── 100% Bulletproof Mobile & Desktop Viewport Observer ── */
   useEffect(() => {
@@ -494,10 +498,10 @@ export default function V2Profile() {
           className={`${styles.copyActionRow} ${
             isVisible ? styles.visible : ""
           }`}
-          onClick={handleCopy}
+          onClick={() => handleCopy("click")}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && handleCopy()}
+          onKeyDown={(e) => e.key === "Enter" && handleCopy("click")}
           aria-label="Click or press C to copy email to clipboard"
         >
           <span>Press</span>
