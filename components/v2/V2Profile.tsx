@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
+import { trackCustomEvent } from "@/components/AnalyticsTracker";
+import GithubActivity from "./GithubActivity";
 import styles from "./V2Profile.module.css";
 
 /* ─── Blue Verified Checkmark Badge SVG ─────────────────── */
@@ -278,10 +280,16 @@ export default function V2Profile() {
   const sectionRef = useRef<HTMLElement>(null);
   const email = "oladimejiuiux@gmail.com";
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = useCallback((triggerType: "click" | "keyboard_c" = "click") => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(email);
       setCopied(true);
+      trackCustomEvent("outbound_click", {
+        label: "Copied Email (Press C / Click)",
+        action: "copy_email",
+        trigger: triggerType,
+        email,
+      });
       setTimeout(() => setCopied(false), 2400);
     }
   }, [email]);
@@ -353,7 +361,7 @@ export default function V2Profile() {
         if (!e.metaKey && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
           setIsKeyPressed(true);
-          handleCopy();
+          handleCopy("keyboard_c");
           setTimeout(() => setIsKeyPressed(false), 300);
         }
       }
@@ -507,13 +515,13 @@ export default function V2Profile() {
           )}
         </div>
 
-        {/* ── Stack Subsection (Centered Minimal Dock) ── */}
+        {/* ── Stack & Activity Subsection ── */}
         <div
           className={`${styles.stackSection} ${
             isVisible ? styles.visible : ""
           }`}
         >
-          <p className={styles.stackHeader}>STACK</p>
+          <p className={styles.stackHeader}>STACK &amp; ACTIVITY</p>
           <div className={styles.stackDock}>
             {stackTools.map(({ name, icon: Icon }) => (
               <div
@@ -527,6 +535,8 @@ export default function V2Profile() {
               </div>
             ))}
           </div>
+
+          <GithubActivity />
         </div>
       </div>
     </section>

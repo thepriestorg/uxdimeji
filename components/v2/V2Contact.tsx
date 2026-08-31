@@ -6,7 +6,10 @@ export default function V2Contact() {
       <p className="eyebrow reveal">Contact / New work</p>
       <div className="contact-main reveal">
         <h2>Put the difficult one on my desk.</h2>
-        <a href="mailto:oladimejiuiux@gmail.com">
+        <a
+          href="mailto:oladimejiuiux@gmail.com"
+          data-analytics-label="Contact: Email Link Click (oladimejiuiux@gmail.com)"
+        >
           oladimejiuiux@gmail.com
           <span className="arrow-icon arrow-out" aria-hidden="true" />
         </a>

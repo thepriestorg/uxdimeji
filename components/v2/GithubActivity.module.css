@@ -1,0 +1,354 @@
+/* ════════════════════════════════════════════════════════════
+   GithubActivity — Minimalist Integrated GitHub Heatmap Dock
+   No drop shadows, 50% border opacity, tight seamless spacing
+   ════════════════════════════════════════════════════════════ */
+
+.activityContainer {
+  width: 100%;
+  max-width: 590px;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Minimal Flat Dock with 50% border opacity & zero drop shadow */
+.activityDock {
+  width: 100%;
+  background: #fbfbf9;
+  border: 1px solid rgba(24, 24, 22, 0.04);
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+
+.activityDock:hover {
+  border-color: rgba(24, 24, 22, 0.08);
+  box-shadow: none !important;
+}
+
+/* Top Meta Row inside Dock */
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(24, 24, 22, 0.03);
+  font-family: var(--font-sans), sans-serif;
+}
+
+.metaLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.githubIcon {
+  width: 15px;
+  height: 15px;
+  color: #181816;
+  flex-shrink: 0;
+}
+
+.summaryText {
+  font-size: 13px;
+  font-weight: 550;
+  color: #181816;
+  letter-spacing: -0.01em;
+}
+
+.highlightCount {
+  font-weight: 700;
+  color: #181816;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: none;
+}
+
+.metaRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.streakPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #ffffff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(24, 24, 22, 0.03);
+  box-shadow: none;
+  user-select: none;
+}
+
+.profileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #6b7280;
+  text-decoration: none;
+  padding: 3px 6px;
+  border-radius: 5px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.profileLink:hover {
+  color: #181816;
+  background: rgba(24, 24, 22, 0.04);
+}
+
+.profileLink svg {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.15s ease;
+}
+
+.profileLink:hover svg {
+  transform: translate(1px, -1px);
+}
+
+/* ── Heatmap Grid Container ── */
+.heatmapScrollArea {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(24, 24, 22, 0.1) transparent;
+}
+
+.heatmapScrollArea::-webkit-scrollbar {
+  height: 3px;
+}
+
+.heatmapScrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.heatmapScrollArea::-webkit-scrollbar-thumb {
+  background: rgba(24, 24, 22, 0.1);
+  border-radius: 3px;
+}
+
+.heatmapWrapper {
+  min-width: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Month Labels Header */
+.monthRow {
+  display: grid;
+  grid-template-columns: 20px repeat(52, 1fr);
+  gap: 2.5px;
+  margin-bottom: 4px;
+}
+
+.monthLabel {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-align: left;
+  user-select: none;
+}
+
+/* Day Labels & Columns */
+.gridRow {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.dayLabelsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  width: 20px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.dayLabel {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  color: #9ca3af;
+  height: 9px;
+  line-height: 9px;
+  text-align: right;
+  padding-right: 3px;
+}
+
+.weeksContainer {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(8.5px, 1fr);
+  gap: 2.5px;
+  flex: 1;
+}
+
+.weekColumn {
+  display: grid;
+  grid-template-rows: repeat(7, 8.5px);
+  gap: 2.5px;
+}
+
+/* Day Cell Squares */
+.dayCell {
+  width: 8.5px;
+  height: 8.5px;
+  border-radius: 2px;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+}
+
+.dayCell:hover {
+  transform: scale(1.4);
+  z-index: 10;
+  box-shadow: none;
+}
+
+/* Modern, Clean Green Shade Progression */
+.level0 {
+  background-color: #e5e7eb;
+}
+
+.level1 {
+  background-color: #86efac;
+}
+
+.level2 {
+  background-color: #4ade80;
+}
+
+.level3 {
+  background-color: #22c55e;
+}
+
+.level4 {
+  background-color: #15803d;
+}
+
+/* Bottom Legend Bar */
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 10.5px;
+  color: #9ca3af;
+  user-select: none;
+}
+
+.footerNote {
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 3.5px;
+}
+
+.legendLabel {
+  font-size: 9.5px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.legendCell {
+  width: 8px;
+  height: 8px;
+  border-radius: 1.5px;
+  display: inline-block;
+}
+
+/* Interactive Floating Tooltip */
+.tooltip {
+  position: absolute;
+  padding: 4px 8px;
+  background: #181816;
+  color: #ffffff;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translate(-50%, -100%);
+  margin-top: -6px;
+  z-index: 50;
+  animation: tooltipFade 0.12s ease-out both;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -3.5px;
+  border-width: 3.5px;
+  border-style: solid;
+  border-color: #181816 transparent transparent transparent;
+}
+
+@keyframes tooltipFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -85%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .activityContainer {
+    margin-top: 10px;
+  }
+
+  .activityDock {
+    padding: 11px 12px;
+    border-radius: 15px;
+  }
+
+  .metaRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .metaRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
