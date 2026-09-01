@@ -1,19 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import { richTextToPlainText } from "@/lib/rich-text";
+import { BlogPost } from "./blog-utils";
 
-export type BlogPost = {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  cover_image: string | null;
-  category: string;
-  published: boolean;
-  published_at: string | null;
-  created_at: string;
-  updated_at: string;
-};
+export * from "./blog-utils";
 
 export async function getPublishedPosts(): Promise<BlogPost[]> {
   try {
@@ -44,18 +32,4 @@ export async function getPublishedPost(slug: string): Promise<BlogPost | null> {
   } catch {
     return null;
   }
-}
-
-export function formatPostDate(date: string | null) {
-  if (!date) return "Draft";
-  return new Intl.DateTimeFormat("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(date));
-}
-
-export function readingTime(html: string) {
-  const words = richTextToPlainText(html).split(/\s+/).filter(Boolean).length;
-  return `${Math.max(1, Math.ceil(words / 220))} min read`;
 }

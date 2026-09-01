@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ArrowRight, Sparkles, Mail } from "lucide-react";
 import V2Header from "@/components/v2/V2Header";
 import V2Footer from "@/components/v2/V2Footer";
-import { formatPostDate, getPublishedPosts, readingTime } from "@/lib/blog";
+import { formatPostDate, formatViews, getPublishedPosts, readingTime } from "@/lib/blog";
 import "./blog.css";
 
 export const metadata: Metadata = {
@@ -138,6 +138,8 @@ export default async function BlogPage() {
                     <time>{formatPostDate(post.published_at)}</time>
                     <span>·</span>
                     <span>{readingTime(post.content)}</span>
+                    <span>·</span>
+                    <span>{formatViews(post.views)}</span>
                   </div>
 
                   <h2 className="blog-row-title">{post.title}</h2>

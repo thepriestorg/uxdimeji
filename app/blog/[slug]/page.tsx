@@ -8,6 +8,7 @@ import V2Footer from "@/components/v2/V2Footer";
 import ArticleAudio from "@/components/blog/ArticleAudio";
 import QuoteTools from "@/components/blog/QuoteTools";
 import CommentSection from "@/components/blog/CommentSection";
+import BlogPostViews from "@/components/blog/BlogPostViews";
 import { formatPostDate, getPublishedPost, readingTime } from "@/lib/blog";
 import { richTextToHtml, richTextToPlainText } from "@/lib/rich-text";
 import "../blog.css";
@@ -140,7 +141,8 @@ export default async function BlogPostPage({
           <div className="article-byline-text">
             <span className="article-byline-name">Oladimeji Abubakar</span>
             <span className="article-byline-sub">
-              {formatPostDate(post.published_at)} · {readingTime(post.content)}
+              {formatPostDate(post.published_at)} · {readingTime(post.content)} ·{" "}
+              <BlogPostViews slug={post.slug} initialViews={post.views} />
             </span>
           </div>
         </div>

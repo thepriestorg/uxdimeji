@@ -14,6 +14,7 @@ type FormData = {
   slug: string;
   excerpt: string;
   category: string;
+  views: number;
   cover_image: string;
   content: string;
   published: boolean;
@@ -21,7 +22,7 @@ type FormData = {
 };
 
 const emptyPost: FormData = {
-  title: "", slug: "", excerpt: "", category: "Design",
+  title: "", slug: "", excerpt: "", category: "Design", views: 0,
   cover_image: "", content: "", published: false, published_at: null,
 };
 
@@ -40,7 +41,7 @@ export default function BlogEditor({ slug }: { slug?: string }) {
       if (error || !data) setError("Post not found.");
       else setForm({
         id: data.id, title: data.title ?? "", slug: data.slug ?? "", excerpt: data.excerpt ?? "",
-        category: data.category ?? "Design", cover_image: data.cover_image ?? "", content: data.content ?? "",
+        category: data.category ?? "Design", views: data.views ?? 0, cover_image: data.cover_image ?? "", content: data.content ?? "",
         published: data.published ?? false, published_at: data.published_at ?? null,
       });
       setLoading(false);
@@ -55,6 +56,7 @@ export default function BlogEditor({ slug }: { slug?: string }) {
     setError(null);
     const payload = {
       title: form.title, slug: form.slug, excerpt: form.excerpt, category: form.category,
+      views: Math.max(0, Number(form.views) || 0),
       cover_image: form.cover_image || null, content: form.content, published: form.published,
       published_at: form.published ? (form.published_at || new Date().toISOString()) : null,
       updated_at: new Date().toISOString(),
@@ -100,7 +102,10 @@ export default function BlogEditor({ slug }: { slug?: string }) {
           <Field label="URL slug — editable"><input required value={form.slug} onChange={(e) => setForm((p) => ({ ...p, slug: makeSlug(e.target.value) }))} className="admin-input" placeholder="a-thought-worth-sharing" /><span className="block mt-2 text-xs text-white/30">You can change this before or after publishing.</span></Field>
         </div>
         <Field label="Excerpt"><textarea required rows={3} maxLength={280} value={form.excerpt} onChange={(e) => setForm((p) => ({ ...p, excerpt: e.target.value }))} className="admin-input resize-none" placeholder="A short invitation into the article…" /><span className="block mt-2 text-right text-xs text-white/30">{form.excerpt.length}/280</span></Field>
-        <Field label="Category"><input required value={form.category} onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))} className="admin-input" placeholder="Design craft" /></Field>
+        <div className="grid md:grid-cols-2 gap-6">
+          <Field label="Category"><input required value={form.category} onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))} className="admin-input" placeholder="Design craft" /></Field>
+          <Field label="Views count"><input type="number" min="0" value={form.views} onChange={(e) => setForm((p) => ({ ...p, views: Math.max(0, parseInt(e.target.value, 10) || 0) }))} className="admin-input" placeholder="0" /><span className="block mt-2 text-xs text-white/30">Total views recorded. You can adjust this to seed initial counts.</span></Field>
+        </div>
         <MediaUploader value={form.cover_image} onChange={(cover_image) => setForm((p) => ({ ...p, cover_image }))} />
         <Field label="Article"><RichTextEditor content={form.content} onChange={(content) => setForm((p) => ({ ...p, content }))} placeholder="Start with the thought you can't shake…" outputFormat="html" /></Field>
         <div className="flex items-center justify-between gap-6 p-5 rounded-2xl border border-white/10 bg-white/5">
