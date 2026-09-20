@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageOps
 
 
 ROOT = Path(r"C:\Users\HP\Documents\uxdimeji")
@@ -40,13 +40,6 @@ def resize_screen(path: Path, max_height: int) -> Image.Image:
 
 
 def add_screen(canvas: Image.Image, screen: Image.Image, x: int, y: int) -> None:
-    shadow = Image.new("RGBA", CANVAS_SIZE, (0, 0, 0, 0))
-    shadow_shape = Image.new("RGBA", screen.size, (0, 0, 0, 0))
-    alpha = screen.getchannel("A")
-    shadow_shape.putalpha(alpha)
-    shadow.paste((20, 18, 32, 112), (x, y + 18), shadow_shape)
-    shadow = shadow.filter(ImageFilter.GaussianBlur(28))
-    canvas.alpha_composite(shadow)
     canvas.alpha_composite(screen, (x, y))
 
 
