@@ -22,6 +22,7 @@ export default function V2ScrollEffects() {
     updateProgress();
 
     const context = gsap.context(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       gsap.set(".hero h1", { autoAlpha: 1, y: 0 });
       gsap.set(".hero-line-inner", { yPercent: 118, rotate: 1.5 });
       gsap.set(".hero-index, .hero-support", {
@@ -81,38 +82,6 @@ export default function V2ScrollEffects() {
             duration: 1.15,
             ease: "expo.out",
             scrollTrigger: { trigger: intro, start: "top 80%", once: true },
-          });
-        }
-      });
-
-      document.querySelectorAll<HTMLElement>(".project-row").forEach((row) => {
-        const visual = row.querySelector<HTMLElement>(".project-visual");
-        const copy = row.querySelector<HTMLElement>(".project-copy");
-        const copyItems = copy
-          ? Array.from(copy.children) as HTMLElement[]
-          : [];
-
-        gsap.set(row, { autoAlpha: 1, y: 0 });
-
-        if (visual) {
-          gsap.from(visual, {
-            autoAlpha: 0,
-            y: 55,
-            clipPath: "inset(0 0 100% 0)",
-            duration: 1.2,
-            ease: "expo.out",
-            scrollTrigger: { trigger: row, start: "top 78%", once: true },
-          });
-        }
-
-        if (copyItems.length > 0) {
-          gsap.from(copyItems, {
-            autoAlpha: 0,
-            x: 34,
-            duration: 0.8,
-            stagger: 0.09,
-            ease: "power3.out",
-            scrollTrigger: { trigger: row, start: "top 72%", once: true },
           });
         }
       });
@@ -218,8 +187,6 @@ export default function V2ScrollEffects() {
     const REPAIR_SELECTORS = [
       ".section-intro .eyebrow",
       ".section-intro h2",
-      ".project-visual",
-      ".project-copy > *",
       ".profile-statement",
       ".profile-detail p",
       ".journey-point",

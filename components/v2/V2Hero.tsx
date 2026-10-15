@@ -9,6 +9,7 @@ import {
   FileText,
 } from "lucide-react";
 import styles from "./V2Hero.module.css";
+import AgentAssembly from "./AgentAssembly";
 
 /* ─── Social & Resume Links ─────────────────────────────── */
 const socialLinks = [
@@ -78,7 +79,7 @@ const selectionHandles = [
 /* ─── Decorative SVGs ───────────────────────────────────── */
 function GreenSwirlIcon() {
   return (
-    <span className={styles.iconWrapper} aria-hidden="true">
+    <span className={styles.iconWrapper} aria-hidden="true" data-build-fragment>
       <svg
         className={styles.inlineIcon}
         viewBox="0 0 24 24"
@@ -95,7 +96,7 @@ function GreenSwirlIcon() {
 
 function PinkFlowerIcon() {
   return (
-    <span className={styles.iconWrapper} aria-hidden="true">
+    <span className={styles.iconWrapper} aria-hidden="true" data-build-fragment>
       <svg
         className={styles.inlineIcon}
         viewBox="0 0 24 24"
@@ -160,6 +161,7 @@ function UnderlineSketch() {
   return (
     <svg
       className={styles.sketchUnderline}
+      data-build-fragment
       viewBox="0 0 70 8"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -167,12 +169,14 @@ function UnderlineSketch() {
     >
       <path
         d="M2 3C22 1.5 48 2 68 3.5"
+        pathLength="1" strokeDasharray="1" data-build-stroke
         stroke="#181816"
         strokeWidth="1.6"
         strokeLinecap="round"
       />
       <path
         d="M6 6.5C26 5 44 5.5 62 6.5"
+        pathLength="1" strokeDasharray="1" data-build-stroke
         stroke="#181816"
         strokeWidth="1.2"
         strokeLinecap="round"
@@ -181,10 +185,16 @@ function UnderlineSketch() {
   );
 }
 
+function BuildWords({ text }: { text: string }) {
+  return text.split(/(\s+)/).map((part, index) =>
+    /^\s+$/.test(part) ? part : <span key={index} data-build-fragment>{part}</span>
+  );
+}
+
 /* ─── Main Hero Component ───────────────────────────────── */
 export default function V2Hero() {
   return (
-    <section className={styles.heroCanvas} id="top">
+    <AgentAssembly as="section" className={styles.heroCanvas} id="top" variant="hero">
       {/* ── Center Stage ── */}
       <div className={styles.centerStage}>
         {/* Live Clock */}
@@ -193,15 +203,15 @@ export default function V2Hero() {
         </div>
 
         {/* "hello, I am" handwriting text */}
-        <div className={styles.nameHeader}>
-          <span className={styles.nameHeaderHand}>hello, I am</span>
+        <div className={styles.nameHeader} data-build-piece="Intro / handwritten" data-build-kind="intro">
+          <span className={styles.nameHeaderHand}><BuildWords text="hello, I am" /></span>
           <UnderlineSketch />
         </div>
 
         {/* Figma Selection Box Container */}
-        <div className={styles.selectionWrapper}>
+        <div className={styles.selectionWrapper} data-build-piece="Identity / Oladimeji" data-build-kind="identity">
           {/* Avatar Bubble - Left (Portrait) */}
-          <div className={styles.avatarBubbleLeft}>
+          <div className={styles.avatarBubbleLeft} data-build-fragment>
             <div className={styles.avatarCirclePhoto}>
               <Image
                 src="/images/oladimeji.png"
@@ -223,11 +233,15 @@ export default function V2Hero() {
                 style={pos as React.CSSProperties}
               />
             ))}
-            <h1 className={styles.designerName}>OLADIMEJI</h1>
+            <h1 className={styles.designerName} aria-label="Oladimeji">
+              {"OLADIMEJI".split("").map((letter, index) => (
+                <span key={index} data-build-fragment aria-hidden="true">{letter}</span>
+              ))}
+            </h1>
           </div>
 
           {/* Avatar Bubble - Right (UX) */}
-          <div className={styles.avatarBubbleRight}>
+          <div className={styles.avatarBubbleRight} data-build-fragment>
             <div className={styles.avatarCircle}>
               <span>UX</span>
             </div>
@@ -236,7 +250,7 @@ export default function V2Hero() {
         </div>
 
         {/* Status Line: Cyan Dot + Text */}
-        <div className={styles.statusRow}>
+        <div className={styles.statusRow} data-build-piece="Availability" data-build-kind="status">
           <span className={styles.statusDot} />
           <span className={styles.statusText}>
             CURRENTLY OPEN TO ROLES
@@ -245,7 +259,7 @@ export default function V2Hero() {
       </div>
 
       {/* ── Floating Badge 1: PRODUCT DESIGNER ── */}
-      <div className={styles.badgeProductDesignerWrapper}>
+      <div className={styles.badgeProductDesignerWrapper} data-build-piece="Role / product designer" data-build-kind="role">
         <div className={styles.badgeProductDesigner}>
           <span className={styles.badgeText}>PRODUCT DESIGNER</span>
           <YellowCursor />
@@ -253,7 +267,7 @@ export default function V2Hero() {
       </div>
 
       {/* ── Floating Badge 2: KWARA, NIGERIA ── */}
-      <div className={styles.badgeLocationWrapper}>
+      <div className={styles.badgeLocationWrapper} data-build-piece="Location / Nigeria" data-build-kind="location">
         <div className={styles.badgeLocation}>
           <PinkCursor />
           <span className={styles.badgeLocationText}>KWARA, NIGERIA</span>
@@ -263,26 +277,27 @@ export default function V2Hero() {
       {/* ── Bottom Section: Headline Copy + WORK WITH ME + Socials ── */}
       <div className={styles.bottomSection}>
         {/* 2-line balanced tagline */}
-        <h2 className={styles.taglineHeading}>
+        <h2 className={styles.taglineHeading} data-build-piece="What I do" data-build-kind="copy">
           <span className={styles.taglineRow}>
-            <span>I design</span>
+            <span><BuildWords text="I design" /></span>
             <GreenSwirlIcon />
-            <span>products,</span>
+            <span data-build-fragment>products,</span>
           </span>
           <span className={styles.taglineRow}>
-            <span>and help bring them to life</span>
+            <span><BuildWords text="and help bring them to life" /></span>
             <PinkFlowerIcon />
-            <span className={styles.taglinePeriod}>.</span>
+            <span className={styles.taglinePeriod} data-build-fragment>.</span>
           </span>
         </h2>
 
         {/* CTA + Socials Row */}
-        <div className={styles.actionsRow}>
+        <div className={styles.actionsRow} data-build-piece="Connect / ready" data-build-kind="actions">
           {/* WORK WITH ME CTA Button */}
           <a
             href="mailto:oladimejiuiux@gmail.com"
             className={styles.contactButton}
             aria-label="Work with Oladimeji Abubakar"
+            data-build-fragment
           >
             <div className={styles.contactIconSquare}>
               <span className={styles.contactChevron}>»</span>
@@ -301,6 +316,7 @@ export default function V2Hero() {
                 aria-label={label}
                 title={label}
                 className={styles.socialBtn}
+                data-build-fragment
               >
                 {Icon ? (
                   <Icon size={15} strokeWidth={1.8} />
@@ -312,6 +328,6 @@ export default function V2Hero() {
           </nav>
         </div>
       </div>
-    </section>
+    </AgentAssembly>
   );
 }

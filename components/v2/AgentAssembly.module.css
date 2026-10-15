@@ -1,0 +1,106 @@
+.scope { position: relative; }
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  user-select: none;
+  overflow: clip;
+  border-radius: inherit;
+}
+.cursor {
+  --agent: #3971d9;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  color: var(--agent);
+  width: 108px;
+  filter: drop-shadow(0 2px 3px #18213b18);
+}
+.cursor[data-agent="1"], .frame[data-agent="1"] { --agent: #9c51c6; }
+.cursor[data-agent="2"], .frame[data-agent="2"] { --agent: #27856c; }
+.cursor span {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: -2px 0 0 15px;
+  padding: 5px 8px;
+  border-radius: 3px 8px 8px;
+  background: var(--agent);
+  color: #fff;
+  font: 600 10px/1.3 var(--font-manrope), sans-serif;
+  white-space: nowrap;
+}
+.cursor i { width: 4px; height: 4px; border-radius: 50%; background: #fff; }
+.cursor em {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ffffffa6;
+  transform-origin: left;
+}
+.cursor[data-agent-template] { display: none; }
+.frame {
+  --agent: #3971d9;
+  position: absolute;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--agent) 3%, transparent);
+  opacity: 0;
+}
+.frame > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.frame rect {
+  fill: none;
+  stroke: var(--agent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.frame::before, .frame::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border: 1px solid var(--agent);
+  background: white;
+}
+.frame::before { left: -3px; top: -3px; }
+.frame::after { right: -3px; bottom: -3px; }
+.frameCaption {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  color: var(--agent);
+  font: 500 9px/1.3 var(--font-manrope), monospace;
+  white-space: nowrap;
+}
+.scope > .skip {
+  display: none;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 21;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #71716a;
+  font: 500 10px/1.3 var(--font-manrope), sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.scope[data-assembly-state="building"] > .skip { display: inline-flex; gap: 8px; align-items: center; }
+.skip:hover, .skip:focus-visible { color: #181816; background: #18181609; }
+.skip:focus-visible { outline: 2px solid #3971d9; outline-offset: 2px; }
+@media (max-width: 600px) {
+  .cursor span { font-size: 9px; padding: 4px 6px; }
+  .cursor svg { width: 18px; height: 21px; }
+  .frameCaption { font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .overlay, .skip { display: none !important; } }

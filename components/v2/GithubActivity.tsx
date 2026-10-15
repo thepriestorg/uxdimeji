@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import styles from "./GithubActivity.module.css";
+import AgentAssembly from "./AgentAssembly";
 
 interface ContributionDay {
   date: string;
@@ -169,10 +170,10 @@ export default function GithubActivity() {
   };
 
   return (
-    <div className={styles.activityContainer}>
+    <AgentAssembly className={styles.activityContainer} variant="activity" label="GitHub activity">
       <div className={styles.activityDock} ref={dockRef}>
         {/* ── Top Meta Row ── */}
-        <div className={styles.metaRow}>
+        <div className={styles.metaRow} data-build-piece="GitHub / activity" data-build-kind="summary">
           <div className={styles.metaLeft}>
             <svg
               className={styles.githubIcon}
@@ -221,7 +222,7 @@ export default function GithubActivity() {
         </div>
 
         {/* ── Heatmap Calendar Grid ── */}
-        <div className={styles.heatmapScrollArea}>
+        <div className={styles.heatmapScrollArea} data-build-piece="Contributions / past year" data-build-kind="grid">
           <div className={styles.heatmapWrapper}>
             {/* Month Labels */}
             <div className={styles.monthRow}>
@@ -250,7 +251,7 @@ export default function GithubActivity() {
 
               <div className={styles.weeksContainer}>
                 {weeks.map((week, wIdx) => (
-                  <div key={wIdx} className={styles.weekColumn}>
+                  <div key={wIdx} className={styles.weekColumn} data-build-column>
                     {week.map((day, dIdx) => {
                       if (!day) {
                         return (
@@ -292,7 +293,7 @@ export default function GithubActivity() {
         </div>
 
         {/* ── Bottom Legend & Days Info ── */}
-        <div className={styles.footerRow}>
+        <div className={styles.footerRow} data-build-piece="Activity / legend" data-build-kind="legend">
           <span className={styles.footerNote}>
             {data.activeDays} active days recorded
           </span>
@@ -318,6 +319,6 @@ export default function GithubActivity() {
           </div>
         )}
       </div>
-    </div>
+    </AgentAssembly>
   );
 }

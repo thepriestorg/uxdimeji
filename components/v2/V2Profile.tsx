@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { trackCustomEvent } from "@/components/AnalyticsTracker";
 import GithubActivity from "./GithubActivity";
+import AgentAssembly from "./AgentAssembly";
 import styles from "./V2Profile.module.css";
 
 /* ─── Blue Verified Checkmark Badge SVG ─────────────────── */
@@ -267,17 +268,9 @@ const bioTokens: BioToken[] = [
   { type: "text", content: "." },
 ];
 
-const TOTAL_BIO_LENGTH = bioTokens.reduce((acc, token) => {
-  return acc + (token.type === "text" ? token.content.length : 1);
-}, 0);
-
 export default function V2Profile() {
   const [copied, setCopied] = useState(false);
   const [isKeyPressed, setIsKeyPressed] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [revealedChars, setRevealedChars] = useState(0);
-
-  const sectionRef = useRef<HTMLElement>(null);
   const email = "oladimejiuiux@gmail.com";
 
   const handleCopy = useCallback(
@@ -297,56 +290,6 @@ export default function V2Profile() {
     },
     [email]
   );
-
-  /* ── 100% Bulletproof Mobile & Desktop Viewport Observer ── */
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    if (typeof IntersectionObserver === "undefined") {
-      setIsVisible(true);
-      setRevealedChars(TOTAL_BIO_LENGTH);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-          setRevealedChars(0);
-        }
-      },
-      {
-        threshold: 0.25,
-        rootMargin: "0px 0px -10% 0px",
-      }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  /* ── Fast, Punchy Character-by-Character Typewriter ── */
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const delayTimer = setTimeout(() => {
-      let count = 0;
-      const interval = setInterval(() => {
-        count = Math.min(count + 5, TOTAL_BIO_LENGTH);
-        setRevealedChars(count);
-        if (count >= TOTAL_BIO_LENGTH) {
-          clearInterval(interval);
-        }
-      }, 12);
-
-      return () => clearInterval(interval);
-    }, 100);
-
-    return () => clearTimeout(delayTimer);
-  }, [isVisible]);
 
   /* ── Keyboard Copy Shortcut ── */
   useEffect(() => {
@@ -375,33 +318,23 @@ export default function V2Profile() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleCopy]);
 
-  const isTypingDone = revealedChars >= TOTAL_BIO_LENGTH;
-
-  // Helper to render tokens progressively up to revealedChars
-  let charCounter = 0;
-
   return (
-    <section
-      ref={sectionRef}
+    <AgentAssembly as="section" variant="profile"
       className={styles.profileSection}
       id="about"
-      aria-label="About Me"
+      label="About Me"
     >
       <div className={styles.profileContainer}>
         {/* ── Section Header ── */}
         <div
-          className={`${styles.sectionHeader} ${
-            isVisible ? styles.visible : ""
-          }`}
+          className={styles.sectionHeader} data-build-piece="About / intro" data-build-kind="intro"
         >
           <span>ABOUT ME</span>
         </div>
 
         {/* ── Avatar with Live Online Status ── */}
         <div
-          className={`${styles.avatarWrapper} ${
-            isVisible ? styles.visible : ""
-          }`}
+          className={styles.avatarWrapper} data-build-piece="Portrait" data-build-kind="portrait"
         >
           <div className={styles.avatar}>
             <Image
@@ -418,52 +351,33 @@ export default function V2Profile() {
 
         {/* ── Name & Verified Badge ── */}
         <div
-          className={`${styles.nameRow} ${isVisible ? styles.visible : ""}`}
+          className={styles.nameRow} data-build-piece="Identity / verified" data-build-kind="identity"
         >
-          <h2 className={styles.name}>Oladimeji Abubakar</h2>
-          <VerifiedBadge />
+          <h2 className={styles.name} data-build-fragment>Oladimeji Abubakar</h2>
+          <span data-build-fragment><VerifiedBadge /></span>
         </div>
 
         {/* ── Role Title ── */}
-        <p className={`${styles.role} ${isVisible ? styles.visible : ""}`}>
+        <p className={styles.role} data-build-piece="Role / product designer" data-build-kind="role">
           Product Designer
         </p>
 
         {/* ── Bio Paragraph (Natural Flow & Preserved Spacing) ── */}
-        <p className={styles.bioText}>
+        <p className={styles.bioText} data-build-piece="A little about me" data-build-kind="copy">
           {bioTokens.map((token, idx) => {
             if (token.type === "text") {
-              const start = charCounter;
-              const len = token.content.length;
-              charCounter += len;
-
-              if (revealedChars <= start) {
-                return null;
-              }
-
-              const visibleSlice = token.content.slice(
-                0,
-                Math.max(0, revealedChars - start)
-              );
-
               return (
                 <span key={idx} className={styles.animatedWord}>
-                  {visibleSlice}
+                  {token.content.match(/(?:\S+\s*){1,3}/g)?.map((phrase, phraseIndex) => (
+                    <span key={phraseIndex} data-build-fragment>{phrase}</span>
+                  ))}
                 </span>
               );
             }
 
-            // Inline badge tokens (flag, figma, code)
-            const badgeIndex = charCounter;
-            charCounter += 1;
-
-            if (revealedChars < badgeIndex) {
-              return null;
-            }
-
             if (token.type === "flag") {
               return (
-                <span key={idx} className={styles.inlineBadge}>
+                <span key={idx} className={styles.inlineBadge} data-build-fragment>
                   <NigeriaFlag />
                 </span>
               );
@@ -471,7 +385,7 @@ export default function V2Profile() {
 
             if (token.type === "figma") {
               return (
-                <span key={idx} className={styles.inlineBadge}>
+                <span key={idx} className={styles.inlineBadge} data-build-fragment>
                   <InlineFigmaBadge />
                 </span>
               );
@@ -479,7 +393,7 @@ export default function V2Profile() {
 
             if (token.type === "code") {
               return (
-                <span key={idx} className={styles.inlineBadge}>
+                <span key={idx} className={styles.inlineBadge} data-build-fragment>
                   <InlineCodeBadge />
                 </span>
               );
@@ -488,16 +402,11 @@ export default function V2Profile() {
             return null;
           })}
 
-          {isVisible && !isTypingDone && (
-            <span className={styles.typingCursor} aria-hidden="true" />
-          )}
         </p>
 
         {/* ── Press C to copy email Widget ── */}
         <div
-          className={`${styles.copyActionRow} ${
-            isVisible ? styles.visible : ""
-          }`}
+          className={styles.copyActionRow} data-build-piece="Get in touch" data-build-kind="actions"
           onClick={() => handleCopy("click")}
           role="button"
           tabIndex={0}
@@ -521,16 +430,15 @@ export default function V2Profile() {
 
         {/* ── Stack & Activity Subsection ── */}
         <div
-          className={`${styles.stackSection} ${
-            isVisible ? styles.visible : ""
-          }`}
+          className={styles.stackSection}
         >
-          <p className={styles.stackHeader}>STACK &amp; ACTIVITY</p>
-          <div className={styles.stackDock}>
+          <p className={styles.stackHeader} data-build-piece="Stack / label" data-build-kind="stack">STACK &amp; ACTIVITY</p>
+          <div className={styles.stackDock} data-build-piece="Stack / tools" data-build-kind="tools">
             {stackTools.map(({ name, icon: Icon }) => (
               <div
                 key={name}
                 className={styles.stackIconTile}
+                data-build-fragment
                 title={name}
                 aria-label={name}
               >
@@ -543,6 +451,6 @@ export default function V2Profile() {
           <GithubActivity />
         </div>
       </div>
-    </section>
+    </AgentAssembly>
   );
 }

@@ -79,8 +79,7 @@
 
 /* Live Clock — centered directly above "my name is" */
 .liveClockWrapper {
-  animation: heroEntranceSlideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
-  -webkit-animation: heroEntranceSlideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+  position: relative;
 }
 
 .liveClock {
@@ -102,8 +101,6 @@
   margin-bottom: 10px;
   user-select: none;
   -webkit-user-select: none;
-  animation: heroEntranceSlideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
-  -webkit-animation: heroEntranceSlideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
 .nameHeaderHand {
@@ -139,8 +136,6 @@
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  animation: heroEntrancePop 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
-  -webkit-animation: heroEntrancePop 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 .figmaHandle {
@@ -178,8 +173,6 @@
   display: flex;
   align-items: center;
   z-index: 6;
-  animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
-  -webkit-animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
 }
 
 .avatarBubbleRight {
@@ -191,8 +184,6 @@
   display: flex;
   align-items: center;
   z-index: 6;
-  animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
-  -webkit-animation: heroEntranceScale 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
 }
 
 .avatarCircle {
@@ -261,8 +252,6 @@
   align-items: center;
   gap: 8px;
   margin-top: 18px;
-  animation: heroEntranceSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
-  -webkit-animation: heroEntranceSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 
 .statusDot {
@@ -295,8 +284,6 @@
   z-index: 10;
   user-select: none;
   -webkit-user-select: none;
-  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
-  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
 }
 
 .badgeProductDesigner {
@@ -308,8 +295,6 @@
   border-radius: 999px;
   transform: rotate(-12deg);
   -webkit-transform: rotate(-12deg);
-  animation: driftAroundYellow 10s ease-in-out infinite;
-  -webkit-animation: driftAroundYellow 10s ease-in-out infinite;
   box-shadow: 0 4px 14px rgba(249, 182, 56, 0.28);
   will-change: transform;
 }
@@ -341,8 +326,6 @@
   z-index: 10;
   user-select: none;
   -webkit-user-select: none;
-  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
-  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
 }
 
 .badgeLocation {
@@ -354,8 +337,6 @@
   border-radius: 999px;
   transform: rotate(12deg);
   -webkit-transform: rotate(12deg);
-  animation: driftAroundPink 11s ease-in-out infinite;
-  -webkit-animation: driftAroundPink 11s ease-in-out infinite;
   box-shadow: 0 4px 14px rgba(224, 30, 90, 0.3);
   will-change: transform;
 }
@@ -406,8 +387,6 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
-  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
 }
 
 .taglineRow {
@@ -443,8 +422,6 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 16px;
-  animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.88s both;
-  -webkit-animation: heroEntranceSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.88s both;
 }
 
 /* ── WORK WITH ME CTA Button (Refined Rounded Pill Design) ── */
@@ -853,8 +830,6 @@
     padding: 7px 13px;
     transform: rotate(-8deg);
     -webkit-transform: rotate(-8deg);
-    animation: gentleFloatMobileYellow 8s ease-in-out infinite;
-    -webkit-animation: gentleFloatMobileYellow 8s ease-in-out infinite;
   }
 
   .badgeText,
@@ -872,8 +847,6 @@
     padding: 7px 13px;
     transform: rotate(8deg);
     -webkit-transform: rotate(8deg);
-    animation: gentleFloatMobilePink 8.5s ease-in-out infinite;
-    -webkit-animation: gentleFloatMobilePink 8.5s ease-in-out infinite;
   }
 
   .bottomSection {
@@ -918,4 +891,8 @@
     width: 38px;
     height: 38px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCanvas * { animation: none !important; transition: none !important; }
 }
