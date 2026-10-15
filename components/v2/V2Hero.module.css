@@ -77,6 +77,8 @@
   margin-top: 6px;
 }
 
+.introGroup { display: flex; flex-direction: column; align-items: center; }
+
 /* Live Clock — centered directly above "my name is" */
 .liveClockWrapper {
   position: relative;

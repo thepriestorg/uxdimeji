@@ -1,4 +1,7 @@
 .scope { position: relative; }
+/* Present in the first server-rendered frame, including while JavaScript is downloading. */
+.scope[data-assembly-state="pending"] [data-build-piece],
+.scope[data-assembly-state="waiting"] [data-build-piece] { visibility: hidden; }
 .overlay {
   position: absolute;
   inset: 0;
@@ -103,4 +106,8 @@
   .cursor svg { width: 18px; height: 21px; }
   .frameCaption { font-size: 8px; }
 }
-@media (prefers-reduced-motion: reduce) { .overlay, .skip { display: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .skip { display: none !important; }
+  .scope[data-assembly-state="pending"] [data-build-piece],
+  .scope[data-assembly-state="waiting"] [data-build-piece] { visibility: visible; }
+}

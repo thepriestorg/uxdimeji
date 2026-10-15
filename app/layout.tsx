@@ -158,6 +158,9 @@ export default function RootLayout({
   return (
     <html lang="en-NG" className="dark">
       <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} font-sans bg-background text-secondary antialiased`}>
+        <noscript>
+          <style>{`[data-assembly] [data-build-piece] { visibility: visible !important; }`}</style>
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(seoJsonLd) }}

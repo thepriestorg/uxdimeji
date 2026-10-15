@@ -197,15 +197,17 @@ export default function V2Hero() {
     <AgentAssembly as="section" className={styles.heroCanvas} id="top" variant="hero">
       {/* ── Center Stage ── */}
       <div className={styles.centerStage}>
-        {/* Live Clock */}
-        <div className={styles.liveClockWrapper}>
-          <LiveClock />
-        </div>
+        <div className={styles.introGroup} data-build-piece="Intro / handwritten" data-build-kind="intro">
+          {/* Live Clock */}
+          <div className={styles.liveClockWrapper} data-build-fragment>
+            <LiveClock />
+          </div>
 
-        {/* "hello, I am" handwriting text */}
-        <div className={styles.nameHeader} data-build-piece="Intro / handwritten" data-build-kind="intro">
-          <span className={styles.nameHeaderHand}><BuildWords text="hello, I am" /></span>
-          <UnderlineSketch />
+          {/* "hello, I am" handwriting text */}
+          <div className={styles.nameHeader}>
+            <span className={styles.nameHeaderHand}><BuildWords text="hello, I am" /></span>
+            <UnderlineSketch />
+          </div>
         </div>
 
         {/* Figma Selection Box Container */}
