@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./v2-design.css";
+@import "./dark-preview.css";
 
 @theme {
   /* Custom Colors: "Void" Palette */

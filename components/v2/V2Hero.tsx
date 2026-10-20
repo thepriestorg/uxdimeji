@@ -170,14 +170,14 @@ function UnderlineSketch() {
       <path
         d="M2 3C22 1.5 48 2 68 3.5"
         pathLength="1" strokeDasharray="1" data-build-stroke
-        stroke="#181816"
+        stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
       />
       <path
         d="M6 6.5C26 5 44 5.5 62 6.5"
         pathLength="1" strokeDasharray="1" data-build-stroke
-        stroke="#181816"
+        stroke="currentColor"
         strokeWidth="1.2"
         strokeLinecap="round"
       />

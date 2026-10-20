@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
-  color: #171815;
-  background: #f4f4f0;
+  color: var(--preview-ink, #171815);
+  background: var(--preview-paper, #f4f4f0);
 }
 
 .intro {
@@ -12,11 +12,11 @@
 
 .introMeta {
   padding-bottom: 18px;
-  border-bottom: 1px solid rgba(23, 24, 21, 0.14);
+  border-bottom: 1px solid var(--preview-line, rgba(23, 24, 21, 0.14));
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  color: #767770;
+  color: var(--preview-muted, #767770);
   font-size: 10px;
   font-weight: 650;
   letter-spacing: 0.09em;
@@ -43,7 +43,7 @@
 .intro p {
   max-width: 390px;
   margin: 0 0 8px;
-  color: #6f706a;
+  color: var(--preview-muted, #6f706a);
   font-size: 14px;
   line-height: 1.65;
 }
@@ -64,10 +64,10 @@
   margin: 0;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border: 1px solid rgba(23, 24, 21, 0.1);
+  border: 1px solid var(--preview-line, rgba(23, 24, 21, 0.1));
   border-radius: clamp(14px, 1.5vw, 22px);
-  background: #e9eae5;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  background: var(--preview-surface, #e9eae5);
+  box-shadow: 0 1px 0 var(--preview-line, rgba(255, 255, 255, 0.85)) inset;
   animation: shotIn 0.65s cubic-bezier(0.2, 0.75, 0.2, 1) both;
   animation-delay: min(calc(var(--shot-index) * 55ms), 440ms);
 }
@@ -94,7 +94,7 @@
   height: auto;
   aspect-ratio: 4 / 3;
   border-radius: clamp(14px, 1.5vw, 22px);
-  background: linear-gradient(105deg, #e7e8e2 20%, #efefeb 35%, #e7e8e2 50%);
+  background: linear-gradient(105deg, var(--preview-surface, #e7e8e2) 20%, var(--preview-raised, #efefeb) 35%, var(--preview-surface, #e7e8e2) 50%);
   background-size: 200% 100%;
   animation: loading 1.2s linear infinite;
 }
@@ -104,8 +104,8 @@
   width: min(100% - 36px, 1410px);
   margin: 0 auto;
   padding-top: 30px;
-  border-top: 1px solid rgba(23, 24, 21, 0.14);
-  color: #6f706a;
+  border-top: 1px solid var(--preview-line, rgba(23, 24, 21, 0.14));
+  color: var(--preview-muted, #6f706a);
   font-size: 13px;
 }
 

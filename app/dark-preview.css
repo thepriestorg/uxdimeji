@@ -1,0 +1,46 @@
+/* Dark theme palette: remove this stylesheet's import to restore light mode. */
+:root {
+  --preview-paper: #101011;
+  --preview-canvas: #0b0b0c;
+  --preview-profile: #111112;
+  --preview-surface: #19191c;
+  --preview-raised: #252528;
+  --preview-ink: #f4f4f5;
+  --preview-body: #c6c6cd;
+  --preview-muted: #a1a1aa;
+  --preview-line: rgba(255, 255, 255, .13);
+  --preview-accent: #e4e4e7;
+  --preview-signal: #f19b7c;
+  --preview-grid: rgba(255, 255, 255, .04);
+  --preview-selection: rgba(255, 255, 255, .015);
+  --preview-glass: rgba(24, 24, 27, .46);
+  --preview-glass-hover: rgba(36, 36, 40, .56);
+  --preview-menu-bg: rgba(8, 8, 10, .92);
+  --preview-glass-border: rgba(255, 255, 255, .2);
+  --preview-glass-shadow: 0 14px 42px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .15), inset 0 -1px 0 rgba(255, 255, 255, .025);
+  --preview-glass-highlight: linear-gradient(115deg, rgba(255,255,255,.1), transparent 35%, transparent 70%, rgba(255,255,255,.025)), linear-gradient(to bottom, rgba(255,255,255,.04), transparent 45%);
+  --preview-active-bg: #e4e4e7;
+  --preview-active-ink: #18181b;
+  --preview-active-dot: #71717a;
+  --preview-cta-bg: #f4f4f5;
+  --preview-cta-ink: #18181b;
+  --preview-cta-hover: #d4d4d8;
+  --preview-cta-icon: #27272a;
+  --preview-cta-border: #f4f4f5;
+  --preview-cta-icon-shadow: 0 2px 6px rgba(0, 0, 0, .22);
+  --preview-tab-shadow: 0 8px 22px rgba(0, 0, 0, .2);
+  --preview-contact: #141416;
+  --preview-heat-0: #2a2a2e;
+  --preview-heat-1: #214d31;
+  --preview-heat-2: #2d7844;
+  --preview-heat-3: #42b465;
+  --preview-heat-4: #83df9a;
+  --preview-agent-blue: #5d8fe6;
+  --preview-agent-purple: #b77bdc;
+  --preview-agent-green: #4dab8e;
+}
+
+.v2-design,
+.case-study-page {
+  color-scheme: dark;
+}

@@ -12,7 +12,7 @@
   border-radius: inherit;
 }
 .cursor {
-  --agent: #3971d9;
+  --agent: var(--preview-agent-blue, #3971d9);
   position: absolute;
   left: 0;
   top: 0;
@@ -21,8 +21,9 @@
   width: 108px;
   filter: drop-shadow(0 2px 3px #18213b18);
 }
-.cursor[data-agent="1"], .frame[data-agent="1"] { --agent: #9c51c6; }
-.cursor[data-agent="2"], .frame[data-agent="2"] { --agent: #27856c; }
+.cursor[data-agent="1"], .frame[data-agent="1"] { --agent: var(--preview-agent-purple, #9c51c6); }
+.cursor[data-agent="2"], .frame[data-agent="2"] { --agent: var(--preview-agent-green, #27856c); }
+.cursor[data-agent="3"], .frame[data-agent="3"] { --agent: var(--preview-signal, #b76029); }
 .cursor span {
   position: relative;
   overflow: hidden;
@@ -33,7 +34,7 @@
   padding: 5px 8px;
   border-radius: 3px 8px 8px;
   background: var(--agent);
-  color: #fff;
+  color: var(--preview-paper, #fff);
   font: 600 10px/1.3 var(--font-manrope), sans-serif;
   white-space: nowrap;
 }
@@ -49,7 +50,7 @@
 }
 .cursor[data-agent-template] { display: none; }
 .frame {
-  --agent: #3971d9;
+  --agent: var(--preview-agent-blue, #3971d9);
   position: absolute;
   border-radius: 2px;
   background: color-mix(in srgb, var(--agent) 3%, transparent);
@@ -70,7 +71,7 @@
   width: 5px;
   height: 5px;
   border: 1px solid var(--agent);
-  background: white;
+  background: var(--preview-paper, white);
 }
 .frame::before { left: -3px; top: -3px; }
 .frame::after { right: -3px; bottom: -3px; }
@@ -93,13 +94,13 @@
   border: 0;
   border-radius: 20px;
   background: transparent;
-  color: #71716a;
+  color: var(--preview-muted, #71716a);
   font: 500 10px/1.3 var(--font-manrope), sans-serif;
   cursor: pointer;
   white-space: nowrap;
 }
 .scope[data-assembly-state="building"] > .skip { display: inline-flex; gap: 8px; align-items: center; }
-.skip:hover, .skip:focus-visible { color: #181816; background: #18181609; }
+.skip:hover, .skip:focus-visible { color: var(--preview-ink, #181816); background: var(--preview-surface, #18181609); }
 .skip:focus-visible { outline: 2px solid #3971d9; outline-offset: 2px; }
 @media (max-width: 600px) {
   .cursor span { font-size: 9px; padding: 4px 6px; }

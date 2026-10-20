@@ -68,12 +68,12 @@ const getVideoPoster = (url: string) => {
     .replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/")
     .replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2");
 };
-// Only existing V2 design-system colors—no gallery-only palette.
+// Keep the reel on the active palette without recoloring its preview media.
 const landingCardThemes = [
-  { background: "#355f52", foreground: "#f4f3ef" },
-  { background: "#d15632", foreground: "#f4f3ef" },
-  { background: "#e8e8e3", foreground: "#181816" },
-  { background: "#f4f3ef", foreground: "#181816" },
+  { background: "var(--preview-surface, #355f52)", foreground: "var(--preview-ink, #f4f3ef)" },
+  { background: "var(--preview-raised, #d15632)", foreground: "var(--preview-ink, #f4f3ef)" },
+  { background: "var(--preview-surface, #e8e8e3)", foreground: "var(--preview-ink, #181816)" },
+  { background: "var(--preview-raised, #f4f3ef)", foreground: "var(--preview-ink, #181816)" },
 ];
 
 const pad = (n: number) => String(n).padStart(2, "0");

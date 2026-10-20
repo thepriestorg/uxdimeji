@@ -6,10 +6,10 @@
 }
 
 :root {
-  --paper: #f4f3ef;
-  --ink: #181816;
-  --muted: #6c6c66;
-  --line: #d5d4ce;
+  --paper: var(--preview-paper, #f4f3ef);
+  --ink: var(--preview-ink, #181816);
+  --muted: var(--preview-muted, #6c6c66);
+  --line: var(--preview-line, #d5d4ce);
   --accent: #355f52;
   --media: #e8e8e3;
   --gutter: clamp(20px, 4.6vw, 72px);
@@ -37,7 +37,7 @@ figure { margin: 0; }
 .project-label, .section-number { margin: 0; color: var(--muted); font-size: 9px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
 .project-header h1 { margin: 68px 0 0; font-size: clamp(84px, 12vw, 176px); font-weight: 460; line-height: .82; letter-spacing: -.09em; }
 .wayfinder-theme .project-header h1 { font-size: clamp(72px, 10.5vw, 154px); }
-.project-summary { max-width: 790px; margin: 0; color: #555650; font-size: clamp(25px, 3.2vw, 45px); font-weight: 400; line-height: 1.2; letter-spacing: -.045em; }
+.project-summary { max-width: 790px; margin: 0; color: var(--preview-body, #555650); font-size: clamp(25px, 3.2vw, 45px); font-weight: 400; line-height: 1.2; letter-spacing: -.045em; }
 .project-meta { margin: 85px 0 0; padding-top: 18px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .project-meta div { display: flex; flex-direction: column; gap: 6px; }
 .project-meta dt, .results-list dt { color: var(--muted); font-size: 8px; text-transform: uppercase; }
@@ -73,7 +73,7 @@ figcaption { margin-top: 12px; color: var(--muted); font-size: 8px; }
 .case-content { max-width: 1180px; margin: 0 auto; }
 .text-block { max-width: 740px; margin: 80px auto; }
 .text-block h2 { margin: 25px 0 40px; font-size: clamp(38px, 4.3vw, 62px); font-weight: 470; line-height: 1.08; letter-spacing: -.055em; }
-.text-block > p:not(.section-number) { margin: 0 0 20px; color: #575852; font-size: 16px; line-height: 1.78; }
+.text-block > p:not(.section-number) { margin: 0 0 20px; color: var(--preview-body, #575852); font-size: 16px; line-height: 1.78; }
 .text-block > p:last-of-type { margin-bottom: 0; }
 
 .media-block { margin-top: 130px; margin-bottom: 130px; padding: clamp(20px, 5vw, 68px); }

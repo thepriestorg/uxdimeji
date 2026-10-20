@@ -7,7 +7,8 @@
   width: 100%;
   padding: 0 clamp(18px, 3vw, 48px);
   pointer-events: none;
-  animation: headerEnter 500ms cubic-bezier(.2,.8,.2,1) both;
+  /* An ancestor opacity animation traps the glass inside its backdrop root. */
+  animation: headerEnter 500ms cubic-bezier(.2,.8,.2,1);
 }
 
 .shell {
@@ -26,26 +27,12 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.72);
-  background: rgba(244,243,239,.28);
-  box-shadow: 0 14px 42px rgba(22,28,25,.12), inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.24);
-  -webkit-backdrop-filter: blur(46px) saturate(180%) contrast(.88);
-  backdrop-filter: blur(46px) saturate(180%) contrast(.88);
+  border: 1px solid var(--preview-glass-border, rgba(255,255,255,.72));
+  background: var(--preview-glass, rgba(244,243,239,.28));
+  box-shadow: var(--preview-glass-shadow, 0 14px 42px rgba(22,28,25,.12), inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.24));
+  -webkit-backdrop-filter: blur(36px) saturate(100%);
+  backdrop-filter: blur(36px) saturate(100%);
   pointer-events: auto;
-}
-
-.wordmark::before,
-.desktopNav::before,
-.contact::before,
-.menuButton::before {
-  content: "";
-  position: absolute;
-  z-index: -2;
-  inset: -24px;
-  background: rgba(255,255,255,.16);
-  -webkit-backdrop-filter: blur(46px) saturate(180%);
-  backdrop-filter: blur(46px) saturate(180%);
-  pointer-events: none;
 }
 
 .wordmark::after,
@@ -56,9 +43,7 @@
   position: absolute;
   z-index: -1;
   inset: 0;
-  background:
-    linear-gradient(115deg, rgba(255,255,255,.48), transparent 35%, transparent 70%, rgba(255,255,255,.13)),
-    linear-gradient(to bottom, rgba(255,255,255,.2), transparent 45%);
+  background: var(--preview-glass-highlight, linear-gradient(115deg, rgba(255,255,255,.48), transparent 35%, transparent 70%, rgba(255,255,255,.13)), linear-gradient(to bottom, rgba(255,255,255,.2), transparent 45%));
   pointer-events: none;
 }
 
@@ -69,7 +54,7 @@
   border-radius: 16px;
   display: flex;
   align-items: center;
-  color: #111;
+  color: var(--preview-ink, #111);
   font-size: 21px;
   font-weight: 790;
   line-height: 1;
@@ -94,17 +79,17 @@
   border-radius: 12px;
   display: flex;
   align-items: center;
-  color: #62625d;
+  color: var(--preview-body, #62625d);
   font-size: 13px;
   font-weight: 650;
   white-space: nowrap;
   transition: color .2s, background .2s, transform .2s, box-shadow .2s;
 }
 
-.desktopNav a:hover { color: #181816; transform: translateY(-1px); }
+.desktopNav a:hover { color: var(--preview-ink, #181816); transform: translateY(-1px); }
 .desktopNav a.active {
-  color: #f4f3ef;
-  background: rgba(24,24,22,.92);
+  color: var(--preview-active-ink, #f4f3ef);
+  background: var(--preview-active-bg, rgba(24,24,22,.92));
   box-shadow: 0 6px 16px rgba(24,24,22,.2), inset 0 1px 0 rgba(255,255,255,.15);
 }
 
@@ -116,11 +101,11 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #a9c3b8;
+  background: var(--preview-active-dot, #a9c3b8);
 }
 
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .wordmark, .desktopNav, .contact, .menuButton { background: rgba(244,243,239,.9); }
+  .wordmark, .desktopNav, .contact, .menuButton { background: var(--preview-surface, rgba(244,243,239,.9)); }
 }
 
 .shell .contact {
@@ -131,19 +116,24 @@
   display: flex;
   align-items: center;
   gap: 22px;
-  color: #181816;
+  color: var(--preview-ink, #181816);
   font-size: 13px;
   font-weight: 720;
   white-space: nowrap;
   transition: transform .2s, background .2s;
 }
 
-.shell .contact:hover { transform: translateY(-2px); background: rgba(255,255,255,.7); }
+.shell .contact:hover { transform: translateY(-2px); background: var(--preview-glass-hover, rgba(255,255,255,.7)); }
 .shell .contact svg, .mobilePanel .mobileContact svg { width: 15px; height: 15px; stroke-width: 1.7; }
 .menuButton, .mobilePanel { display: none; }
 
 @keyframes headerEnter {
-  from { opacity: 0; transform: translateY(-14px); }
+  from { transform: translateY(-14px); }
+  to { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header { animation: none; }
 }
 
 @media (max-width: 980px) {
@@ -169,7 +159,7 @@
     place-content: center;
     gap: 5px;
   }
-  .menuButton span { width: 17px; height: 1px; display: block; background: #181816; transition: transform .22s; }
+  .menuButton span { width: 17px; height: 1px; display: block; background: var(--preview-ink, #181816); transition: transform .22s; }
   .menuButtonOpen span:first-child { transform: translateY(3px) rotate(45deg); }
   .menuButtonOpen span:last-child { transform: translateY(-3px) rotate(-45deg); }
 
@@ -182,7 +172,7 @@
     flex-direction: column;
     justify-content: space-between;
     color: #f4f3ef;
-    background: rgba(13,16,15,.86);
+    background: var(--preview-menu-bg, rgba(13,16,15,.86));
     -webkit-backdrop-filter: blur(24px) saturate(130%);
     backdrop-filter: blur(24px) saturate(130%);
     opacity: 0;

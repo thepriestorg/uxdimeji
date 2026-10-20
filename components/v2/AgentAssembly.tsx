@@ -14,7 +14,7 @@ type Props = {
 
 type BuildJob = { agent: number; start: number; draw: number; stagger: number; settle: number };
 
-// Three independent tracks overlap intentionally. Each agent owns a part of the canvas.
+// Independent tracks overlap intentionally. Each agent owns a part of the canvas.
 const jobs: Record<NonNullable<Props["variant"]>, Record<string, BuildJob>> = {
   hero: {
     intro: { agent: 0, start: 180, draw: 300, stagger: 150, settle: 350 },
@@ -23,7 +23,7 @@ const jobs: Record<NonNullable<Props["variant"]>, Record<string, BuildJob>> = {
     status: { agent: 0, start: 1800, draw: 300, stagger: 100, settle: 400 },
     role: { agent: 0, start: 3000, draw: 300, stagger: 100, settle: 400 },
     location: { agent: 1, start: 3500, draw: 300, stagger: 100, settle: 400 },
-    actions: { agent: 2, start: 4800, draw: 400, stagger: 170, settle: 350 },
+    actions: { agent: 3, start: 420, draw: 400, stagger: 170, settle: 350 },
   },
   profile: {
     intro: { agent: 0, start: 180, draw: 300, stagger: 100, settle: 350 },
@@ -267,7 +267,7 @@ export default function AgentAssembly({
 
   const names = variant === "activity"
     ? ["Agent / data", "Agent / build", "Agent / detail"]
-    : ["Agent / layout", "Agent / type", "Agent / content"];
+    : ["Agent / layout", "Agent / type", "Agent / content", ...(variant === "hero" ? ["Agent / connect"] : [])];
   return (
     <Tag ref={rootRef} className={`${styles.scope} ${className}`} id={id} aria-label={label} data-assembly={variant} data-assembly-state="pending">
       {children}
