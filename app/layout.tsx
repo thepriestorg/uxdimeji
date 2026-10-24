@@ -173,11 +173,17 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en-NG" className="dark">
+    <html lang="en-NG" className="dark" suppressHydrationWarning>
+      <head>
+        {/* Runs before first paint: opts real browsers into the section build animation.
+            Crawlers never get it, so their render shows every section's text. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(/bot|crawl|spider|slurp|mediapartners|lighthouse|headless|inspectiontool/i.test(navigator.userAgent)||!Element.prototype.animate||!window.IntersectionObserver||matchMedia("(prefers-reduced-motion: reduce)").matches)return;document.documentElement.setAttribute("data-build-animate","")}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} font-sans bg-background text-secondary antialiased`}>
-        <noscript>
-          <style>{`[data-assembly] [data-build-piece] { visibility: visible !important; }`}</style>
-        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(seoJsonLd) }}

@@ -42,8 +42,6 @@ const jobs: Record<NonNullable<Props["variant"]>, Record<string, BuildJob>> = {
   },
 };
 
-const CRAWLER = /bot|crawl|spider|slurp|mediapartners|lighthouse|headless/i;
-
 // CSS hides pending pieces in the server HTML, before React or any animation code runs.
 export default function AgentAssembly({
   children, className = "", id, label, as: Tag = "div", variant = "hero",
@@ -56,13 +54,10 @@ export default function AgentAssembly({
     const root = rootRef.current;
     const overlay = overlayRef.current;
     if (!root || !overlay) return;
-    if (!Element.prototype.animate || !window.IntersectionObserver) {
-      root.dataset.assemblyState = "complete";
-      return;
-    }
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Crawlers render once without scrolling; give them the finished section so no text is hidden.
-    if (motion.matches || CRAWLER.test(navigator.userAgent)) {
+    // The <head> script in the root layout decides who gets the build (not crawlers,
+    // reduced motion or browsers without the APIs); everyone else sees it finished.
+    if (!document.documentElement.hasAttribute("data-build-animate") || motion.matches) {
       root.dataset.assemblyState = "complete";
       return;
     }

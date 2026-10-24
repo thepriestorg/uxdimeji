@@ -1,7 +1,8 @@
 .scope { position: relative; }
-/* Present in the first server-rendered frame, including while JavaScript is downloading. */
-.scope[data-assembly-state="pending"] [data-build-piece],
-.scope[data-assembly-state="waiting"] [data-build-piece] { visibility: hidden; }
+/* Hidden from the first frame only for browsers the <head> script opted into the build.
+   Crawlers, reduced-motion and no-JS visitors never match, so the HTML stays readable. */
+:root[data-build-animate] .scope[data-assembly-state="pending"] [data-build-piece],
+:root[data-build-animate] .scope[data-assembly-state="waiting"] [data-build-piece] { visibility: hidden; }
 .overlay {
   position: absolute;
   inset: 0;
