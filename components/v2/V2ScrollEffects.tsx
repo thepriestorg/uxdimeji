@@ -23,42 +23,6 @@ export default function V2ScrollEffects() {
 
     const context = gsap.context(() => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      gsap.set(".hero h1", { autoAlpha: 1, y: 0 });
-      gsap.set(".hero-line-inner", { yPercent: 118, rotate: 1.5 });
-      gsap.set(".hero-index, .hero-support", {
-        autoAlpha: 0,
-        y: 24,
-      });
-      gsap.set(".hero-support", { filter: "blur(10px)" });
-
-      const opening = gsap.timeline({
-        defaults: { ease: "power3.out" },
-      });
-
-      opening
-        .to(".hero-index", { autoAlpha: 1, y: 0, duration: 0.38 }, 0)
-        .to(".hero-line-inner", {
-          yPercent: 0,
-          rotate: 0,
-          duration: 0.62,
-          stagger: 0.06,
-          ease: "expo.out",
-        }, 0.04)
-        .to(".hero-support", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.52, ease: "power3.out" }, 0.2);
-
-      gsap.to(".hero-copy", {
-        yPercent: -10,
-        scale: 0.965,
-        opacity: 0.18,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-
       document.querySelectorAll<HTMLElement>(".section-intro").forEach((intro) => {
         const eyebrow = intro.querySelector(".eyebrow");
         const heading = intro.querySelector("h2");
@@ -84,56 +48,6 @@ export default function V2ScrollEffects() {
             scrollTrigger: { trigger: intro, start: "top 80%", once: true },
           });
         }
-      });
-
-      gsap.set(".profile-statement, .profile-detail, .profile-journey, .practice-list", {
-        autoAlpha: 1,
-        y: 0,
-      });
-
-      gsap.from(".profile-statement", {
-        autoAlpha: 0,
-        y: 70,
-        duration: 1.1,
-        ease: "expo.out",
-        immediateRender: false,
-        scrollTrigger: { trigger: ".profile-grid", start: "top 76%", once: true },
-      });
-
-      gsap.from(".profile-detail p", {
-        autoAlpha: 0,
-        y: 30,
-        duration: 0.75,
-        stagger: 0.13,
-        ease: "power3.out",
-        immediateRender: false,
-        scrollTrigger: { trigger: ".profile-detail", start: "top 82%", once: true },
-      });
-
-      gsap.from(".profile-journey path", {
-        strokeDashoffset: 420,
-        duration: 1.45,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".profile-journey", start: "top 84%", once: true },
-      });
-
-      gsap.from(".journey-point", {
-        autoAlpha: 0,
-        y: 26,
-        duration: 0.75,
-        stagger: 0.14,
-        ease: "power3.out",
-        immediateRender: false,
-        scrollTrigger: { trigger: ".profile-journey", start: "top 82%", once: true },
-      });
-
-      gsap.from(".practice-list > div", {
-        autoAlpha: 0,
-        y: 45,
-        duration: 0.85,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".practice-list", start: "top 84%", once: true },
       });
 
       gsap.set(".contact .eyebrow, .contact-main", { autoAlpha: 1, y: 0 });
@@ -187,10 +101,6 @@ export default function V2ScrollEffects() {
     const REPAIR_SELECTORS = [
       ".section-intro .eyebrow",
       ".section-intro h2",
-      ".profile-statement",
-      ".profile-detail p",
-      ".journey-point",
-      ".practice-list > div",
       ".contact .eyebrow",
       ".contact-main h2",
       ".contact-main a",

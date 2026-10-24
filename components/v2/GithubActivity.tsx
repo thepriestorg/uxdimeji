@@ -19,19 +19,22 @@ interface ActivityData {
   contributions: ContributionDay[];
 }
 
-function getInitialData(): ActivityData {
+const DAY_MS = 86_400_000;
+
+// Built from the server's render date in UTC, so the server HTML and the first client
+// render match in every timezone. Real data from the API replaces it after mount.
+function getInitialData(today: string): ActivityData {
   const contributions: ContributionDay[] = [];
-  const today = new Date();
+  const end = Date.parse(`${today}T00:00:00Z`);
   let total = 0;
   let activeDays = 0;
 
   for (let i = 364; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
+    const d = new Date(end - i * DAY_MS);
     const dateStr = d.toISOString().split("T")[0];
-    const dayOfWeek = d.getDay();
+    const dayOfWeek = d.getUTCDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const seed = (Math.sin(i * 997 + d.getDate() * 13) + 1) / 2;
+    const seed = (Math.sin(i * 997 + d.getUTCDate() * 13) + 1) / 2;
 
     let count = 0;
     let level: 0 | 1 | 2 | 3 | 4 = 0;
@@ -77,8 +80,8 @@ function formatDate(dateStr: string): string {
   }
 }
 
-export default function GithubActivity() {
-  const [data, setData] = useState<ActivityData>(getInitialData);
+export default function GithubActivity({ today }: { today: string }) {
+  const [data, setData] = useState<ActivityData>(() => getInitialData(today));
   const [tooltip, setTooltip] = useState<{
     text: string;
     x: number;
@@ -110,8 +113,9 @@ export default function GithubActivity() {
     const raw = data.contributions;
     if (!raw || raw.length === 0) return { weeks: [], monthLabels: [] };
 
+    // Dates are "YYYY-MM-DD" (parsed as UTC); read them in UTC so labels don't shift by timezone.
     const firstDate = new Date(raw[0].date);
-    const startDayOfWeek = firstDate.getDay();
+    const startDayOfWeek = firstDate.getUTCDay();
 
     const paddedContributions: (ContributionDay | null)[] = [
       ...Array(startDayOfWeek).fill(null),
@@ -130,10 +134,10 @@ export default function GithubActivity() {
       const firstValidDay = week.find((d) => d !== null);
       if (firstValidDay) {
         const d = new Date(firstValidDay.date);
-        const m = d.getMonth();
+        const m = d.getUTCMonth();
         if (m !== lastMonth) {
           months.push({
-            name: d.toLocaleDateString("en-US", { month: "short" }),
+            name: d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }),
             colIndex: wIdx,
           });
           lastMonth = m;
@@ -189,7 +193,7 @@ export default function GithubActivity() {
             </svg>
             <span className={styles.summaryText}>
               <span className={styles.highlightCount}>
-                {data.totalContributions.toLocaleString()}
+                {data.totalContributions.toLocaleString("en-US")}
               </span>{" "}
               contributions in the past year
             </span>

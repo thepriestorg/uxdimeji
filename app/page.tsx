@@ -51,7 +51,8 @@ export default function Home() {
       <V2Header />
       <V2Hero />
       <V2SelectedWork />
-      <V2Profile />
+      {/* Render date for time-based fallbacks, so server and client HTML agree. */}
+      <V2Profile today={new Date().toISOString().slice(0, 10)} />
       <V2Contact />
       <V2Footer />
     </main>

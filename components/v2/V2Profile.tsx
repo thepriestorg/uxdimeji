@@ -268,7 +268,7 @@ const bioTokens: BioToken[] = [
   { type: "text", content: "." },
 ];
 
-export default function V2Profile() {
+export default function V2Profile({ today }: { today: string }) {
   const [copied, setCopied] = useState(false);
   const [isKeyPressed, setIsKeyPressed] = useState(false);
   const email = "oladimejiuiux@gmail.com";
@@ -453,7 +453,7 @@ export default function V2Profile() {
             ))}
           </div>
 
-          <GithubActivity />
+          <GithubActivity today={today} />
         </div>
       </div>
     </AgentAssembly>
