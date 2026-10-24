@@ -401,7 +401,12 @@ export default function V2Profile() {
 
             return null;
           })}
-
+          {/* Education continues the bio rather than starting a new line. */}
+          <span data-build-fragment> I studied Computer Science at Ojaja University</span>
+          <span className={styles.degreeBadge} data-build-fragment>First Class</span>
+          <span data-build-fragment> and I&apos;m currently doing my M.Sc. at Al-Hikmah University</span>
+          <span className={`${styles.degreeBadge} ${styles.degreeBadgePending}`} data-build-fragment>In view</span>
+          <span data-build-fragment>.</span>
         </p>
 
         {/* ── Press C to copy email Widget ── */}

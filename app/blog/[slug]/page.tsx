@@ -11,6 +11,7 @@ import CommentSection from "@/components/blog/CommentSection";
 import BlogPostViews from "@/components/blog/BlogPostViews";
 import { formatPostDate, getPublishedPost, readingTime } from "@/lib/blog";
 import { richTextToHtml, richTextToPlainText } from "@/lib/rich-text";
+import { absoluteUrl, authorRef, jsonLdScript } from "@/lib/seo";
 import "../blog.css";
 
 export async function generateMetadata({
@@ -106,9 +107,23 @@ export default async function BlogPostPage({
 
   const renderedContent = richTextToHtml(post.content);
   const spokenText = richTextToPlainText(post.content);
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    url: absoluteUrl(`/blog/${post.slug}`),
+    mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
+    image: [absoluteUrl(post.cover_image || "/og-image")],
+    ...(post.published_at ? { datePublished: post.published_at } : {}),
+    dateModified: post.updated_at,
+    author: authorRef,
+    publisher: authorRef,
+  };
 
   return (
     <main className="v2-design blog-page" id="top">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd)} />
       <V2Header />
 
       {/* ── Unboxed Centered Article Reader ── */}

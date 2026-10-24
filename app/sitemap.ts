@@ -30,17 +30,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = createClient(supabaseUrl, supabaseKey);
     const { data: projects } = await supabase
       .from("projects")
-      .select("slug")
+      .select("slug, updated_at")
       .eq("is_featured", true);
     const { data: posts } = await supabase
       .from("blog_posts")
       .select("slug, updated_at")
       .eq("published", true);
 
+    // The homepage lists this work, so it changes whenever any of it does.
+    const latestUpdate = [...(projects ?? []), ...(posts ?? [])]
+      .map((item) => item.updated_at)
+      .filter(Boolean)
+      .sort()
+      .at(-1);
+    if (latestUpdate) pages[0].lastModified = latestUpdate;
+
     return [
       ...pages,
       ...(projects ?? []).map((project) => ({
         url: `${SITE_URL}/projects/${project.slug}`,
+        lastModified: project.updated_at,
         changeFrequency: "monthly" as const,
         priority: 0.8,
       })),

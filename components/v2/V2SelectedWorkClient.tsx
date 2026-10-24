@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import { ViewportGif, ViewportVideo } from "./ViewportMedia";
 
@@ -76,7 +76,17 @@ const landingCardThemes = [
   { background: "var(--preview-raised, #f4f3ef)", foreground: "var(--preview-ink, #181816)" },
 ];
 
-const pad = (n: number) => String(n).padStart(2, "0");
+type Collection = "projects" | "live" | "landing";
+
+const getDisplayDomain = (url: string | null) => {
+  if (!url) return "in progress";
+  if (url.startsWith("/")) return `uxdimeji.com${url}`;
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
 
 const hasLongWord = (title: string) =>
   title.split(/\s+/).some((word) => word.length >= 8);
@@ -131,18 +141,68 @@ const getProjectSummary = (contentJsonString?: string): string => {
   return "";
 };
 
+function ProjectMedia({ src, alt, eager }: { src: string; alt: string; eager: boolean }) {
+  if (isVideoUrl(src)) {
+    return (
+      <ViewportVideo
+        className="project-visual-media"
+        src={src}
+        poster={getVideoPoster(src)}
+        ariaLabel={alt}
+        eager={eager}
+        onMetadata={applyProjectMediaRatio}
+      />
+    );
+  }
+  if (isGifUrl(src)) {
+    return (
+      <ViewportGif
+        className="project-visual-media"
+        src={src}
+        alt={alt}
+        onMediaLoad={applyProjectMediaRatio}
+      />
+    );
+  }
+  return (
+    <Image
+      className="project-visual-media"
+      src={getOptimizedUrl(src)}
+      alt={alt}
+      fill
+      priority={eager}
+      quality={90}
+      sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
+      ref={(image) => {
+        if (image?.complete) applyProjectMediaRatio(image);
+      }}
+      onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
+    />
+  );
+}
+
 /* ── Component ──────────────────────────────────── */
 export default function V2SelectedWorkClient({
   projects,
   vibeProjects,
   landingPages,
 }: V2SelectedWorkClientProps) {
-  const [activeCollection, setActiveCollection] = useState<"projects" | "landing">("projects");
+  const collections = [
+    { id: "projects" as const, label: "Case studies", count: projects.length },
+    { id: "live" as const, label: "Built by me", count: vibeProjects.length },
+    { id: "landing" as const, label: "Landing pages", count: landingPages.length },
+  ].filter((collection) => collection.count > 0);
+  const [activeCollection, setActiveCollection] = useState<Collection>(collections[0]?.id ?? "projects");
   const [selectedLanding, setSelectedLanding] = useState<LandingPage | null>(null);
-  const hasDesignProjects = projects.length > 0;
-  const hasVibeProjects = vibeProjects.length > 0;
+  const tabsRef = useRef<HTMLDivElement>(null);
 
-  const totalDesign = projects.length;
+  const openCollection = (collection: Collection) => {
+    setActiveCollection(collection);
+    const tabs = tabsRef.current;
+    if (!tabs) return;
+    // Land just below the floating header so the tabs stay in view.
+    window.scrollTo({ top: tabs.getBoundingClientRect().top + window.scrollY - 110, behavior: "smooth" });
+  };
 
   useEffect(() => {
     const images = Array.from(
@@ -174,7 +234,7 @@ export default function V2SelectedWorkClient({
     };
   }, [selectedLanding]);
 
-  if (!hasDesignProjects && !hasVibeProjects && !landingPages.length) return null;
+  if (!collections.length) return null;
 
   return (
     <section className="selected-work" id="work">
@@ -187,26 +247,21 @@ export default function V2SelectedWorkClient({
         </div>
       </header>
 
-      <div className="work-tabs" role="tablist" aria-label="Work collections">
-        <button
-          role="tab"
-          aria-selected={activeCollection === "projects"}
-          className={activeCollection === "projects" ? "active" : ""}
-          onClick={() => setActiveCollection("projects")}
-        >
-          <span>01</span> Projects + live work
-        </button>
-        <button
-          role="tab"
-          aria-selected={activeCollection === "landing"}
-          className={activeCollection === "landing" ? "active" : ""}
-          onClick={() => setActiveCollection("landing")}
-        >
-          <span>02</span> Landing pages <i>{landingPages.length}</i>
-        </button>
+      <div ref={tabsRef} className="work-tabs" role="tablist" aria-label="Work collections" style={{ "--tab-count": collections.length } as React.CSSProperties}>
+        {collections.map((collection) => (
+          <button
+            key={collection.id}
+            role="tab"
+            aria-selected={activeCollection === collection.id}
+            className={activeCollection === collection.id ? "active" : ""}
+            onClick={() => setActiveCollection(collection.id)}
+          >
+            {collection.label} <i>{collection.count}</i>
+          </button>
+        ))}
       </div>
 
-      {/* ── Design projects ─────────────────────────── */}
+      {/* ── Case studies ────────────────────────────── */}
       {activeCollection === "projects" && <div className="projects-grid work-panel" role="tabpanel">
       {projects.map((project, index) => (
         <article key={project.id} className="project-row">
@@ -219,37 +274,7 @@ export default function V2SelectedWorkClient({
           >
             <div className="project-visual-inner">
               {project.featured_image ? (
-                isVideoUrl(project.featured_image) ? (
-                <ViewportVideo
-                  className="project-visual-media"
-                  src={project.featured_image}
-                  poster={getVideoPoster(project.featured_image)}
-                  ariaLabel={project.title}
-                  eager={index < 2}
-                  onMetadata={applyProjectMediaRatio}
-                />
-                ) : isGifUrl(project.featured_image) ? (
-                <ViewportGif
-                  className="project-visual-media"
-                  src={project.featured_image}
-                  alt={project.title}
-                  onMediaLoad={applyProjectMediaRatio}
-                />
-                ) : (
-                <Image
-                  className="project-visual-media"
-                  src={getOptimizedUrl(project.featured_image)}
-                  alt={project.title}
-                  fill
-                  priority={index < 2}
-                  quality={90}
-                  sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
-                  ref={(image) => {
-                    if (image?.complete) applyProjectMediaRatio(image);
-                  }}
-                  onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
-                />
-                )
+                <ProjectMedia src={project.featured_image} alt={project.title} eager={index < 2} />
               ) : (
                 <span className="project-visual-fallback">{project.title}</span>
               )}
@@ -257,193 +282,106 @@ export default function V2SelectedWorkClient({
           </Link>
 
           <div className="project-copy">
-            <div className="project-number">
-              {pad(index + 1)} / {project.category} / {project.year}
-            </div>
             <h3 className={hasLongWord(project.title) ? "project-title-long" : undefined}>
               <Link href={`/projects/${project.slug}`}>
                 {project.title}
               </Link>
             </h3>
             {project.content && (
-              <p className="project-lead">
-                {(() => {
-                  const summary = getProjectSummary(project.content);
-                  return summary.length > 165
-                    ? summary.slice(0, 165).trim() + "…"
-                    : summary;
-                })()}
-              </p>
+              <p className="project-lead">{getProjectSummary(project.content)}</p>
             )}
-            <Link className="text-link" href={`/projects/${project.slug}`}>
-              Read case study
-              <span className="arrow-icon arrow-out" aria-hidden="true" />
+            <Link className="case-study-link" href={`/projects/${project.slug}`}>
+              <span>Read case study</span>
+              <i aria-hidden="true"><ArrowUpRight /></i>
             </Link>
           </div>
         </article>
       ))}
-
-      {/* ── Vibe-coded projects ─────────────────────── */}
-      {vibeProjects.map((project, index) => {
-        const isExternal = Boolean(
-          project.url && !project.url.startsWith("/")
-        );
-
-        return (
-          <article key={project.id} className="project-row">
-            {/* Visual */}
-            {project.url ? (
-              <a
-                className="project-visual"
-                href={project.url}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
-                style={{
-                  backgroundColor: project.accent || "#1a1a1a",
-                }}
-              >
-                <div className="project-visual-inner">
-                  {project.image ? (
-                    isVideoUrl(project.image) ? (
-                    <ViewportVideo
-                      className="project-visual-media"
-                      src={project.image}
-                      poster={getVideoPoster(project.image)}
-                      ariaLabel={project.title}
-                      onMetadata={applyProjectMediaRatio}
-                    />
-                    ) : isGifUrl(project.image) ? (
-                    <ViewportGif
-                      className="project-visual-media"
-                      src={project.image}
-                      alt={project.title}
-                      onMediaLoad={applyProjectMediaRatio}
-                    />
-                    ) : (
-                    <Image
-                      className="project-visual-media"
-                      src={getOptimizedUrl(project.image)}
-                      alt={project.title}
-                      fill
-                      quality={90}
-                      sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
-                      ref={(image) => {
-                        if (image?.complete) applyProjectMediaRatio(image);
-                      }}
-                      onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
-                    />
-                    )
-                  ) : (
-                    <span className="project-visual-fallback">{project.title}</span>
-                  )}
-                </div>
-              </a>
-            ) : (
-              <div
-                className="project-visual"
-                style={{
-                  backgroundColor: project.accent || "#1a1a1a",
-                }}
-              >
-                <div className="project-visual-inner">
-                  {project.image ? (
-                    isVideoUrl(project.image) ? (
-                    <ViewportVideo
-                      className="project-visual-media"
-                      src={project.image}
-                      poster={getVideoPoster(project.image)}
-                      ariaLabel={project.title}
-                      onMetadata={applyProjectMediaRatio}
-                    />
-                    ) : isGifUrl(project.image) ? (
-                    <ViewportGif
-                      className="project-visual-media"
-                      src={project.image}
-                      alt={project.title}
-                      onMediaLoad={applyProjectMediaRatio}
-                    />
-                    ) : (
-                    <Image
-                      className="project-visual-media"
-                      src={getOptimizedUrl(project.image)}
-                      alt={project.title}
-                      fill
-                      quality={90}
-                      sizes="(max-width: 980px) calc(100vw - 36px), 46vw"
-                      ref={(image) => {
-                        if (image?.complete) applyProjectMediaRatio(image);
-                      }}
-                      onLoad={(event) => applyProjectMediaRatio(event.currentTarget)}
-                    />
-                    )
-                  ) : (
-                    <span className="project-visual-fallback">{project.title}</span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Copy */}
-            <div className="project-copy">
-              <div className="project-number">
-                {pad(totalDesign + index + 1)} / Built by me / 2025
-              </div>
-              <h3 className={hasLongWord(project.title) ? "project-title-long" : undefined}>
-                {project.url ? (
-                  <a
-                    href={project.url}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
-                  >
-                    {project.title}
-                  </a>
-                ) : (
-                  project.title
-                )}
-              </h3>
-              <p className="project-lead">{project.description}</p>
-
-              {/* Status */}
-              {project.status && (
-                <div className={`vibe-status ${project.status.toLowerCase() === "live" ? "live" : "wip"}`}>
-                  <i />
-                  <span>{project.status}</span>
-                </div>
-              )}
-
-              {/* Tags */}
-              {project.tags && project.tags.length > 0 && (
-                <div className="vibe-tags">
-                  {project.tags.map((tag) => (
-                    <span key={tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {project.url && (
-                <a
-                  className="text-link"
-                  href={project.url}
-                  target={isExternal ? "_blank" : undefined}
-                  rel={isExternal ? "noopener noreferrer" : undefined}
-                >
-                  Visit project
-                  <span className="arrow-icon arrow-out" aria-hidden="true" />
-                </a>
-              )}
-            </div>
-          </article>
-        );
-      })}
       <div className="playground-project-cta">
-        <span>More interface explorations</span>
-        <Link href="/playground">
-          View UI shots <ArrowUpRight aria-hidden="true" />
-        </Link>
+        <span>There&apos;s more where that came from</span>
+        <div className="playground-project-actions">
+          {vibeProjects.length > 0 && (
+            <button type="button" onClick={() => openCollection("live")}>
+              See what I&apos;ve built <ArrowUpRight aria-hidden="true" />
+            </button>
+          )}
+          <Link href="/playground">
+            View UI shots <ArrowUpRight aria-hidden="true" />
+          </Link>
+        </div>
       </div>
       </div>}
+
+      {/* ── Live builds ─────────────────────────────── */}
+      {activeCollection === "live" && (
+        <div className="live-panel work-panel" role="tabpanel">
+          <div className="live-note">
+            <span>Shipped, not just shown</span>
+            <p>Products I designed and built end to end. They&apos;re live, so go and click around.</p>
+          </div>
+          <div className="live-grid">
+            {vibeProjects.map((project, index) => {
+              const isExternal = Boolean(project.url && !project.url.startsWith("/"));
+              const linkProps = project.url
+                ? {
+                    href: project.url,
+                    target: isExternal ? "_blank" : undefined,
+                    rel: isExternal ? "noopener noreferrer" : undefined,
+                  }
+                : null;
+              const isLive = project.status?.toLowerCase() === "live";
+              const screen = (
+                <>
+                  <div className="live-window-bar" aria-hidden="true">
+                    <span className="live-window-lights"><i /><i /><i /></span>
+                    <span className="live-window-url">{getDisplayDomain(project.url)}</span>
+                  </div>
+                  <div className="live-window-screen" style={{ backgroundColor: project.accent || "#1a1a1a" }}>
+                    {project.image ? (
+                      <ProjectMedia src={project.image} alt={project.title} eager={index < 2} />
+                    ) : (
+                      <span className="project-visual-fallback">{project.title}</span>
+                    )}
+                  </div>
+                </>
+              );
+
+              return (
+                <article key={project.id} className="live-card">
+                  {linkProps ? (
+                    <a className="live-window" {...linkProps}>{screen}</a>
+                  ) : (
+                    <div className="live-window">{screen}</div>
+                  )}
+                  <div className="live-card-body">
+                    <div className="live-card-head">
+                      <h3>{project.title}</h3>
+                      {project.status && (
+                        <span className={`live-status ${isLive ? "live" : "wip"}`}>
+                          <i />{project.status}
+                        </span>
+                      )}
+                    </div>
+                    {project.description && <p>{project.description}</p>}
+                    <div className="live-card-foot">
+                      {project.tags?.length > 0 && (
+                        <ul className="live-tags">
+                          {project.tags.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}
+                        </ul>
+                      )}
+                      {linkProps && (
+                        <a className="live-visit" {...linkProps}>
+                          {isLive ? "Visit site" : "Preview"} <ArrowUpRight aria-hidden="true" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {activeCollection === "landing" && (
         <div className="landing-work-panel work-panel" role="tabpanel">
@@ -463,13 +401,12 @@ export default function V2SelectedWorkClient({
                   >
                     <button className="landing-gallery-image" onClick={() => setSelectedLanding(page)} aria-label={`Open ${page.title}`}>
                       {isVideoUrl(page.image_url) ? (
-                        <video
+                        <ViewportVideo
                           src={getOptimizedVideoUrl(page.image_url)}
                           poster={getVideoPoster(page.image_url)}
-                          muted autoPlay loop playsInline
-                          preload={index < 2 ? "auto" : "metadata"}
-                          onLoadedMetadata={(event) => {
-                            const video = event.currentTarget;
+                          ariaLabel={`${page.title} landing page`}
+                          eager={index < 2}
+                          onMetadata={(video) => {
                             if (video.videoWidth && video.videoHeight) video.parentElement?.style.setProperty("--reel-ratio", `${video.videoWidth} / ${video.videoHeight}`);
                           }}
                         />

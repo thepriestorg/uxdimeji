@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import styles from "./V2Hero.module.css";
 import AgentAssembly from "./AgentAssembly";
+import HeroBackdrop from "./HeroBackdrop";
 
 /* ─── Social & Resume Links ─────────────────────────────── */
 const socialLinks = [
@@ -195,6 +196,8 @@ function BuildWords({ text }: { text: string }) {
 export default function V2Hero() {
   return (
     <AgentAssembly as="section" className={styles.heroCanvas} id="top" variant="hero">
+      <HeroBackdrop />
+
       {/* ── Center Stage ── */}
       <div className={styles.centerStage}>
         <div className={styles.introGroup} data-build-piece="Intro / handwritten" data-build-kind="intro">
@@ -235,10 +238,12 @@ export default function V2Hero() {
                 style={pos as React.CSSProperties}
               />
             ))}
-            <h1 className={styles.designerName} aria-label="Oladimeji">
+            <h1 className={styles.designerName}>
               {"OLADIMEJI".split("").map((letter, index) => (
                 <span key={index} data-build-fragment aria-hidden="true">{letter}</span>
               ))}
+              {/* The display letters are decorative; this is the heading search engines and screen readers get. */}
+              <span className="sr-only"> Oladimeji Abubakar, Product Designer in Nigeria</span>
             </h1>
           </div>
 

@@ -22,19 +22,168 @@
   backface-visibility: hidden;
 }
 
-/* Subtle canvas background grid */
-.heroCanvas::before {
-  content: "";
+/* ── Canvas backdrop: colour auras, pointer-lit dots, rulers ── */
+.backdrop {
+  --mx: 50%;
+  --my: 45%;
+  --ruler: 18px;
+  /* Rulers start under the floating header instead of running behind it. */
+  --ruler-top: 84px;
+  --tick: color-mix(in srgb, var(--preview-ink, #181816) 22%, transparent);
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image:
-    linear-gradient(var(--preview-grid, rgba(24, 24, 22, 0.04)) 1px, transparent 1px),
-    linear-gradient(90deg, var(--preview-grid, rgba(24, 24, 22, 0.04)) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(circle at center, #000 65%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at center, #000 65%, transparent 100%);
+  overflow: hidden;
   pointer-events: none;
+}
+
+.aura {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: var(--hero-aura-opacity, 0.22);
+  animation: auraDrift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.auraGreen {
+  top: -26%;
+  left: 2%;
+  width: min(62vw, 900px);
+  background: radial-gradient(circle, rgba(46, 182, 125, 0.55), transparent 62%);
+}
+
+.auraPink {
+  right: -8%;
+  bottom: -34%;
+  width: min(66vw, 960px);
+  background: radial-gradient(circle, rgba(224, 30, 90, 0.5), transparent 62%);
+  animation-duration: 28s;
+  animation-delay: -9s;
+}
+
+.auraYellow {
+  top: 18%;
+  left: -20%;
+  width: min(44vw, 640px);
+  background: radial-gradient(circle, rgba(251, 176, 59, 0.38), transparent 62%);
+  animation-duration: 32s;
+  animation-delay: -15s;
+}
+
+@keyframes auraDrift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6vw, 4vh, 0) scale(1.08); }
+  100% { transform: translate3d(-4vw, -3vh, 0) scale(0.96); }
+}
+
+.dotField {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--dot, color-mix(in srgb, var(--preview-ink, #181816) 9%, transparent)) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  background-position: center;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 30%, transparent 100%);
+}
+
+.dotSpotlight {
+  --dot: color-mix(in srgb, var(--preview-ink, #181816) 60%, transparent);
+  opacity: 0;
+  mask-image: radial-gradient(220px circle at var(--mx) var(--my), #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(220px circle at var(--mx) var(--my), #000, transparent 75%);
+  transition: opacity 0.5s ease;
+}
+
+.backdrop[data-active="true"] .dotSpotlight {
+  opacity: 1;
+}
+
+/* Design-tool rulers; the signal mark tracks the pointer. */
+.rulerTop,
+.rulerLeft {
+  position: absolute;
+  border-color: var(--preview-line, rgba(24, 24, 22, 0.12));
+  opacity: 0.85;
+}
+
+.rulerTop {
+  top: var(--ruler-top);
+  left: var(--ruler);
+  right: var(--ruler);
+  height: var(--ruler);
+  border-bottom: 1px solid;
+  background:
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 80px) left bottom / 100% 10px no-repeat;
+}
+
+.rulerLeft {
+  top: calc(var(--ruler-top) + var(--ruler));
+  bottom: var(--ruler);
+  left: 0;
+  width: var(--ruler);
+  border-right: 1px solid;
+  background:
+    repeating-linear-gradient(180deg, var(--tick) 0 1px, transparent 1px 8px) right top / 4px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--tick) 0 1px, transparent 1px 80px) right top / 10px 100% no-repeat;
+}
+
+.rulerBottom {
+  top: auto;
+  bottom: 0;
+  border-bottom: 0;
+  border-top: 1px solid;
+  background:
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 8px) left top / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 80px) left top / 100% 10px no-repeat;
+}
+
+.rulerRight {
+  left: auto;
+  right: 0;
+  border-right: 0;
+  border-left: 1px solid;
+  background:
+    repeating-linear-gradient(180deg, var(--tick) 0 1px, transparent 1px 8px) left top / 4px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--tick) 0 1px, transparent 1px 80px) left top / 10px 100% no-repeat;
+}
+
+.rulerTop::after,
+.rulerLeft::after {
+  content: "";
+  position: absolute;
+  background: var(--preview-signal, #d15632);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rulerTop::after {
+  top: 0;
+  bottom: 0;
+  left: calc(var(--mx) - var(--ruler));
+  width: 1px;
+}
+
+.rulerLeft::after {
+  left: 0;
+  right: 0;
+  top: calc(var(--my) - var(--ruler-top) - var(--ruler));
+  height: 1px;
+}
+
+.backdrop[data-active="true"] .rulerTop::after,
+.backdrop[data-active="true"] .rulerLeft::after {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .backdrop { --ruler: 12px; }
+  .dotField { background-size: 22px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura { animation: none; }
 }
 
 /* ── Top-Left Sticker: Currently open to roles ── */
@@ -370,37 +519,37 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 22px;
-  margin-top: 30px;
+  gap: 40px;
+  margin-top: 34px;
   max-width: 900px;
 }
 
 /* 2-line headline layout */
 .taglineHeading {
   margin: 0;
-  font-family: var(--font-sans), sans-serif;
-  font-size: clamp(24px, 3.4vw, 40px);
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -0.03em;
+  font-family: var(--font-manrope), var(--font-sans), sans-serif;
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-weight: 560;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
   color: var(--preview-ink, #181816);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0.04em;
 }
 
 .taglineRow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0.24em;
   white-space: nowrap;
 }
 
 .taglinePeriod {
-  margin-left: -6px;
+  margin-left: -0.2em;
 }
 
 .iconWrapper {
@@ -409,12 +558,17 @@
   justify-content: center;
   line-height: 1;
   flex-shrink: 0;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.taglineHeading:hover .iconWrapper {
+  transform: rotate(90deg);
 }
 
 .inlineIcon {
   display: block;
-  width: clamp(24px, 3vw, 34px);
-  height: clamp(24px, 3vw, 34px);
+  width: 0.76em;
+  height: 0.76em;
 }
 
 /* ── Actions Row: WORK WITH ME Button + Rounded Socials ── */
@@ -857,21 +1011,11 @@
   .bottomSection {
     margin-top: 32px;
     margin-bottom: 55px;
-    gap: 16px;
+    gap: 28px;
   }
 
   .taglineHeading {
-    font-size: clamp(21px, 6vw, 28px);
-    line-height: 1.3;
-  }
-
-  .taglineRow {
-    gap: 7px;
-  }
-
-  .inlineIcon {
-    width: clamp(20px, 5.8vw, 26px);
-    height: clamp(20px, 5.8vw, 26px);
+    font-size: clamp(24px, 7vw, 32px);
   }
 
   .actionsRow {

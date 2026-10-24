@@ -7,7 +7,7 @@ import "./globals.css";
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 const manrope = localFont({
-  src: "../public/assets/Manrope-Variable.ttf",
+  src: "../public/assets/Manrope-Variable.woff2",
   variable: "--font-manrope",
 });
 const flux = localFont({
@@ -100,9 +100,15 @@ export default function RootLayout({
         "@type": "Person",
         "@id": "https://uxdimeji.com/#person",
         name: "Oladimeji Abubakar",
-        alternateName: "uxdimeji",
+        givenName: "Oladimeji",
+        familyName: "Abubakar",
+        alternateName: ["uxdimeji", "Oladimeji"],
         url: "https://uxdimeji.com",
-        image: "https://uxdimeji.com/icon.png",
+        image: {
+          "@type": "ImageObject",
+          url: "https://uxdimeji.com/images/oladimeji.png",
+          caption: "Oladimeji Abubakar",
+        },
         description: "Product and UI/UX designer based in Kwara and working across Nigeria and worldwide, with over five years of experience designing digital products and interface systems.",
         jobTitle: "Product Designer and UI/UX Designer",
         email: "mailto:oladimejiuiux@gmail.com",
@@ -124,6 +130,16 @@ export default function RootLayout({
             addressCountry: "NG",
           },
         },
+        alumniOf: [
+          { "@type": "CollegeOrUniversity", name: "Ojaja University" },
+          { "@type": "CollegeOrUniversity", name: "Al-Hikmah University" },
+        ],
+        hasCredential: {
+          "@type": "EducationalOccupationalCredential",
+          name: "B.Sc. Computer Science (First Class)",
+          credentialCategory: "degree",
+          recognizedBy: { "@type": "CollegeOrUniversity", name: "Ojaja University" },
+        },
         knowsAbout: [
           "Product Design",
           "UI Design",
@@ -140,6 +156,7 @@ export default function RootLayout({
           "https://www.instagram.com/uxdimeji",
           "https://x.com/uxdimeji",
           "https://www.tiktok.com/@uxdimeji",
+          "https://github.com/thepriest0",
         ],
       },
       {

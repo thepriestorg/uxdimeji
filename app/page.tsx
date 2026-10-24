@@ -7,6 +7,9 @@ import V2Profile from "@/components/v2/V2Profile";
 import V2Contact from "@/components/v2/V2Contact";
 import V2Footer from "@/components/v2/V2Footer";
 
+// Serve the homepage from cache; admin edits show up within a minute.
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: { absolute: "Oladimeji Abubakar — Product Designer in Nigeria" },
   description:
@@ -16,9 +19,34 @@ export const metadata: Metadata = {
   },
 };
 
+// Marks the homepage as the canonical profile of the Person defined in the root layout.
+const profilePageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": "https://uxdimeji.com/#profilepage",
+  url: "https://uxdimeji.com",
+  name: "Oladimeji Abubakar — Product Designer in Nigeria",
+  inLanguage: "en-NG",
+  isPartOf: { "@id": "https://uxdimeji.com/#website" },
+  // Named inline as well as by @id, since the full Person graph lives in a separate script.
+  mainEntity: {
+    "@type": "Person",
+    "@id": "https://uxdimeji.com/#person",
+    name: "Oladimeji Abubakar",
+    alternateName: ["uxdimeji", "Oladimeji"],
+    url: "https://uxdimeji.com",
+    image: "https://uxdimeji.com/images/oladimeji.png",
+    jobTitle: "Product Designer",
+  },
+};
+
 export default function Home() {
   return (
     <main className="v2-design" id="main">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
+      />
       <V2ScrollEffects />
       <V2Header />
       <V2Hero />

@@ -27,13 +27,13 @@ const jobs: Record<NonNullable<Props["variant"]>, Record<string, BuildJob>> = {
   },
   profile: {
     intro: { agent: 0, start: 180, draw: 300, stagger: 100, settle: 350 },
-    portrait: { agent: 0, start: 1200, draw: 350, stagger: 100, settle: 350 },
+    portrait: { agent: 0, start: 900, draw: 350, stagger: 100, settle: 350 },
     identity: { agent: 1, start: 300, draw: 450, stagger: 160, settle: 300 },
-    role: { agent: 1, start: 1700, draw: 250, stagger: 100, settle: 300 },
+    role: { agent: 1, start: 1300, draw: 250, stagger: 100, settle: 300 },
     copy: { agent: 2, start: 400, draw: 400, stagger: 175, settle: 300 },
-    actions: { agent: 0, start: 3000, draw: 300, stagger: 100, settle: 350 },
-    stack: { agent: 1, start: 3400, draw: 250, stagger: 100, settle: 300 },
-    tools: { agent: 1, start: 4300, draw: 400, stagger: 160, settle: 350 },
+    actions: { agent: 0, start: 1700, draw: 300, stagger: 100, settle: 350 },
+    stack: { agent: 3, start: 260, draw: 250, stagger: 100, settle: 300 },
+    tools: { agent: 3, start: 760, draw: 400, stagger: 120, settle: 350 },
   },
   activity: {
     summary: { agent: 0, start: 180, draw: 300, stagger: 100, settle: 350 },
@@ -41,6 +41,8 @@ const jobs: Record<NonNullable<Props["variant"]>, Record<string, BuildJob>> = {
     legend: { agent: 2, start: 450, draw: 300, stagger: 100, settle: 350 },
   },
 };
+
+const CRAWLER = /bot|crawl|spider|slurp|mediapartners|lighthouse|headless/i;
 
 // CSS hides pending pieces in the server HTML, before React or any animation code runs.
 export default function AgentAssembly({
@@ -59,7 +61,8 @@ export default function AgentAssembly({
       return;
     }
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (motion.matches) {
+    // Crawlers render once without scrolling; give them the finished section so no text is hidden.
+    if (motion.matches || CRAWLER.test(navigator.userAgent)) {
       root.dataset.assemblyState = "complete";
       return;
     }
@@ -211,8 +214,8 @@ export default function AgentAssembly({
       const visibleHeight = Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0);
       return visibleHeight >= Math.min(80, rect.height * .18);
     };
-    const play = () => {
-      if (played || document.hidden || !isInView()) return;
+    const play = (force = false) => {
+      if (played || document.hidden || (!force && !isInView())) return;
       initialWidth = innerWidth;
       initialHeight = innerHeight;
       try {
@@ -227,7 +230,12 @@ export default function AgentAssembly({
       root.dataset.assemblyState = "building";
       animations.forEach((animation) => animation.play());
       finishTimer = setTimeout(() => finish(), duration);
+      root.dispatchEvent(new Event("assembly:start"));
     };
+    // A nested build (e.g. activity inside profile) starts alongside its parent section.
+    const parent = root.parentElement?.closest<HTMLElement>("[data-assembly]");
+    const handleParentStart = () => play(true);
+    parent?.addEventListener("assembly:start", handleParentStart);
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && isInView()) {
         play();
@@ -257,6 +265,7 @@ export default function AgentAssembly({
     window.addEventListener("resize", handleResize);
     return () => {
       observer.disconnect();
+      parent?.removeEventListener("assembly:start", handleParentStart);
       finish();
       finishRef.current = null;
       document.removeEventListener("visibilitychange", handleVisibility);
@@ -267,7 +276,7 @@ export default function AgentAssembly({
 
   const names = variant === "activity"
     ? ["Agent / data", "Agent / build", "Agent / detail"]
-    : ["Agent / layout", "Agent / type", "Agent / content", ...(variant === "hero" ? ["Agent / connect"] : [])];
+    : ["Agent / layout", "Agent / type", "Agent / content", variant === "hero" ? "Agent / connect" : "Agent / stack"];
   return (
     <Tag ref={rootRef} className={`${styles.scope} ${className}`} id={id} aria-label={label} data-assembly={variant} data-assembly-state="pending">
       {children}

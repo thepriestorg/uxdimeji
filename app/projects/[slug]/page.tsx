@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { absoluteUrl, authorRef, jsonLdScript } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -257,9 +258,27 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
     const nextProject = otherProjects?.[0];
     const themeClass = `${project.slug}-theme`;
+    const schemaImage = project.featured_image && isVideoUrl(project.featured_image)
+        ? getVideoPoster(project.featured_image)
+        : project.featured_image;
+    const articleJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: `${project.title} — Product Design Case Study`,
+        description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+        url: absoluteUrl(`/projects/${project.slug}`),
+        mainEntityOfPage: absoluteUrl(`/projects/${project.slug}`),
+        ...(schemaImage ? { image: [schemaImage] } : {}),
+        ...(project.created_at ? { datePublished: project.created_at } : {}),
+        ...(project.updated_at ? { dateModified: project.updated_at } : {}),
+        genre: project.category,
+        author: authorRef,
+        publisher: authorRef,
+    };
 
     return (
         <div className="case-study-page">
+            <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd)} />
             <div className={themeClass} style={{ minHeight: "100vh", position: "relative" }}>
                 <div className="case-progress" data-case-progress aria-hidden="true" style={{ transform: "scaleX(1)" }}></div>
                 <V2Header />

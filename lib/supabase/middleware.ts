@@ -44,6 +44,3 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
 }
 
-export const config = {
-    matcher: ['/admin/:path*'],
-};
