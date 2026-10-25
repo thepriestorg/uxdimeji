@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Playfair_Display, Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans, Playfair_Display, Space_Grotesk, Space_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
+// Receipt type in the footer.
+const mono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-mono", display: "swap" });
 const manrope = localFont({
   src: "../public/assets/Manrope-Variable.woff2",
   variable: "--font-manrope",
@@ -183,7 +185,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} font-sans bg-background text-secondary antialiased`}>
+      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} ${mono.variable} font-sans bg-background text-secondary antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(seoJsonLd) }}

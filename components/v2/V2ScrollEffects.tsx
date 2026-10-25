@@ -49,30 +49,6 @@ export default function V2ScrollEffects() {
           });
         }
       });
-
-      gsap.set(".contact .eyebrow, .contact-main", { autoAlpha: 1, y: 0 });
-      gsap.from(".contact .eyebrow", {
-        autoAlpha: 0,
-        x: -28,
-        duration: 0.8,
-        scrollTrigger: { trigger: ".contact", start: "top 72%", once: true },
-      });
-      gsap.from(".contact-main h2", {
-        autoAlpha: 0,
-        y: 90,
-        rotate: 1.5,
-        duration: 1.2,
-        ease: "expo.out",
-        scrollTrigger: { trigger: ".contact-main", start: "top 75%", once: true },
-      });
-      gsap.from(".contact-main a, .contact-foot", {
-        autoAlpha: 0,
-        y: 28,
-        duration: 0.8,
-        stagger: 0.13,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".contact-main", start: "top 62%", once: true },
-      });
     }, root);
 
     const refresh = () => ScrollTrigger.refresh();
@@ -92,10 +68,6 @@ export default function V2ScrollEffects() {
     const REPAIR_SELECTORS = [
       ".section-intro .eyebrow",
       ".section-intro h2",
-      ".contact .eyebrow",
-      ".contact-main h2",
-      ".contact-main a",
-      ".contact-foot",
     ];
 
     const runRepairPass = () => {

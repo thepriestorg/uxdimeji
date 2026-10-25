@@ -4,7 +4,6 @@ import V2Hero from "@/components/v2/V2Hero";
 import V2ScrollEffects from "@/components/v2/V2ScrollEffects";
 import V2SelectedWork from "@/components/v2/V2SelectedWork";
 import V2Profile from "@/components/v2/V2Profile";
-import V2Contact from "@/components/v2/V2Contact";
 import V2Footer from "@/components/v2/V2Footer";
 
 // Serve the homepage from cache; admin edits show up within a minute.
@@ -53,7 +52,6 @@ export default function Home() {
       <V2SelectedWork />
       {/* Render date for time-based fallbacks, so server and client HTML agree. */}
       <V2Profile today={new Date().toISOString().slice(0, 10)} />
-      <V2Contact />
       <V2Footer />
     </main>
   );
