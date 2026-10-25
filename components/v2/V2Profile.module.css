@@ -1,66 +1,80 @@
 /* ════════════════════════════════════════════════════════════
-   V2Profile — Centered Verified Profile Card Experience
-   With 100% GPU Hardware-Accelerated iOS/Mobile Animations
+   V2Profile — editorial About: sticky ID card + scroll-lit statement,
+   then Stack & Activity. Motion is driven by components/v2/scrollReveal.ts.
    ════════════════════════════════════════════════════════════ */
 
 .profileSection {
   position: relative;
   width: 100%;
-  padding: clamp(80px, 9vw, 120px) var(--gutter, 24px);
-  background: var(--preview-profile, #ffffff) !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: clamp(110px, 12vw, 180px) var(--gutter, 24px) clamp(100px, 11vw, 160px);
+  background: var(--preview-profile, #ffffff);
   border-top: 1px solid var(--preview-line, rgba(24, 24, 22, 0.06));
-  border-bottom: 1px solid var(--preview-line, rgba(24, 24, 22, 0.06));
-  overflow: hidden;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
 }
 
-.profileContainer {
-  max-width: 620px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.aboutGrid {
+  max-width: 1320px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: clamp(40px, 6.5vw, 120px);
+  align-items: start;
 }
 
-/* ── Section Header ── */
-.sectionHeader {
+.eyebrow {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-family: var(--font-manrope), sans-serif;
-  font-size: 11px;
-  font-weight: 750;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--preview-muted, #9ca3af);
-  margin-bottom: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
+  color: var(--preview-muted, #6b7280);
 }
 
-/* ── Avatar with Live Online Status ── */
+.eyebrow span {
+  min-width: 30px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--preview-line, rgba(24, 24, 22, 0.12));
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--preview-signal, #d15632);
+}
+
+/* ── ID card ── */
+.idCard {
+  position: sticky;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .avatarWrapper {
   position: relative;
-  display: inline-block;
+  margin-top: 34px;
   user-select: none;
 }
 
 .avatar {
-  width: 74px;
-  height: 74px;
-  border-radius: 20px;
-  background: #121313;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: #121313;
   border: 1.5px solid var(--preview-line, rgba(24, 24, 22, 0.08));
+  box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.6);
+  rotate: -4deg;
+  transition: rotate 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.idCard:hover .avatar {
+  rotate: 0deg;
 }
 
 .avatarImage {
@@ -69,100 +83,178 @@
   object-fit: cover;
 }
 
-/* Bright green online indicator dot */
 .onlineDot {
   position: absolute;
-  right: -2px;
+  right: -4px;
   bottom: -2px;
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   background: #22c55e;
-  border: 2.5px solid var(--preview-profile, #ffffff);
+  border: 3px solid var(--preview-profile, #ffffff);
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
   animation: pulseBeacon 2.4s ease-in-out infinite;
 }
 
 @keyframes pulseBeacon {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45);
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12); }
 }
 
-/* ── Name & Verified Badge ── */
 .nameRow {
+  margin-top: 24px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 20px;
+  gap: 8px;
 }
 
 .name {
   margin: 0;
-  font-family: var(--font-sans), sans-serif;
-  font-size: 23px;
+  font-family: var(--font-manrope), var(--font-sans), sans-serif;
+  font-size: 26px;
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
   color: var(--preview-ink, #181816);
 }
 
 .verifiedBadge {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   display: block;
 }
 
-/* ── Role Title ── */
 .role {
-  margin: 4px 0 0;
-  font-family: var(--font-sans), sans-serif;
+  margin: 6px 0 0;
   font-size: 15px;
-  font-weight: 450;
   color: var(--preview-muted, #6b7280);
-  letter-spacing: -0.01em;
 }
 
-/* ── Bio Paragraph (Natural Flow & Preserved Spacing) ── */
-.bioText {
-  margin: 24px 0 0;
-  font-family: var(--font-sans), sans-serif;
-  font-size: clamp(15px, 1.6vw, 16.5px);
-  line-height: 1.7;
-  font-weight: 400;
-  color: var(--preview-body, #4b5563);
-  letter-spacing: -0.01em;
-  max-width: 590px;
+/* Press C to copy */
+.copyActionRow {
+  position: relative;
+  margin-top: 30px;
+  padding: 10px 16px 10px 12px;
+  border: 1px solid var(--preview-line, rgba(24, 24, 22, 0.12));
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--preview-muted, #6b7280);
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.copyActionRow:hover {
+  color: var(--preview-ink, #181816);
+  border-color: var(--preview-ink, #181816);
+}
+
+.kbd {
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--preview-line, #d1d5db);
+  border-bottom-width: 3px;
+  border-radius: 7px;
+  background: var(--preview-surface, #f3f4f6);
+  font-family: var(--font-manrope), monospace;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--preview-ink, #111827);
+  transition: transform 0.15s ease, border-bottom-width 0.15s ease;
+}
+
+.copyActionRow:active .kbd,
+.kbdActive {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+.toast {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 10px);
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--preview-raised, #181816);
+  color: var(--preview-ink, #ffffff);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  z-index: 20;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; translate: 0 -4px; }
+}
+
+/* ── Statement: each word's opacity follows the paragraph's scroll progress ── */
+.statement {
+  --progress: 1;
+  margin: 0;
+  font-family: var(--font-manrope), var(--font-sans), sans-serif;
+  font-size: clamp(28px, 3.05vw, 48px);
+  font-weight: 560;
+  line-height: 1.24;
+  letter-spacing: -0.035em;
+  color: var(--preview-ink, #181816);
   white-space: pre-wrap;
-  word-break: break-word;
+  text-wrap: pretty;
 }
 
-/* Word reveal animation token */
-.animatedWord {
-  display: inline;
+.word {
+  opacity: clamp(0.13, calc(var(--progress) * (var(--n) + 10) - var(--i)), 1);
+  transition: opacity 0.25s linear;
 }
 
-/* ── Inline SVG Badges ── */
+.inlineBadge {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: 0.04em;
+  margin: 0 0.12em;
+  line-height: 1;
+}
+
+.flagSvg {
+  display: block;
+  width: 1.05em;
+  height: 0.7em;
+  border-radius: 0.1em;
+}
+
+.figmaInlineSvg {
+  display: block;
+  width: 0.56em;
+  height: 0.84em;
+}
+
+.codeInlineSvg {
+  display: block;
+  width: 0.88em;
+  height: 0.88em;
+}
+
 .degreeBadge {
   display: inline-block;
-  margin: 0 0 0 6px;
-  padding: 3px 8px;
+  padding: 0.38em 0.8em;
   border-radius: 999px;
-  vertical-align: 1px;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 10.5px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.06em;
+  font-size: 0.34em;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
   color: #f5b73b;
   background: color-mix(in srgb, #f5b73b 14%, transparent);
+  vertical-align: 0.5em;
 }
 
 .degreeBadgePending {
@@ -170,241 +262,132 @@
   background: color-mix(in srgb, var(--preview-agent-blue, #3971d9) 16%, transparent);
 }
 
-.inlineBadge {
+/* ── Stack & Activity: same columns as the About grid above ── */
+.stackSection {
+  max-width: 1320px;
+  margin: clamp(120px, 13vw, 200px) auto 0;
+  display: grid;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: clamp(40px, 6.5vw, 120px);
+  align-items: start;
+}
+
+.toolList {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  vertical-align: -2px;
-  margin: 0 3px;
-  line-height: 1;
+  gap: 10px;
+  padding: 5px 14px 5px 5px;
+  border: 1px solid var(--preview-line, rgba(24, 24, 22, 0.1));
+  border-radius: 999px;
+  background: var(--preview-surface, #f4f3ef);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--preview-ink, #181816);
+  transition: border-color 0.25s ease;
 }
 
-.flagSvg {
-  display: block;
-  width: 18px;
-  height: 12px;
-  border-radius: 2px;
-  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.15);
-  flex-shrink: 0;
+.tool:hover {
+  border-color: color-mix(in srgb, var(--preview-ink, #181816) 40%, transparent);
 }
 
-.figmaInlineSvg {
-  display: block;
-  width: 13px;
-  height: 15px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+.toolIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--preview-ink, #181816);
+  background: var(--preview-paper, #ffffff);
 }
 
-.codeInlineSvg {
-  display: block;
+.toolIcon svg {
   width: 17px;
   height: 17px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
 }
 
-/* ── Press C to copy email Widget ── */
-.copyActionRow {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 24px;
-  color: var(--preview-muted, #6b7280);
-  font-family: var(--font-sans), sans-serif;
-  font-size: 14.5px;
-  font-weight: 450;
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.15s ease;
-}
-
-.copyActionRow:hover {
+.stackTitle {
+  margin: 0;
+  font-family: var(--font-manrope), var(--font-sans), sans-serif;
+  font-size: clamp(34px, 4.2vw, 64px);
+  font-weight: 560;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
   color: var(--preview-ink, #181816);
 }
 
-.kbd {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
-  background: var(--preview-surface, #f3f4f6);
-  border: 1px solid var(--preview-line, #d1d5db);
-  border-radius: 5px;
-  font-family: var(--font-manrope), monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--preview-body, #374151);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: all 0.15s ease;
+.stackTitleMuted {
+  color: var(--preview-muted, #6b7280);
 }
 
-.copyActionRow:hover .kbd {
-  background: var(--preview-raised, #e5e7eb);
-  border-color: var(--preview-muted, #9ca3af);
-  color: var(--preview-ink, #111827);
-  transform: translateY(-1px);
+.activityWrap {
+  margin-top: clamp(36px, 4vw, 56px);
 }
 
-.copyActionRow:active .kbd,
-.kbdActive {
-  background: var(--preview-raised, #d1d5db) !important;
-  border-color: var(--preview-muted, #6b7280) !important;
-  transform: scale(0.92) !important;
+/* Let the GitHub card use the full column instead of its 590px cap. */
+.activityWrap > * {
+  max-width: none;
+  margin-top: 0;
 }
 
-/* ── Toast Notification ── */
-.toast {
-  position: absolute;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
-  -webkit-transform: translate3d(-50%, 0, 0);
-  top: calc(100% + 8px);
-  padding: 5px 12px;
-  background: var(--preview-raised, #181816);
-  color: #ffffff;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  white-space: nowrap;
-  animation: toastFadeIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-  z-index: 20;
-}
-
-@keyframes toastFadeIn {
-  from {
-    opacity: 0;
-    transform: translate3d(-50%, -4px, 0);
-    -webkit-transform: translate3d(-50%, -4px, 0);
+@media (max-width: 900px) {
+  .aboutGrid,
+  .stackSection {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
   }
-  to {
-    opacity: 1;
-    transform: translate3d(-50%, 0, 0);
-    -webkit-transform: translate3d(-50%, 0, 0);
+
+  .idCard {
+    position: relative;
+    top: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 18px;
+    align-items: center;
   }
-}
 
-/* ── Stack Subsection (Centered Minimal Dock) ── */
-.stackSection {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
+  .idCard .eyebrow {
+    grid-column: 1 / -1;
+  }
 
-.stackHeader {
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--preview-muted, #9ca3af);
-  margin: 0 0 14px 0;
-  user-select: none;
-}
-
-/* Centered Tool Dock */
-.stackDock {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 6px 8px;
-  border-radius: 16px;
-  background: var(--preview-surface, #fbfbf9);
-  border: 1px solid var(--preview-line, rgba(24, 24, 22, 0.04));
-  box-shadow: none;
-  flex-wrap: wrap;
-}
-
-.stackIconTile {
-  position: relative;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: var(--preview-raised, #ffffff);
-  border: 1px solid var(--preview-line, rgba(24, 24, 22, 0.04));
-  box-shadow: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.stackIconTile:hover {
-  transform: translateY(-2px) scale(1.06);
-  border-color: var(--preview-line, rgba(24, 24, 22, 0.16));
-  box-shadow: none;
-  z-index: 5;
-}
-
-.stackTooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 4px 8px;
-  background: var(--preview-raised, #181816);
-  color: #ffffff;
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 5px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-  z-index: 20;
-}
-
-.stackIconTile:hover .stackTooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-2px);
-}
-
-@media (max-width: 768px) {
-  .profileSection {
-    padding: 56px var(--gutter, 20px);
+  .avatarWrapper {
+    grid-row: span 2;
+    margin-top: 24px;
   }
 
   .avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 18px;
+    width: 72px;
+    height: 72px;
+    border-radius: 22px;
+  }
+
+  .nameRow {
+    margin-top: 24px;
+    align-self: end;
   }
 
   .name {
-    font-size: 21px;
+    font-size: 22px;
   }
 
-  .bioText {
-    font-size: 15px;
-    line-height: 1.62;
+  .role {
+    align-self: start;
   }
 
-  .stackDock {
-    gap: 8px;
-    padding: 6px;
+  .copyActionRow {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 22px;
   }
 
-  .stackIconTile {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-  }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .profileSection * { animation: none !important; transition: none !important; }
 }

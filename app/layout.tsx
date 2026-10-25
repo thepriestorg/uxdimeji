@@ -106,7 +106,7 @@ export default function RootLayout({
         url: "https://uxdimeji.com",
         image: {
           "@type": "ImageObject",
-          url: "https://uxdimeji.com/images/oladimeji.png",
+          url: "https://uxdimeji.com/images/oladimeji.jpg",
           caption: "Oladimeji Abubakar",
         },
         description: "Product and UI/UX designer based in Kwara and working across Nigeria and worldwide, with over five years of experience designing digital products and interface systems.",

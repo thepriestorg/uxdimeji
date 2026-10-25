@@ -73,15 +73,6 @@ export default function V2ScrollEffects() {
         ease: "power3.out",
         scrollTrigger: { trigger: ".contact-main", start: "top 62%", once: true },
       });
-
-      gsap.from(".site-footer > *", {
-        autoAlpha: 0,
-        y: 18,
-        duration: 0.65,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".site-footer", start: "top 96%", once: true },
-      });
     }, root);
 
     const refresh = () => ScrollTrigger.refresh();
@@ -105,7 +96,6 @@ export default function V2ScrollEffects() {
       ".contact-main h2",
       ".contact-main a",
       ".contact-foot",
-      ".site-footer > *",
     ];
 
     const runRepairPass = () => {

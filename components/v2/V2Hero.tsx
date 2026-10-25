@@ -219,7 +219,7 @@ export default function V2Hero() {
           <div className={styles.avatarBubbleLeft} data-build-fragment>
             <div className={styles.avatarCirclePhoto}>
               <Image
-                src="/images/oladimeji.png"
+                src="/images/oladimeji.jpg"
                 alt="Oladimeji Abubakar"
                 width={34}
                 height={34}

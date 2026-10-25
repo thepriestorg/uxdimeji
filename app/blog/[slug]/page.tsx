@@ -147,7 +147,7 @@ export default async function BlogPostPage({
         <div className="article-reader-byline">
           <div className="article-byline-avatar">
             <Image
-              src="/images/oladimeji.png"
+              src="/images/oladimeji.jpg"
               alt="Oladimeji Abubakar"
               width={40}
               height={40}
@@ -191,7 +191,7 @@ export default async function BlogPostPage({
             <div className="signoff-avatar-wrapper">
               <div className="signoff-avatar">
                 <Image
-                  src="/images/oladimeji.png"
+                  src="/images/oladimeji.jpg"
                   alt="Oladimeji Abubakar"
                   width={52}
                   height={52}

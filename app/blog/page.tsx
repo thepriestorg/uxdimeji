@@ -81,7 +81,7 @@ export default async function BlogPage() {
           <div className="blog-avatar-wrapper">
             <div className="blog-avatar">
               <Image
-                src="/images/oladimeji.png"
+                src="/images/oladimeji.jpg"
                 alt="Oladimeji Abubakar"
                 width={74}
                 height={74}

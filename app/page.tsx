@@ -35,7 +35,7 @@ const profilePageJsonLd = {
     name: "Oladimeji Abubakar",
     alternateName: ["uxdimeji", "Oladimeji"],
     url: "https://uxdimeji.com",
-    image: "https://uxdimeji.com/images/oladimeji.png",
+    image: "https://uxdimeji.com/images/oladimeji.jpg",
     jobTitle: "Product Designer",
   },
 };

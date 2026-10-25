@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { trackCustomEvent } from "@/components/AnalyticsTracker";
 import GithubActivity from "./GithubActivity";
-import AgentAssembly from "./AgentAssembly";
+import { useRevealOnEnter, useScrollProgress } from "./scrollReveal";
 import styles from "./V2Profile.module.css";
 
 /* ─── Blue Verified Checkmark Badge SVG ─────────────────── */
@@ -256,7 +256,8 @@ type BioToken =
   | { type: "text"; content: string }
   | { type: "flag" }
   | { type: "figma" }
-  | { type: "code" };
+  | { type: "code" }
+  | { type: "degree"; label: string; pending?: boolean };
 
 const bioTokens: BioToken[] = [
   { type: "text", content: "Hey, I'm Oladimeji, a product designer based in Kwara, Nigeria" },
@@ -265,8 +266,31 @@ const bioTokens: BioToken[] = [
   { type: "figma" },
   { type: "text", content: ", and all the way to code" },
   { type: "code" },
+  { type: "text", content: ". I studied Computer Science at Ojaja University" },
+  { type: "degree", label: "First Class" },
+  { type: "text", content: " and I'm currently doing my M.Sc. at Al-Hikmah University" },
+  { type: "degree", label: "In view", pending: true },
   { type: "text", content: "." },
 ];
+
+// Split the bio into words and badges, each with its reveal index; whitespace is kept as-is.
+type BioPiece = { kind: "space"; text: string } | { kind: "word"; text: string; i: number } | { kind: "badge"; token: BioToken; i: number };
+const bioPieces: BioPiece[] = (() => {
+  const pieces: BioPiece[] = [];
+  let i = 0;
+  for (const token of bioTokens) {
+    if (token.type === "text") {
+      for (const part of token.content.split(/(\s+)/)) {
+        if (!part) continue;
+        pieces.push(/^\s+$/.test(part) ? { kind: "space", text: part } : { kind: "word", text: part, i: i++ });
+      }
+    } else {
+      pieces.push({ kind: "badge", token, i: i++ });
+    }
+  }
+  return pieces;
+})();
+const bioCount = bioPieces.filter((piece) => piece.kind !== "space").length;
 
 export default function V2Profile({ today }: { today: string }) {
   const [copied, setCopied] = useState(false);
@@ -318,144 +342,125 @@ export default function V2Profile({ today }: { today: string }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleCopy]);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const statementRef = useRef<HTMLParagraphElement>(null);
+  useRevealOnEnter(sectionRef);
+  useScrollProgress(statementRef, { start: 0.85, end: 0.5 });
+
   return (
-    <AgentAssembly as="section" variant="profile"
-      className={styles.profileSection}
-      id="about"
-      label="About Me"
-    >
-      <div className={styles.profileContainer}>
-        {/* ── Section Header ── */}
-        <div
-          className={styles.sectionHeader} data-build-piece="About / intro" data-build-kind="intro"
-        >
-          <span>ABOUT ME</span>
-        </div>
+    <section ref={sectionRef} className={styles.profileSection} id="about" aria-label="About Me">
+      <div className={styles.aboutGrid}>
+        {/* ── ID card: sticky beside the statement on desktop ── */}
+        <aside className={styles.idCard} data-reveal="rise">
+          <p className={styles.eyebrow}>
+            <span>02</span> About me
+          </p>
 
-        {/* ── Avatar with Live Online Status ── */}
-        <div
-          className={styles.avatarWrapper} data-build-piece="Portrait" data-build-kind="portrait"
-        >
-          <div className={styles.avatar}>
-            <Image
-              src="/images/oladimeji.png"
-              alt="Oladimeji Abubakar"
-              width={74}
-              height={74}
-              className={styles.avatarImage}
-              priority
-            />
-          </div>
-          <span className={styles.onlineDot} aria-label="Online" />
-        </div>
-
-        {/* ── Name & Verified Badge ── */}
-        <div
-          className={styles.nameRow} data-build-piece="Identity / verified" data-build-kind="identity"
-        >
-          <h2 className={styles.name} data-build-fragment>Oladimeji Abubakar</h2>
-          <span data-build-fragment><VerifiedBadge /></span>
-        </div>
-
-        {/* ── Role Title ── */}
-        <p className={styles.role} data-build-piece="Role / product designer" data-build-kind="role">
-          Product Designer
-        </p>
-
-        {/* ── Bio Paragraph (Natural Flow & Preserved Spacing) ── */}
-        <p className={styles.bioText} data-build-piece="A little about me" data-build-kind="copy">
-          {bioTokens.map((token, idx) => {
-            if (token.type === "text") {
-              return (
-                <span key={idx} className={styles.animatedWord}>
-                  {token.content.match(/(?:\S+\s*){1,3}/g)?.map((phrase, phraseIndex) => (
-                    <span key={phraseIndex} data-build-fragment>{phrase}</span>
-                  ))}
-                </span>
-              );
-            }
-
-            if (token.type === "flag") {
-              return (
-                <span key={idx} className={styles.inlineBadge} data-build-fragment>
-                  <NigeriaFlag />
-                </span>
-              );
-            }
-
-            if (token.type === "figma") {
-              return (
-                <span key={idx} className={styles.inlineBadge} data-build-fragment>
-                  <InlineFigmaBadge />
-                </span>
-              );
-            }
-
-            if (token.type === "code") {
-              return (
-                <span key={idx} className={styles.inlineBadge} data-build-fragment>
-                  <InlineCodeBadge />
-                </span>
-              );
-            }
-
-            return null;
-          })}
-          {/* Education continues the bio rather than starting a new line. */}
-          <span data-build-fragment> I studied Computer Science at Ojaja University</span>
-          <span className={styles.degreeBadge} data-build-fragment>First Class</span>
-          <span data-build-fragment> and I&apos;m currently doing my M.Sc. at Al-Hikmah University</span>
-          <span className={`${styles.degreeBadge} ${styles.degreeBadgePending}`} data-build-fragment>In view</span>
-          <span data-build-fragment>.</span>
-        </p>
-
-        {/* ── Press C to copy email Widget ── */}
-        <div
-          className={styles.copyActionRow} data-build-piece="Get in touch" data-build-kind="actions"
-          onClick={() => handleCopy("click")}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && handleCopy("click")}
-          aria-label="Click or press C to copy email to clipboard"
-        >
-          <span>Press</span>
-          <kbd
-            className={`${styles.kbd} ${isKeyPressed ? styles.kbdActive : ""}`}
-          >
-            C
-          </kbd>
-          <span>to copy my email</span>
-
-          {copied && (
-            <div className={styles.toast} role="status">
-              Copied to clipboard! 📋
+          <div className={styles.avatarWrapper}>
+            <div className={styles.avatar}>
+              <Image
+                src="/images/oladimeji.jpg"
+                alt="Oladimeji Abubakar"
+                width={96}
+                height={96}
+                className={styles.avatarImage}
+              />
             </div>
-          )}
-        </div>
-
-        {/* ── Stack & Activity Subsection ── */}
-        <div
-          className={styles.stackSection}
-        >
-          <p className={styles.stackHeader} data-build-piece="Stack / label" data-build-kind="stack">STACK &amp; ACTIVITY</p>
-          <div className={styles.stackDock} data-build-piece="Stack / tools" data-build-kind="tools">
-            {stackTools.map(({ name, icon: Icon }) => (
-              <div
-                key={name}
-                className={styles.stackIconTile}
-                data-build-fragment
-                title={name}
-                aria-label={name}
-              >
-                <Icon />
-                <span className={styles.stackTooltip}>{name}</span>
-              </div>
-            ))}
+            <span className={styles.onlineDot} aria-label="Online" />
           </div>
 
-          <GithubActivity today={today} />
+          <div className={styles.nameRow}>
+            <h2 className={styles.name}>Oladimeji Abubakar</h2>
+            <VerifiedBadge />
+          </div>
+          <p className={styles.role}>Product Designer</p>
+
+          <div
+            className={styles.copyActionRow}
+            onClick={() => handleCopy("click")}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && handleCopy("click")}
+            aria-label="Click or press C to copy email to clipboard"
+          >
+            <span>Press</span>
+            <kbd className={`${styles.kbd} ${isKeyPressed ? styles.kbdActive : ""}`}>C</kbd>
+            <span>to copy my email</span>
+
+            {copied && (
+              <div className={styles.toast} role="status">
+                Copied to clipboard! 📋
+              </div>
+            )}
+          </div>
+        </aside>
+
+        {/* ── Statement: words light up as it scrolls through the viewport ── */}
+        <p
+          ref={statementRef}
+          className={styles.statement}
+          style={{ "--n": bioCount } as React.CSSProperties}
+        >
+          {bioPieces.map((piece, idx) => {
+            if (piece.kind === "space") return piece.text;
+            const style = { "--i": piece.i } as React.CSSProperties;
+            if (piece.kind === "word") {
+              return (
+                <span key={idx} className={styles.word} style={style}>
+                  {piece.text}
+                </span>
+              );
+            }
+            const { token } = piece;
+            return (
+              <span key={idx} className={`${styles.word} ${styles.inlineBadge}`} style={style}>
+                {token.type === "flag" && <NigeriaFlag />}
+                {token.type === "figma" && <InlineFigmaBadge />}
+                {token.type === "code" && <InlineCodeBadge />}
+                {token.type === "degree" && (
+                  <span className={`${styles.degreeBadge} ${token.pending ? styles.degreeBadgePending : ""}`}>
+                    {token.label}
+                  </span>
+                )}
+              </span>
+            );
+          })}
+        </p>
+      </div>
+
+      {/* ── Stack & Activity: tools on the left, title + GitHub activity on the right ── */}
+      <div className={styles.stackSection}>
+        <div className={styles.stackAside}>
+          <p className={styles.eyebrow}>
+            <span>03</span> Stack &amp; activity
+          </p>
+          <ul className={styles.toolList}>
+            {stackTools.map(({ name, icon: Icon }, index) => (
+              <li
+                key={name}
+                className={styles.tool}
+                data-reveal="rise"
+                style={{ "--reveal-delay": `${index * 50}ms` } as React.CSSProperties}
+              >
+                <span className={styles.toolIcon}><Icon /></span>
+                {name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={styles.stackMain}>
+          <h3 className={styles.stackTitle}>
+            <span data-reveal="mask"><span>The tools I think in,</span></span>
+            <span data-reveal="mask" style={{ "--reveal-delay": "90ms" } as React.CSSProperties}>
+              <span className={styles.stackTitleMuted}>and the commits that prove it.</span>
+            </span>
+          </h3>
+          <div data-reveal="rise" className={styles.activityWrap} style={{ "--reveal-delay": "160ms" } as React.CSSProperties}>
+            <GithubActivity today={today} />
+          </div>
         </div>
       </div>
-    </AgentAssembly>
+    </section>
   );
 }
