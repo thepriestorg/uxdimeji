@@ -181,6 +181,9 @@ function extractYoutubeId(url: string): string {
 
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 
+const getOptimizedVideoUrl = (url: string, width: number = 1600) => url.includes("cloudinary.com") && url.includes("/video/upload/")
+    ? url.replace("/video/upload/", `/video/upload/f_auto,q_auto:eco,c_limit,w_${width}/`)
+    : url;
 const getVideoPoster = (url: string) => url.includes("cloudinary.com") && url.includes("/video/upload/")
     ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2")
     : undefined;
@@ -294,7 +297,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                             <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
                                 {isVideoUrl(project.featured_image) ? (
                                 <video
-                                    src={project.featured_image}
                                     poster={getVideoPoster(project.featured_image)}
                                     aria-label={project.title}
                                     muted
@@ -303,7 +305,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                                     playsInline
                                     controls
                                     preload="metadata"
-                                />
+                                >
+                                    <source media="(max-width: 760px)" src={getOptimizedVideoUrl(project.featured_image, 720)} />
+                                    <source src={getOptimizedVideoUrl(project.featured_image)} />
+                                </video>
                                 ) : (
                                 <Image
                                     src={project.featured_image}

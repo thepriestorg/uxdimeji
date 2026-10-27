@@ -3,11 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 
 const MEDIA_LOAD_MARGIN = "600px 0px";
+export const MOBILE_VIDEO_QUERY = "(max-width: 760px)";
 const TRANSPARENT_GIF =
   "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 interface ViewportVideoProps {
   src: string;
+  // Lighter file for phones; the browser picks it via <source media>.
+  mobileSrc?: string;
   poster?: string;
   ariaLabel: string;
   className?: string;
@@ -18,6 +21,7 @@ interface ViewportVideoProps {
 
 export function ViewportVideo({
   src,
+  mobileSrc,
   poster,
   ariaLabel,
   className,
@@ -69,7 +73,7 @@ export function ViewportVideo({
   return (
     <video
       ref={videoRef}
-      src={active ? src : undefined}
+      src={active && !mobileSrc ? src : undefined}
       poster={poster}
       aria-label={ariaLabel}
       className={className}
@@ -79,7 +83,14 @@ export function ViewportVideo({
       controls={controls}
       preload={eager ? "auto" : "metadata"}
       onLoadedMetadata={(event) => onMetadata?.(event.currentTarget)}
-    />
+    >
+      {active && mobileSrc && (
+        <>
+          <source media={MOBILE_VIDEO_QUERY} src={mobileSrc} />
+          <source src={src} />
+        </>
+      )}
+    </video>
   );
 }
 

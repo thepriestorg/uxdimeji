@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
-import { ViewportGif, ViewportVideo } from "./ViewportMedia";
+import { MOBILE_VIDEO_QUERY, ViewportGif, ViewportVideo } from "./ViewportMedia";
 
 /* ── Types ──────────────────────────────────────── */
 interface Project {
@@ -58,9 +58,10 @@ const getOptimizedUrl = (url: string, width: number = 1200) => {
 
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url) || /[?&,]f_gif(?:[,&]|$)/i.test(url);
-const getOptimizedVideoUrl = (url: string) =>
+// Cap delivered width: the source files are full-resolution screen recordings.
+const getOptimizedVideoUrl = (url: string, width: number = 1280) =>
   url.includes("cloudinary.com") && url.includes("/video/upload/")
-    ? url.replace("/video/upload/", "/video/upload/q_auto:eco/")
+    ? url.replace("/video/upload/", `/video/upload/f_auto,q_auto:eco,c_limit,w_${width}/`)
     : url;
 const getVideoPoster = (url: string) => {
   if (!url.includes("cloudinary.com") || !url.includes("/video/upload/")) return undefined;
@@ -146,7 +147,8 @@ function ProjectMedia({ src, alt, eager }: { src: string; alt: string; eager: bo
     return (
       <ViewportVideo
         className="project-visual-media"
-        src={src}
+        src={getOptimizedVideoUrl(src)}
+        mobileSrc={getOptimizedVideoUrl(src, 720)}
         poster={getVideoPoster(src)}
         ariaLabel={alt}
         eager={eager}
@@ -403,6 +405,7 @@ export default function V2SelectedWorkClient({
                       {isVideoUrl(page.image_url) ? (
                         <ViewportVideo
                           src={getOptimizedVideoUrl(page.image_url)}
+                          mobileSrc={getOptimizedVideoUrl(page.image_url, 720)}
                           poster={getVideoPoster(page.image_url)}
                           ariaLabel={`${page.title} landing page`}
                           eager={index < 2}
@@ -435,7 +438,10 @@ export default function V2SelectedWorkClient({
             <button className="landing-modal-close" onClick={() => setSelectedLanding(null)} aria-label="Close"><X aria-hidden="true" /></button>
             <div className="landing-modal-media">
               {isVideoUrl(selectedLanding.image_url) ? (
-                <video src={getOptimizedVideoUrl(selectedLanding.image_url)} poster={getVideoPoster(selectedLanding.image_url)} autoPlay loop muted playsInline controls preload="auto" />
+                <video poster={getVideoPoster(selectedLanding.image_url)} autoPlay loop muted playsInline controls preload="auto">
+                  <source media={MOBILE_VIDEO_QUERY} src={getOptimizedVideoUrl(selectedLanding.image_url, 720)} />
+                  <source src={getOptimizedVideoUrl(selectedLanding.image_url, 1600)} />
+                </video>
               ) : (
                 <Image src={getOptimizedUrl(selectedLanding.image_url, 1800)} alt={selectedLanding.title} fill sizes="90vw" quality={95} />
               )}
