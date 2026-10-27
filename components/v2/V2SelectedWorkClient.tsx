@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import { MOBILE_VIDEO_QUERY, ViewportGif, ViewportVideo } from "./ViewportMedia";
+import { getLocalGif, getLocalPoster, getLocalVideo, type LocalVideoWidth } from "@/lib/local-media";
 
 /* ── Types ──────────────────────────────────────── */
 interface Project {
@@ -59,11 +60,14 @@ const getOptimizedUrl = (url: string, width: number = 1200) => {
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url) || /[?&,]f_gif(?:[,&]|$)/i.test(url);
 // Cap delivered width: the source files are full-resolution screen recordings.
-const getOptimizedVideoUrl = (url: string, width: number = 1280) =>
-  url.includes("cloudinary.com") && url.includes("/video/upload/")
+const getOptimizedVideoUrl = (url: string, width: LocalVideoWidth = 1280) =>
+  getLocalVideo(url, width) ??
+  (url.includes("cloudinary.com") && url.includes("/video/upload/")
     ? url.replace("/video/upload/", `/video/upload/f_auto,q_auto:eco,c_limit,w_${width}/`)
-    : url;
+    : url);
 const getVideoPoster = (url: string) => {
+  const localPoster = getLocalPoster(url);
+  if (localPoster) return localPoster;
   if (!url.includes("cloudinary.com") || !url.includes("/video/upload/")) return undefined;
   return url
     .replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/")
@@ -160,7 +164,7 @@ function ProjectMedia({ src, alt, eager }: { src: string; alt: string; eager: bo
     return (
       <ViewportGif
         className="project-visual-media"
-        src={src}
+        src={getLocalGif(src) ?? src}
         alt={alt}
         onMediaLoad={applyProjectMediaRatio}
       />
