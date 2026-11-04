@@ -260,7 +260,7 @@ type BioToken =
   | { type: "degree"; label: string; pending?: boolean };
 
 const bioTokens: BioToken[] = [
-  { type: "text", content: "Hey, I'm Oladimeji, a product designer based in Kwara, Nigeria" },
+  { type: "text", content: "Hey, I'm Oladimeji Abubakar, a product designer based in Kwara, Nigeria" },
   { type: "flag" },
   { type: "text", content: ". With over half a decade of experience, I design products that look good, feel great, and are easy to use. I don't stop at Figma, I can take your idea from conception, through Figma" },
   { type: "figma" },

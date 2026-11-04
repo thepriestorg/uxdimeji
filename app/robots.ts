@@ -40,6 +40,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: "https://uxdimeji.com/sitemap.xml",
-    host: "https://uxdimeji.com",
   };
 }

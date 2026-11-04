@@ -3,13 +3,17 @@ import V2Header from "@/components/v2/V2Header";
 import V2ScrollEffects from "@/components/v2/V2ScrollEffects";
 import PlaygroundGallery from "@/components/v2/PlaygroundGallery";
 import V2Footer from "@/components/v2/V2Footer";
+import { socialMetadata } from "@/lib/seo";
 import styles from "./Playground.module.css";
+
+const description = "UI shots and product design explorations by Nigerian product and UI/UX designer Oladimeji Abubakar.";
 
 export const metadata: Metadata = {
   title: "UI/UX Design Playground",
-  description: "UI shots and product design explorations by Nigerian product and UI/UX designer Oladimeji Abubakar.",
+  description,
   alternates: { canonical: "/playground" },
   robots: { index: true, follow: true },
+  ...socialMetadata({ title: "UI/UX Design Playground", description, path: "/playground" }),
 };
 
 export default function PlaygroundPage() {

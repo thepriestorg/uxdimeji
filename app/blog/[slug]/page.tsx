@@ -9,10 +9,18 @@ import ArticleAudio from "@/components/blog/ArticleAudio";
 import QuoteTools from "@/components/blog/QuoteTools";
 import CommentSection from "@/components/blog/CommentSection";
 import BlogPostViews from "@/components/blog/BlogPostViews";
-import { formatPostDate, getPublishedPost, readingTime } from "@/lib/blog";
+import { formatPostDate, getPublishedPost, getPublishedPosts, readingTime } from "@/lib/blog";
 import { richTextToHtml, richTextToPlainText } from "@/lib/rich-text";
 import { absoluteUrl, authorRef, jsonLdScript } from "@/lib/seo";
 import "../blog.css";
+
+// Serve articles from cache; admin edits show up within a minute.
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map(({ slug }) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -25,7 +33,8 @@ export async function generateMetadata({
   const shareImage = post.cover_image || "/og-image";
 
   return {
-    title: `${post.title} | Oladimeji Abubakar`,
+    // The root layout's title template adds the name.
+    title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {

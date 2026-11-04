@@ -5,13 +5,20 @@ import { ArrowRight, Sparkles, Mail } from "lucide-react";
 import V2Header from "@/components/v2/V2Header";
 import V2Footer from "@/components/v2/V2Footer";
 import { formatPostDate, formatViews, getPublishedPosts, readingTime } from "@/lib/blog";
+import { socialMetadata } from "@/lib/seo";
 import "./blog.css";
+
+// Serve the list from cache; new posts show up within a minute.
+export const revalidate = 60;
+
+const description =
+  "A quiet space for thoughts on product design, craft, interfaces, and code by Oladimeji Abubakar.";
 
 export const metadata: Metadata = {
   title: "Writing",
-  description:
-    "A quiet space for thoughts on product design, craft, interfaces, and code by Oladimeji Abubakar.",
+  description,
   alternates: { canonical: "/blog" },
+  ...socialMetadata({ title: "Writing", description, path: "/blog" }),
 };
 
 /* ─── Blue Verified Badge SVG ───────────────────────────── */

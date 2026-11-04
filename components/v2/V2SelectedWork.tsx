@@ -1,4 +1,5 @@
 import { createPublicClient } from "@/lib/supabase/public";
+import { getProjectSummary } from "@/lib/seo";
 import V2SelectedWorkClient from "./V2SelectedWorkClient";
 
 export default async function V2SelectedWork() {
@@ -25,9 +26,16 @@ export default async function V2SelectedWork() {
     (project) => project.is_featured !== false
   );
 
+  // The list only shows each project's lead paragraph, so keep full case studies out of the
+  // homepage's HTML.
+  const projectCards = (projects || []).map(({ content, ...project }) => ({
+    ...project,
+    summary: getProjectSummary(content),
+  }));
+
   return (
     <V2SelectedWorkClient
-      projects={projects || []}
+      projects={projectCards}
       vibeProjects={visibleVibeProjects}
       landingPages={landingPages || []}
     />

@@ -104,7 +104,7 @@ export default function RootLayout({
         name: "Oladimeji Abubakar",
         givenName: "Oladimeji",
         familyName: "Abubakar",
-        alternateName: ["uxdimeji", "Oladimeji"],
+        alternateName: ["uxdimeji", "Oladimeji", "Dimeji", "Abubakar Oladimeji"],
         url: "https://uxdimeji.com",
         image: {
           "@type": "ImageObject",
@@ -159,6 +159,8 @@ export default function RootLayout({
           "https://x.com/uxdimeji",
           "https://www.tiktok.com/@uxdimeji",
           "https://github.com/thepriest0",
+          "https://www.figma.com/@uxdimeji",
+          "https://play.google.com/store/apps/developer?id=Oladimeji+Abubakar",
         ],
       },
       {

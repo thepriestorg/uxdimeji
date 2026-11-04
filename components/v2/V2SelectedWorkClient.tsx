@@ -16,7 +16,7 @@ interface Project {
   year: string;
   featured_image: string;
   color: string;
-  content?: string;
+  summary: string;
   is_featured: boolean;
   order: number;
 }
@@ -111,40 +111,6 @@ const applyProjectMediaRatio = (media: HTMLImageElement | HTMLVideoElement | nul
   window.dispatchEvent(new Event("portfolio:layout"));
 };
 
-const getProjectSummary = (contentJsonString?: string): string => {
-  if (!contentJsonString) return "";
-  try {
-    const doc = JSON.parse(contentJsonString);
-    if (!doc || !doc.content || !Array.isArray(doc.content)) return "";
-
-    const paragraphs: string[] = [];
-    for (const node of doc.content) {
-      if (node.type === "paragraph" && node.content && Array.isArray(node.content)) {
-        let text = "";
-        for (const child of node.content) {
-          if (child.type === "text" && child.text) {
-            text += child.text;
-          }
-        }
-        text = text.trim();
-        if (text) {
-          // Skip metadata lines
-          if (/^(role|timeline|platform|tools|client|impact):/i.test(text)) {
-            continue;
-          }
-          paragraphs.push(text);
-        }
-      }
-    }
-
-    if (paragraphs.length > 0) {
-      return paragraphs[0];
-    }
-  } catch {
-    return contentJsonString;
-  }
-  return "";
-};
 
 function ProjectMedia({ src, alt, eager }: { src: string; alt: string; eager: boolean }) {
   if (isVideoUrl(src)) {
@@ -293,8 +259,8 @@ export default function V2SelectedWorkClient({
                 {project.title}
               </Link>
             </h3>
-            {project.content && (
-              <p className="project-lead">{getProjectSummary(project.content)}</p>
+            {project.summary && (
+              <p className="project-lead">{project.summary}</p>
             )}
             <Link className="case-study-link" href={`/projects/${project.slug}`}>
               <span>Read case study</span>

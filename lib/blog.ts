@@ -1,11 +1,11 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { BlogPost } from "./blog-utils";
 
 export * from "./blog-utils";
 
 export async function getPublishedPosts(): Promise<BlogPost[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("blog_posts")
       .select("*")
@@ -20,7 +20,7 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
 
 export async function getPublishedPost(slug: string): Promise<BlogPost | null> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("blog_posts")
       .select("*")

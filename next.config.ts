@@ -34,6 +34,17 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     qualities: [75, 90, 95, 100],
   },
+  // The default Vercel address serves the whole site; send people and crawlers to the real domain.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "uxdimeji.vercel.app" }],
+        destination: "https://uxdimeji.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
-import { absoluteUrl, authorRef, jsonLdScript } from "@/lib/seo";
+import { createPublicClient } from "@/lib/supabase/public";
+import { absoluteUrl, authorRef, getProjectSummary, jsonLdScript, truncateDescription } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -190,21 +190,38 @@ const getVideoPoster = (url: string) => url.includes("cloudinary.com") && url.in
     ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2")
     : undefined;
 
+// Serve case studies from cache; admin edits show up within a minute.
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+    const { data: projects } = await createPublicClient().from("projects").select("slug").eq("is_featured", true);
+    return (projects ?? []).map(({ slug }) => ({ slug }));
+}
+
+const projectDescription = (project: { title: string; category: string; content?: string | null }) => {
+    const summary = getProjectSummary(project.content);
+    return summary
+        ? truncateDescription(summary)
+        : `${project.title}, a ${project.category} product design case study by Oladimeji Abubakar.`;
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const supabase = await createClient();
+    const supabase = createPublicClient();
 
     const { data: project } = await supabase
         .from("projects")
-        .select("title, category, featured_image")
+        .select("title, category, featured_image, content, is_featured")
         .eq("slug", slug)
         .single();
 
     if (!project) {
         return {
-            title: "Project Not Found - Oladimeji Abubakar",
+            title: { absolute: "Project Not Found | Oladimeji Abubakar" },
         };
     }
+
+    const description = projectDescription(project);
 
     const socialImage = project.featured_image && isVideoUrl(project.featured_image)
         ? getVideoPoster(project.featured_image)
@@ -212,13 +229,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     return {
         title: `${project.title} — Product Design Case Study`,
-        description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+        description,
         alternates: {
             canonical: `/projects/${slug}`,
         },
+        // Retired projects stay reachable by direct link but stop competing for search.
+        ...(project.is_featured ? {} : { robots: { index: false, follow: true } }),
         openGraph: {
             title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
-            description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+            description,
+            type: "article",
+            siteName: "Oladimeji Abubakar",
             url: `/projects/${slug}`,
             images: socialImage ? [
                 {
@@ -232,7 +253,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         twitter: {
             card: "summary_large_image",
             title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
-            description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+            description,
             images: socialImage ? [socialImage] : [],
         },
     };
@@ -240,7 +261,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const supabase = await createClient();
+    const supabase = createPublicClient();
 
     const { data: project } = await supabase
         .from("projects")
@@ -252,16 +273,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         notFound();
     }
 
-    // Fetch next project for the footer
-    const { data: otherProjects } = await supabase
+    // Walk the featured list in order, so each case study links to a different one and
+    // a crawler landing on any of them can reach them all.
+    const { data: featuredProjects } = await supabase
         .from("projects")
         .select("id, title, slug")
-        .neq("slug", slug)
         .eq("is_featured", true)
-        .order("order", { ascending: true })
-        .limit(1);
+        .order("order", { ascending: true });
 
-    const nextProject = otherProjects?.[0];
+    const featured = featuredProjects ?? [];
+    const nextProject = featured.filter(({ slug: other }) => other !== slug)[
+        Math.max(featured.findIndex(({ slug: other }) => other === slug), 0) % Math.max(featured.length - 1, 1)
+    ];
     const themeClass = `${project.slug}-theme`;
     const schemaImage = project.featured_image && isVideoUrl(project.featured_image)
         ? getVideoPoster(project.featured_image)
@@ -270,7 +293,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         "@context": "https://schema.org",
         "@type": "Article",
         headline: `${project.title} — Product Design Case Study`,
-        description: `View the ${project.title} project in ${project.category} by Oladimeji Abubakar.`,
+        description: projectDescription(project),
         url: absoluteUrl(`/projects/${project.slug}`),
         mainEntityOfPage: absoluteUrl(`/projects/${project.slug}`),
         ...(schemaImage ? { image: [schemaImage] } : {}),
@@ -341,7 +364,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 </main>
 
                 <footer className="case-footer">
-                    <span>© {new Date().getFullYear()} Oladimeji Abubakar</span>
+                    <span>© {new Date().getFullYear()} <Link href="/">Oladimeji Abubakar</Link></span>
                     <Link href="/#work">All projects</Link>
                     <a href="#case-main">Back to top ↑</a>
                 </footer>

@@ -15,6 +15,8 @@ const SOCIALS = [
   { label: "X", href: "https://x.com/uxdimeji", analytics: "Social: X / Twitter (@uxdimeji)" },
   { label: "Instagram", href: "https://www.instagram.com/uxdimeji", analytics: "Social: Instagram (@uxdimeji)" },
   { label: "TikTok", href: "https://www.tiktok.com/@uxdimeji", analytics: "Social: TikTok (@uxdimeji)" },
+  { label: "Behance", href: "https://www.behance.net/oladimejiabubakar", analytics: "Social: Behance (oladimejiabubakar)" },
+  { label: "Contra", href: "https://contra.com/uxdimeji", analytics: "Social: Contra (uxdimeji)" },
 ];
 
 /* ─── Visit ledger ──────────────────────────────────────────

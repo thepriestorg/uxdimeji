@@ -32,7 +32,7 @@ const profilePageJsonLd = {
     "@type": "Person",
     "@id": "https://uxdimeji.com/#person",
     name: "Oladimeji Abubakar",
-    alternateName: ["uxdimeji", "Oladimeji"],
+    alternateName: ["uxdimeji", "Oladimeji", "Dimeji", "Abubakar Oladimeji"],
     url: "https://uxdimeji.com",
     image: "https://uxdimeji.com/images/oladimeji.jpg",
     jobTitle: "Product Designer",
