@@ -1,0 +1,105 @@
+.footer {
+  padding: 0 var(--gutter, 16px);
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.shell {
+  max-width: var(--site-max, 1160px);
+  margin: 0 auto;
+}
+
+/* ── The ask on the left, socials on the right ── */
+.top {
+  padding: clamp(56px, 7vw, 96px) 0 clamp(40px, 5vw, 64px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px 48px;
+}
+
+.heading {
+  margin: 0;
+  max-width: 16ch;
+  font-size: clamp(30px, 3.6vw, 48px);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.heading span { color: var(--muted); }
+
+.mail {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer .mail a {
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 550;
+  transition: border-color 0.2s;
+}
+
+.footer .mail a:hover { border-color: var(--ink); }
+
+.footer .mail button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer .mail button:hover { color: var(--ink); }
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer .socials a {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.footer .socials a:hover {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.socials svg { width: 17px; height: 17px; }
+
+/* ── Bottom line ── */
+.bottom {
+  padding: 20px 0 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.links { display: flex; gap: 20px; }
+
+.footer .links a { color: var(--muted); transition: color 0.2s; }
+.footer .links a:hover { color: var(--ink); }

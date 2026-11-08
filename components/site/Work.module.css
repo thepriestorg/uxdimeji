@@ -1,0 +1,335 @@
+.work {
+  padding: clamp(64px, 8vw, 112px) var(--gutter) clamp(80px, 10vw, 140px);
+  border-top: 1px solid var(--line);
+}
+
+.shell {
+  max-width: var(--site-max);
+  margin: 0 auto;
+}
+
+/* ── Head ── */
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.heading {
+  margin: 12px 0 0;
+  font-size: clamp(34px, 4.6vw, 60px);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.heading span { color: var(--muted); }
+
+.count {
+  margin: 0 0 6px;
+  font: 400 12px/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ── Tabs: one aligned row on a hairline ── */
+.tabs {
+  margin: clamp(28px, 3.4vw, 40px) 0 clamp(28px, 3.4vw, 44px);
+  display: flex;
+  gap: clamp(18px, 2.6vw, 32px);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.work .tabs button {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 14px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.work .tabs button:hover { color: var(--ink); }
+
+.tabs button span {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--surface);
+  font: 400 11px/1 var(--font-mono), ui-monospace, monospace;
+  color: var(--muted);
+}
+
+.tabs button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.work .tabs .tabActive { color: var(--ink); }
+.tabs .tabActive::after { transform: scaleX(1); }
+.tabs .tabActive span { background: var(--ink); color: var(--paper); }
+
+/* ── List ── */
+.list {
+  display: grid;
+  gap: clamp(48px, 6vw, 80px);
+  animation: settle 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes settle {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(48px, 6vw, 72px) clamp(20px, 2.6vw, 36px);
+}
+
+/* ── Card: open layout, media at its own proportions, details underneath ── */
+.card { min-width: 0; }
+
+.cardLink {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.linked { cursor: pointer; }
+
+.work .stretch { color: inherit; }
+
+.stretch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.stretch:focus-visible { outline: none; }
+.stretch:focus-visible::after { outline: 2px solid var(--signal); outline-offset: 6px; border-radius: 16px; }
+
+.media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--surface);
+  isolation: isolate;
+}
+
+/* Media keeps its native aspect ratio: full width, height follows the file. */
+.media .mediaFill,
+.media video,
+.media img {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--line);
+  pointer-events: none;
+}
+
+.mediaEmpty {
+  aspect-ratio: 16 / 10;
+  background: repeating-linear-gradient(-45deg, var(--surface) 0 14px, var(--raised) 14px 15px);
+}
+
+.linked:hover .media video,
+.linked:hover .media img { transform: scale(1.02); }
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding-top: 20px;
+}
+
+.titleRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(21px, 1.9vw, 25px);
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+/* Quiet pill beside the title: sentence case, no border, no shouting. */
+.tag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  color: var(--body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.tagLive i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4fbf7a;
+}
+
+.year {
+  margin-left: auto;
+  font: 400 12px/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.summary {
+  max-width: 62ch;
+  color: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* The excerpt runs on into "Read more", same line, no separate button row. */
+.summaryBody { display: inline; }
+.summaryBody p { margin: 0; }
+.summaryBody p:last-child { display: inline; }
+
+.more {
+  margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--ink);
+  font-weight: 650;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.more svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s;
+}
+
+.linked:hover .more { color: var(--signal); }
+.linked:hover .more svg { transform: translate(2px, -1px); }
+
+.summary p { margin: 0; }
+.summary p + p { margin-top: 10px; }
+.summary strong, .summary b { color: var(--ink); font-weight: 650; }
+.summary u { text-underline-offset: 3px; }
+
+.work .summary a {
+  position: relative;
+  z-index: 1;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--muted);
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+.work .summary a:hover { color: var(--signal); text-decoration-color: var(--signal); }
+
+.metrics {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+
+.metrics li { display: grid; gap: 4px; }
+
+.metrics strong {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.metrics span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+
+/* ── Featured: the same card, media beside the details ── */
+.featured .cardLink {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 3.6vw, 52px);
+}
+
+.featured .info {
+  padding-top: 0;
+  gap: 14px;
+}
+
+.featured .title {
+  font-size: clamp(30px, 3.2vw, 42px);
+  letter-spacing: -0.045em;
+}
+
+.featured .summary { font-size: 16px; }
+
+@media (max-width: 900px) {
+  .featured .cardLink { display: flex; gap: 0; }
+  .featured .info { padding-top: 20px; }
+}
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+  .head { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .count { margin: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list { animation: none; }
+  .media video,
+  .media img { transition: none; }
+}

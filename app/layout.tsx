@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Playfair_Display, Space_Grotesk, Space_Mono } from "
 import localFont from "next/font/local";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import "./globals.css";
+import "./site.css";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });

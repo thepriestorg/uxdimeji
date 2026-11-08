@@ -1,0 +1,73 @@
+/* Quiet sticky bar: name on the left, small text links on the right. */
+.header {
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: color-mix(in srgb, var(--paper, #0c0c0d) 86%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.bar {
+  max-width: calc(var(--site-max, 1160px) + 2 * var(--gutter, 24px));
+  height: 60px;
+  margin: 0 auto;
+  padding: 0 var(--gutter, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header .brand {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header .nav a {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.header .nav a:hover,
+.header .nav .active { color: var(--ink); }
+
+.header .nav .contact {
+  margin-left: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.header .nav .contact:hover { background: var(--surface); border-color: var(--surface); }
+
+/* Narrow screens: the nav drops to its own row under the name. */
+@media (max-width: 560px) {
+  .bar {
+    height: auto;
+    padding-top: 14px;
+    padding-bottom: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav { gap: 18px; }
+  .header .nav .contact { display: none; }
+}

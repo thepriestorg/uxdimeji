@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import V2Header from "@/components/v2/V2Header";
-import V2Hero from "@/components/v2/V2Hero";
+import SiteHeader from "@/components/site/SiteHeader";
 import V2ScrollEffects from "@/components/v2/V2ScrollEffects";
-import V2SelectedWork from "@/components/v2/V2SelectedWork";
-import V2Profile from "@/components/v2/V2Profile";
-import V2Footer from "@/components/v2/V2Footer";
+import SiteHero from "@/components/site/SiteHero";
+import Work from "@/components/site/Work";
+import StackActivity from "@/components/site/StackActivity";
+import SiteFooter from "@/components/site/SiteFooter";
 
 // Serve the homepage from cache; admin edits show up within a minute.
 export const revalidate = 60;
@@ -47,12 +47,12 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
       />
       <V2ScrollEffects />
-      <V2Header />
-      <V2Hero />
-      <V2SelectedWork />
+      <SiteHeader />
+      <SiteHero />
+      <Work />
       {/* Render date for time-based fallbacks, so server and client HTML agree. */}
-      <V2Profile today={new Date().toISOString().slice(0, 10)} />
-      <V2Footer />
+      <StackActivity today={new Date().toISOString().slice(0, 10)} />
+      <SiteFooter />
     </main>
   );
 }

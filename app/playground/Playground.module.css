@@ -1,167 +1,198 @@
 .page {
   min-height: 100vh;
-  color: var(--preview-ink, #171815);
-  background: var(--preview-paper, #f4f4f0);
+  color: var(--ink);
+  background: var(--paper);
 }
 
-.intro {
-  width: min(100%, 1480px);
-  margin: 0 auto;
-  padding: clamp(150px, 16vw, 230px) clamp(18px, 4.5vw, 72px) clamp(70px, 9vw, 130px);
+.intro,
+.count,
+.gallery,
+.loading,
+.empty {
+  width: min(100%, calc(var(--site-max, 1160px) + 2 * var(--gutter, 16px)));
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: var(--gutter, 16px);
+  padding-left: var(--gutter, 16px);
 }
 
-.introMeta {
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--preview-line, rgba(23, 24, 21, 0.14));
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  color: var(--preview-muted, #767770);
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.introCopy {
-  margin-top: clamp(34px, 5vw, 76px);
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.5fr);
-  gap: clamp(40px, 8vw, 130px);
-  align-items: end;
-}
+.intro { padding-top: clamp(128px, 14vw, 184px); }
 
 .intro h1 {
-  margin: 0;
-  max-width: 920px;
-  font-size: clamp(60px, 8.4vw, 132px);
-  font-weight: 450;
-  line-height: 0.88;
-  letter-spacing: -0.075em;
+  max-width: 19ch;
+  margin: 16px 0 0;
+  font-size: clamp(42px, 6.4vw, 88px);
+  font-weight: 650;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
 }
 
-.intro p {
-  max-width: 390px;
-  margin: 0 0 8px;
-  color: var(--preview-muted, #6f706a);
-  font-size: 14px;
-  line-height: 1.65;
+.intro h1 span { color: var(--muted); }
+
+.intro p:last-child {
+  max-width: 52ch;
+  margin: 22px 0 0;
+  color: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
 }
 
+.count {
+  margin-top: clamp(48px, 6vw, 80px);
+  margin-bottom: 20px;
+  font: 400 12px/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Masonry: every shot at its own proportions ── */
 .gallery {
-  width: min(100%, 1480px);
-  margin: 0 auto;
-  padding: 0 clamp(12px, 2.2vw, 34px) clamp(110px, 13vw, 190px);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 1.8vw, 28px);
+  padding-bottom: clamp(110px, 13vw, 190px);
+  columns: 2;
+  column-gap: clamp(16px, 2.4vw, 32px);
 }
 
 .shot {
-  position: relative;
-  width: 100%;
-  height: auto;
-  margin: 0;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border: 1px solid var(--preview-line, rgba(23, 24, 21, 0.1));
-  border-radius: clamp(14px, 1.5vw, 22px);
-  background: var(--preview-surface, #e9eae5);
-  box-shadow: 0 1px 0 var(--preview-line, rgba(255, 255, 255, 0.85)) inset;
+  break-inside: avoid;
+  margin: 0 0 clamp(28px, 3.4vw, 44px);
   animation: shotIn 0.65s cubic-bezier(0.2, 0.75, 0.2, 1) both;
   animation-delay: min(calc(var(--shot-index) * 55ms), 440ms);
 }
 
-.shot img,
-.shot video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--surface);
 }
 
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--line);
+  pointer-events: none;
+}
+
+.frame img,
+.frame video {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  position: static !important;
+}
+
+.page .zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.zoom img { transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.zoom:hover img { transform: scale(1.02); }
+
+.shot figcaption {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  color: var(--body);
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.shot figcaption span {
+  font: 400 12px/1.6 var(--font-mono), ui-monospace, monospace;
+  color: var(--muted);
+}
+
+/* ── Lightbox ── */
+.lightbox {
+  position: fixed;
+  z-index: 400;
+  inset: 0;
+  padding: clamp(16px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(10px);
+  cursor: zoom-out;
+  animation: fade 0.2s ease both;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: calc(100vh - 140px);
+  border-radius: 12px;
+  cursor: default;
+}
+
+.lightbox p {
+  margin: 0;
+  color: var(--body);
+  font-size: 14px;
+}
+
+.page .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.close svg { width: 18px; height: 18px; }
+
+/* ── States ── */
 .loading {
-  width: min(100%, 1480px);
-  margin: 0 auto;
-  padding: 0 clamp(12px, 2.2vw, 34px) 140px;
+  margin-top: clamp(48px, 6vw, 80px);
+  padding-bottom: 140px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 1.8vw, 28px);
+  gap: clamp(16px, 2.4vw, 32px);
 }
 
 .loading i {
   display: block;
-  width: 100%;
-  height: auto;
   aspect-ratio: 4 / 3;
-  border-radius: clamp(14px, 1.5vw, 22px);
-  background: linear-gradient(105deg, var(--preview-surface, #e7e8e2) 20%, var(--preview-raised, #efefeb) 35%, var(--preview-surface, #e7e8e2) 50%);
+  border-radius: 14px;
+  background: linear-gradient(105deg, var(--surface) 20%, var(--raised) 35%, var(--surface) 50%);
   background-size: 200% 100%;
   animation: loading 1.2s linear infinite;
 }
 
 .empty {
   min-height: 42vh;
-  width: min(100% - 36px, 1410px);
-  margin: 0 auto;
-  padding-top: 30px;
-  border-top: 1px solid var(--preview-line, rgba(23, 24, 21, 0.14));
-  color: var(--preview-muted, #6f706a);
-  font-size: 13px;
+  margin-top: 56px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-@keyframes shotIn {
-  from { opacity: 0; transform: translateY(16px); }
-}
-
-@keyframes loading {
-  to { background-position-x: -200%; }
-}
+@keyframes shotIn { from { opacity: 0; transform: translateY(16px); } }
+@keyframes loading { to { background-position-x: -200%; } }
+@keyframes fade { from { opacity: 0; } }
 
 @media (max-width: 760px) {
-  .intro {
-    padding: 125px 16px 64px;
-  }
-
-  .introMeta span:last-child {
-    display: none;
-  }
-
-  .introCopy {
-    margin-top: 32px;
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .intro h1 {
-    font-size: clamp(57px, 18vw, 78px);
-    line-height: 0.9;
-  }
-
-  .intro p {
-    max-width: 330px;
-    font-size: 13px;
-  }
-
-  .gallery,
-  .loading {
-    padding-right: 10px;
-    padding-left: 10px;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .gallery {
-    padding-bottom: 100px;
-  }
-
-  .shot {
-    border-radius: 14px;
-  }
+  .gallery { columns: 1; }
+  .loading { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .shot,
-  .loading i {
-    animation: none;
-  }
+  .loading i,
+  .lightbox { animation: none; }
 }

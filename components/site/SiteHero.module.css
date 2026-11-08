@@ -1,0 +1,287 @@
+.hero {
+  padding: clamp(120px, 16vw, 176px) var(--gutter) clamp(64px, 8vw, 104px);
+}
+
+.shell {
+  max-width: var(--site-max);
+  margin: 0 auto;
+}
+
+/* ── Identity row ── */
+.idRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.portrait {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: none;
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.onlineDot {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 13px;
+  height: 13px;
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  background: #4fbf7a;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nameRow strong {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.verified {
+  width: 17px;
+  height: 17px;
+}
+
+.role {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.status {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  font: 400 12px/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+}
+
+.statusPill i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4fbf7a;
+  box-shadow: 0 0 0 4px rgba(79, 191, 122, 0.16);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% { box-shadow: 0 0 0 7px rgba(79, 191, 122, 0); }
+}
+
+/* ── Statement ── */
+.statement {
+  position: relative;
+  margin: clamp(40px, 6vw, 72px) 0 0;
+  max-width: 18ch;
+  font-size: clamp(40px, 7vw, 92px);
+  font-weight: 650;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.statement > span:not(:global(.sr-only)):not(.note) {
+  color: var(--muted);
+}
+
+.note {
+  position: absolute;
+  right: -0.4em;
+  bottom: calc(100% - 0.2em);
+  font: 400 clamp(22px, 2.6vw, 32px)/1 var(--font-handwriting), cursive;
+  letter-spacing: 0;
+  color: var(--signal);
+  transform: rotate(-6deg);
+  white-space: nowrap;
+}
+
+/* ── Bio ── */
+.bio {
+  margin: clamp(28px, 4vw, 40px) 0 0;
+  max-width: 62ch;
+  font-size: clamp(17px, 1.5vw, 19px);
+  line-height: 1.65;
+  color: var(--body);
+}
+
+.bio strong { color: var(--ink); font-weight: 600; }
+
+.bio .flag,
+.bio .figma,
+.bio .code {
+  display: inline-block;
+  margin: 0 0.25em;
+  vertical-align: -0.12em;
+}
+
+.flag { width: 1.15em; height: 0.78em; border-radius: 2px; vertical-align: -0.05em; }
+.figma { width: 0.62em; height: 0.92em; }
+.code { width: 1em; height: 1em; }
+
+/* ── Actions ── */
+.actions {
+  margin-top: clamp(32px, 4vw, 44px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 650;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.actions .primary {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.actions .primary:hover { background: var(--signal); }
+
+.primary svg,
+.secondary svg {
+  width: 17px;
+  height: 17px;
+}
+
+.primary svg { transition: transform 0.2s; }
+.primary:hover svg { transform: translate(2px, -2px); }
+
+.secondary {
+  border: 1px solid var(--line);
+}
+
+.secondary:hover { border-color: var(--ink); }
+
+.socials {
+  display: flex;
+  gap: 6px;
+}
+
+.socials a {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.socials a:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.socials svg { width: 17px; height: 17px; }
+.socials b { font-size: 15px; font-weight: 600; }
+
+.actions .copyHint {
+  position: relative;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.copyHint kbd {
+  min-width: 26px;
+  height: 26px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-bottom-width: 3px;
+  border-radius: 7px;
+  color: var(--ink);
+  font: 700 12px/1 var(--font-mono), ui-monospace, monospace;
+  transition: transform 0.1s, border-bottom-width 0.1s;
+}
+
+.copyHint:active kbd,
+.kbdPressed {
+  transform: translateY(2px);
+  border-bottom-width: 1px !important;
+}
+
+.toast {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: var(--raised);
+  color: var(--ink);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .actions .copyHint { display: none; }
+}
+
+@media (max-width: 560px) {
+  .note { position: static; display: block; margin-top: 14px; transform: rotate(-3deg); transform-origin: left; }
+  .statement { max-width: none; }
+  .actions > .primary,
+  .actions > .secondary { flex: 1 1 auto; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusPill i { animation: none; }
+}

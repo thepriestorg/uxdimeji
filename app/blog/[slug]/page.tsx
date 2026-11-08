@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Share2, Mail, Linkedin } from "lucide-react";
-import V2Header from "@/components/v2/V2Header";
-import V2Footer from "@/components/v2/V2Footer";
+import SiteHeader from "@/components/site/SiteHeader";
+import SiteFooter from "@/components/site/SiteFooter";
 import ArticleAudio from "@/components/blog/ArticleAudio";
 import QuoteTools from "@/components/blog/QuoteTools";
 import CommentSection from "@/components/blog/CommentSection";
@@ -133,7 +133,7 @@ export default async function BlogPostPage({
   return (
     <main className="v2-design blog-page" id="top">
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd)} />
-      <V2Header />
+      <SiteHeader />
 
       {/* ── Unboxed Centered Article Reader ── */}
       <article className="article-reader-container">
@@ -273,7 +273,7 @@ export default async function BlogPostPage({
         <CommentSection postSlug={post.slug} />
       </article>
 
-      <V2Footer />
+      <SiteFooter />
     </main>
   );
 }

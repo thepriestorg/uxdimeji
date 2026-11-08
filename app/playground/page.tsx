@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import V2Header from "@/components/v2/V2Header";
+import SiteHeader from "@/components/site/SiteHeader";
 import V2ScrollEffects from "@/components/v2/V2ScrollEffects";
 import PlaygroundGallery from "@/components/v2/PlaygroundGallery";
-import V2Footer from "@/components/v2/V2Footer";
+import SiteFooter from "@/components/site/SiteFooter";
 import { socialMetadata } from "@/lib/seo";
 import styles from "./Playground.module.css";
 
@@ -18,21 +18,18 @@ export const metadata: Metadata = {
 
 export default function PlaygroundPage() {
   return (
-    <main className={`v2-design ${styles.page}`} id="main">
+    <main className={`v2-design site-page ${styles.page}`} id="main">
       <V2ScrollEffects />
-      <V2Header />
-      <section className={styles.intro}>
-        <div className={styles.introMeta}>
-          <span>Playground</span>
-          <span>Selected interface studies</span>
-        </div>
-        <div className={styles.introCopy}>
-          <h1>Made along the way.</h1>
-          <p>A collection of UI shots and product ideas I&apos;ve created along the way—smaller than case studies, but no less worth sharing.</p>
-        </div>
-      </section>
+      <SiteHeader />
+      <header className={styles.intro}>
+        <p className="mono-label">Playground</p>
+        <h1>
+          Made along the way. <span>Smaller than case studies.</span>
+        </h1>
+        <p>UI shots and product ideas I&apos;ve explored between projects. Not every idea needs a case study to be worth sharing.</p>
+      </header>
       <PlaygroundGallery />
-      <V2Footer />
+      <SiteFooter />
     </main>
   );
 }

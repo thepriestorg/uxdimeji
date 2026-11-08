@@ -4,8 +4,12 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import V2Header from "@/components/v2/V2Header";
+import SiteHeader from "@/components/site/SiteHeader";
+import SiteFooter from "@/components/site/SiteFooter";
 import { getLocalGif, getLocalPoster, getLocalVideo, type LocalVideoWidth } from "@/lib/local-media";
+import { kindLabel, madeForLabel, type ProjectMetric } from "@/lib/projects";
+import { sanitizeSummary, summaryText } from "@/lib/summary";
+import { displayDomain } from "@/lib/media";
 import "@/app/case-studies.css"; // The new case studies CSS
 
 // TipTap content renderer
@@ -194,7 +198,7 @@ const getVideoPoster = (url: string) => url.includes("cloudinary.com") && url.in
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-    const { data: projects } = await createPublicClient().from("projects").select("slug").eq("is_featured", true);
+    const { data: projects } = await createPublicClient().from("projects").select("slug").eq("is_published", true).eq("has_case_study", true);
     return (projects ?? []).map(({ slug }) => ({ slug }));
 }
 
@@ -211,8 +215,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const { data: project } = await supabase
         .from("projects")
-        .select("title, category, featured_image, content, is_featured")
+        .select("title, category, featured_image, content, is_published")
         .eq("slug", slug)
+        .eq("has_case_study", true)
         .single();
 
     if (!project) {
@@ -234,7 +239,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             canonical: `/projects/${slug}`,
         },
         // Retired projects stay reachable by direct link but stop competing for search.
-        ...(project.is_featured ? {} : { robots: { index: false, follow: true } }),
+        ...(project.is_published ? {} : { robots: { index: false, follow: true } }),
         openGraph: {
             title: `${project.title} — Product Design Case Study | Oladimeji Abubakar`,
             description,
@@ -267,6 +272,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         .from("projects")
         .select("*")
         .eq("slug", slug)
+        .eq("has_case_study", true)
         .single();
 
     if (!project) {
@@ -278,7 +284,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     const { data: featuredProjects } = await supabase
         .from("projects")
         .select("id, title, slug")
-        .eq("is_featured", true)
+        .eq("is_published", true)
+        .eq("has_case_study", true)
         .order("order", { ascending: true });
 
     const featured = featuredProjects ?? [];
@@ -309,12 +316,39 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd)} />
             <div className={themeClass} style={{ minHeight: "100vh", position: "relative" }}>
                 <div className="case-progress" data-case-progress aria-hidden="true" style={{ transform: "scaleX(1)" }}></div>
-                <V2Header />
+                <SiteHeader />
 
                 <main id="case-main" className="project-page">
-                    <header className="project-header">
-                        <p className="project-label">{project.title} / {project.category} / {project.year}</p>
+                    <header className="project-header cs-header">
+                        <div className="cs-tags">
+                            <span className="stamp">Case study</span>
+                            <span className="cs-meta">
+                                {[kindLabel(project.kind), madeForLabel(project), project.year].filter(Boolean).join(" · ")}
+                            </span>
+                        </div>
                         <h1>{project.title}</h1>
+                        {(summaryText(project.summary) || getProjectSummary(project.content)) && (
+                            <div
+                                className="cs-summary"
+                                dangerouslySetInnerHTML={{
+                                    __html: sanitizeSummary(summaryText(project.summary) ? project.summary : getProjectSummary(project.content)),
+                                }}
+                            />
+                        )}
+                        <dl className="cs-specs">
+                            {project.role && <div><dt>Role</dt><dd>{project.role}</dd></div>}
+                            {project.category && <div><dt>Field</dt><dd>{project.category}</dd></div>}
+                            {project.year && <div><dt>Year</dt><dd>{project.year}</dd></div>}
+                            {(project.metrics as ProjectMetric[] | null)?.slice(0, 2).map((metric) => (
+                                <div key={`${metric.value}-${metric.label}`}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>
+                            ))}
+                            {project.live_url && (
+                                <div>
+                                    <dt>Live</dt>
+                                    <dd><a href={project.live_url} target="_blank" rel="noopener noreferrer">{displayDomain(project.live_url)} ↗</a></dd>
+                                </div>
+                            )}
+                        </dl>
                     </header>
 
                     {project.featured_image && (
@@ -363,11 +397,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     )}
                 </main>
 
-                <footer className="case-footer">
-                    <span>© {new Date().getFullYear()} <Link href="/">Oladimeji Abubakar</Link></span>
-                    <Link href="/#work">All projects</Link>
-                    <a href="#case-main">Back to top ↑</a>
-                </footer>
+                <SiteFooter />
             </div>
         </div>
     );

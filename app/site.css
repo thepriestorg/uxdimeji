@@ -1,0 +1,71 @@
+/* Site-wide tokens for the redesign. The palette comes from dark-preview.css; this adds the
+   pieces the new layout needs and is shared by the homepage, case studies, blog and playground. */
+.v2-design,
+.case-study-page,
+.site-page {
+  --paper: var(--preview-paper, #101011);
+  --surface: var(--preview-surface, #19191c);
+  --raised: var(--preview-raised, #252528);
+  --ink: var(--preview-ink, #f4f4f5);
+  --body: var(--preview-body, #c6c6cd);
+  --muted: var(--preview-muted, #a1a1aa);
+  --line: var(--preview-line, rgba(255, 255, 255, 0.13));
+  --signal: var(--preview-signal, #f19b7c);
+  --gutter: clamp(16px, 4.6vw, 72px);
+  --site-max: 1160px;
+  --radius: 18px;
+}
+
+/* Receipt-style label: mono caps in a dashed outline, used to tag work across the site. */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px 4px;
+  border: 1px dashed currentColor;
+  border-radius: 6px;
+  font: 700 10.5px/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stamp i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4fbf7a;
+}
+
+.mono-label {
+  font: 400 11px/1.2 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+
+/* Page head shared by Writing and Playground: same voice as the homepage hero. */
+.page-head {
+  width: 100%;
+  max-width: var(--site-max);
+  margin: 0 auto;
+  padding-bottom: clamp(36px, 5vw, 64px);
+}
+.page-head h1 {
+  margin: 14px 0 0;
+  max-width: 17ch;
+  font-size: clamp(42px, 6.4vw, 88px);
+  font-weight: 650;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+.page-head h1 span { color: var(--muted); }
+.page-head > p:not(.mono-label) {
+  margin: 24px 0 0;
+  max-width: 58ch;
+  color: var(--body);
+  font-size: clamp(16px, 1.4vw, 18px);
+  line-height: 1.65;
+}

@@ -1,0 +1,68 @@
+.section {
+  padding: clamp(72px, 10vw, 140px) var(--gutter);
+  border-top: 1px solid var(--line);
+}
+
+.shell {
+  max-width: var(--site-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(36px, 6vw, 96px);
+  align-items: start;
+}
+
+.title {
+  margin: 12px 0 0;
+  font-size: clamp(30px, 3.6vw, 48px);
+  font-weight: 650;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+}
+
+.title span { color: var(--muted); }
+
+.tools {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 14px 5px 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toolIcon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.toolIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Let the GitHub card use the full column instead of its own cap. */
+.activity > * {
+  max-width: none;
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+}

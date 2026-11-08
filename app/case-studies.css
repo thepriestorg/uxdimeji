@@ -137,3 +137,27 @@ figcaption { margin-top: 12px; color: var(--muted); font-size: 8px; }
   *, *::before, *::after { transition-duration: .01ms !important; }
 }
 
+
+/* ── Redesign: case study header in the homepage's language ── */
+.cs-header { max-width: var(--site-max, 1160px); padding: 150px 0 64px; }
+.cs-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.cs-meta { color: var(--muted); font-size: 14px; }
+.case-study-page .cs-header h1 { margin: 28px 0 0; font-size: clamp(56px, 9vw, 128px); font-weight: 650; line-height: .9; letter-spacing: -.06em; }
+.cs-summary { margin: 28px 0 0; max-width: 60ch; color: var(--body); font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; }
+.cs-specs { margin: 44px 0 0; display: flex; flex-wrap: wrap; border-top: 1px solid var(--line); }
+.cs-specs > div { padding: 18px 32px 0 0; margin-right: 32px; border-right: 1px dashed var(--line); }
+.cs-specs > div:last-child { border-right: 0; }
+.cs-specs dt { font: 400 11px/1 var(--font-mono), ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.cs-specs dd { margin: 10px 0 0; font-size: 15px; font-weight: 600; }
+.cs-specs a { border-bottom: 1px solid var(--line); }
+.cs-specs a:hover { color: var(--signal); border-color: var(--signal); }
+@media (max-width: 760px) {
+  .cs-header { padding: 116px 0 44px; }
+  .case-study-page .cs-header h1 { font-size: clamp(48px, 15vw, 72px); }
+  .cs-specs > div { padding-right: 0; margin-right: 24px; border-right: 0; }
+}
+.case-study-page .text-block h2 { font-weight: 650; letter-spacing: -.05em; }
+.case-study-page .next-project > span { font: 400 11px/1 var(--font-mono), ui-monospace, monospace; letter-spacing: .08em; }
+.case-study-page .next-project a { font-weight: 650; letter-spacing: -.05em; }
+.case-study-page .next-project a:hover i { transform: translateX(6px); }
+.case-study-page .next-project i { display: inline-block; color: var(--signal); transition: transform .25s; }
