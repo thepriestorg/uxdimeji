@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -22,7 +22,6 @@ const FILTERS: Filter[] = [
   { id: "all", label: "All work", match: () => true },
   { id: "case-studies", label: "Case studies", match: (item) => item.has_case_study },
   { id: "live", label: "Live", match: (item) => !!item.live_url },
-  { id: "client", label: "Client", match: (item) => item.made_for === "client" },
   { id: "personal", label: "Personal", match: (item) => item.made_for === "personal" },
 ];
 
@@ -57,6 +56,64 @@ function Media({ src, alt, eager, sizes }: { src: string | null; alt: string; ea
 }
 
 // One card for every kind of work. The type label and the action are what tell them apart.
+// The action link sits at the end of the excerpt. If it would wrap onto a line of its own,
+// trim words off the end (adding an ellipsis) until it fits on the last line of text.
+function Excerpt({ html, action, external }: { html: string | null; action: string | null; external: boolean }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const moreRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const box = boxRef.current;
+    const body = bodyRef.current;
+    const more = moreRef.current;
+    if (!box || !body || !more || !html) return;
+
+    // The link has a small left margin, so "starts within 12px of the edge" means it wrapped.
+    const wrapped = () => more.getBoundingClientRect().left - box.getBoundingClientRect().left < 12;
+    const lastText = () => {
+      const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+      let found: Text | null = null;
+      let node: Node | null;
+      while ((node = walker.nextNode())) if ((node.textContent ?? "").trim()) found = node as Text;
+      return found;
+    };
+
+    const fit = () => {
+      body.innerHTML = html;
+      for (let guard = 0; guard < 80 && wrapped(); guard++) {
+        const node = lastText();
+        if (!node) break;
+        const shorter = node.data.replace(/…$/, "").replace(/\s*\S+\s*$/, "");
+        node.data = shorter.trim() ? `${shorter.replace(/[\s,;:.\-–—]+$/, "")}…` : "";
+      }
+    };
+
+    fit();
+    let width = box.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (box.clientWidth === width) return;
+      width = box.clientWidth;
+      fit();
+    });
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [html]);
+
+  if (!html && !action) return null;
+  return (
+    <div className={styles.summary} ref={boxRef}>
+      {html && <div className={styles.summaryBody} ref={bodyRef} dangerouslySetInnerHTML={{ __html: html }} />}
+      {action && (
+        <span className={styles.more} ref={moreRef} aria-hidden="true">
+          {action}
+          {external && <ArrowUpRight />}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function WorkCard({ item, featured, index }: { item: WorkItem; featured: boolean; index: number }) {
   const href = item.has_case_study ? `/projects/${item.slug}` : item.live_url;
   const external = !item.has_case_study;
@@ -97,17 +154,7 @@ function WorkCard({ item, featured, index }: { item: WorkItem; featured: boolean
           )}
           {item.year && <span className={styles.year}>{item.year}</span>}
         </div>
-        {(item.summary || href) && (
-          <div className={styles.summary}>
-            {item.summary && <div className={styles.summaryBody} dangerouslySetInnerHTML={{ __html: item.summary }} />}
-            {href && (
-              <span className={styles.more} aria-hidden="true">
-                {action}
-                {external && <ArrowUpRight />}
-              </span>
-            )}
-          </div>
-        )}
+        <Excerpt html={item.summary} action={href ? action : null} external={external} />
 
         {item.metrics.length > 0 && (
           <ul className={styles.metrics}>
