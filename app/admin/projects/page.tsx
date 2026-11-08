@@ -16,15 +16,15 @@ export default async function ProjectsPage() {
         .order("order", { ascending: true });
 
     return (
-        <div className="p-8 max-w-5xl">
-            <div className="flex items-center justify-between mb-8">
+        <div className="p-4 sm:p-8 max-w-5xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Projects</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Projects</h1>
                     <p className="text-white/50">Case studies, live products and landing pages, all in one place.</p>
                 </div>
                 <Link
                     href="/admin/projects/new"
-                    className="flex items-center gap-2 bg-accent text-black px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
+                    className="flex items-center justify-center gap-2 bg-accent text-black px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
                 >
                     <Plus className="w-5 h-5" />
                     New project

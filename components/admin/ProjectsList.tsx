@@ -28,12 +28,12 @@ const FILTERS: { id: Filter; label: string; match: (row: Row) => boolean }[] = [
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 
 function Thumb({ url, title }: { url: string | null; title: string }) {
-  if (!url) return <div className="w-14 h-14 rounded-lg bg-white/10 shrink-0" />;
+  if (!url) return <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-white/10 shrink-0" />;
   return isVideoUrl(url) ? (
-    <video src={url} aria-label={title} className="w-14 h-14 rounded-lg object-cover shrink-0" muted playsInline preload="metadata" />
+    <video src={url} aria-label={title} className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shrink-0" muted playsInline preload="metadata" />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={url} alt={title} className="w-14 h-14 rounded-lg object-cover shrink-0" />
+    <img src={url} alt={title} className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shrink-0" />
   );
 }
 
@@ -49,7 +49,10 @@ type RowProps = {
 const iconButton = "p-2 rounded-lg text-white/50 hover:bg-white/10 hover:text-white disabled:opacity-20 disabled:pointer-events-none";
 
 function ProjectRow({ row, index, total, draggable, onTogglePublished, onMove }: RowProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: row.id, disabled: !draggable });
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
+    id: row.id,
+    disabled: !draggable,
+  });
   const who = madeForLabel(row);
   const isSpotlight = draggable && index === 0 && row.is_published;
 
@@ -57,13 +60,17 @@ function ProjectRow({ row, index, total, draggable, onTogglePublished, onMove }:
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`group flex items-center gap-4 px-4 py-3 border-b border-white/5 bg-zinc-950 touch-none select-none ${draggable ? "cursor-grab active:cursor-grabbing" : ""} ${isDragging ? "relative z-10 shadow-2xl ring-1 ring-accent/60" : "hover:bg-zinc-900"} ${row.is_published ? "" : "opacity-50"}`}
+      className={`group flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2 sm:gap-4 px-3 sm:px-4 py-3 border-b border-white/5 bg-zinc-950 select-none ${draggable ? "sm:cursor-grab sm:active:cursor-grabbing" : ""} ${isDragging ? "relative z-10 shadow-2xl ring-1 ring-accent/60" : "hover:bg-zinc-900"} ${row.is_published ? "" : "opacity-50"}`}
       {...(draggable ? listeners : {})}
       {...attributes}
       aria-roledescription="Draggable project"
     >
-      <span className={`flex w-10 shrink-0 items-center gap-1 font-mono text-xs ${draggable ? "text-white/40" : "invisible"}`}>
-        <GripVertical className="w-4 h-4 text-white/25 group-hover:text-white/60" />
+      <span
+        ref={setActivatorNodeRef}
+        className={`flex w-11 sm:w-10 h-11 sm:h-auto shrink-0 items-center gap-1 font-mono text-xs touch-none ${draggable ? "text-white/40 cursor-grab" : "invisible"}`}
+        aria-label={`Drag ${row.title}`}
+      >
+        <GripVertical className="w-5 h-5 sm:w-4 sm:h-4 text-white/40 sm:text-white/25 group-hover:text-white/60" />
         {String(index + 1).padStart(2, "0")}
       </span>
 
@@ -89,9 +96,13 @@ function ProjectRow({ row, index, total, draggable, onTogglePublished, onMove }:
         </div>
       </div>
 
-      <div className="flex items-center gap-1" onPointerDown={(event) => event.stopPropagation()}>
+      {/* On phones the actions take their own line under the title. */}
+      <div
+        className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-1 pl-[56px] sm:pl-0"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
         {draggable && (
-          <div className="mr-2 flex items-center gap-0.5 rounded-xl border border-white/10 p-0.5">
+          <div className="sm:mr-2 flex items-center gap-0.5 rounded-xl border border-white/10 p-0.5">
             <button type="button" className={iconButton} title="Move to top" disabled={index === 0} onClick={() => onMove(row, 0)}>
               <ChevronsUp className="w-4 h-4" />
             </button>
@@ -103,6 +114,7 @@ function ProjectRow({ row, index, total, draggable, onTogglePublished, onMove }:
             </button>
           </div>
         )}
+        <div className="flex items-center gap-1">
         {(row.has_case_study || row.live_url) && (
           <a
             href={row.has_case_study ? `/projects/${row.slug}` : row.live_url!}
@@ -125,6 +137,7 @@ function ProjectRow({ row, index, total, draggable, onTogglePublished, onMove }:
         <Link href={`/admin/projects/${row.slug}`} className="p-2 rounded-lg hover:bg-white/10 text-white/50 hover:text-white" title="Edit">
           <Pencil className="w-4 h-4" />
         </Link>
+        </div>
       </div>
     </li>
   );
@@ -189,7 +202,7 @@ export default function ProjectsList({ initial }: { initial: Row[] }) {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex gap-2 mb-4 -mx-4 px-4 overflow-x-auto [scrollbar-width:none] sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
         {FILTERS.map((f) => {
           const count = rows.filter(f.match).length;
           if (f.id !== "all" && count === 0) return null;
@@ -198,7 +211,7 @@ export default function ProjectsList({ initial }: { initial: Row[] }) {
               key={f.id}
               type="button"
               onClick={() => setFilter(f.id)}
-              className={`px-4 py-2 rounded-full border text-sm font-bold transition-colors ${
+              className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-full border text-sm font-bold transition-colors ${
                 filter === f.id ? "bg-accent text-black border-accent" : "border-white/10 text-white/60 hover:text-white"
               }`}
             >
@@ -212,7 +225,7 @@ export default function ProjectsList({ initial }: { initial: Row[] }) {
 
       <p className="mb-3 text-sm text-white/40">
         {draggable
-          ? "Drag any row, or use the arrows, to set the homepage order. The top project becomes the featured card."
+          ? "Drag a row by its handle, or use the arrows, to set the homepage order. The top project becomes the featured card."
           : "Switch to All to reorder."}
       </p>
 

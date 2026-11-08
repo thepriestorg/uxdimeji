@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import ProjectForm, { emptyProject, type ProjectFormValues } from "@/components/admin/ProjectForm";
+import ProjectForm from "@/components/admin/ProjectForm";
+import { emptyProject, type ProjectFormValues } from "@/lib/projects";
 
 export default async function EditProjectPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

@@ -58,3 +58,29 @@ export const slugify = (title: string) =>
 // a visible case study. Anything that only links out stays off the old case-study list.
 export const legacyFeatured = (project: Pick<Project, "is_published" | "has_case_study">) =>
   project.is_published && project.has_case_study;
+
+// Defaults for a new project. Kept out of the client form so server pages can call it.
+export type ProjectFormValues = Omit<Project, "id" | "created_at" | "updated_at"> & { id?: string };
+
+export const emptyProject = (order = 0): ProjectFormValues => ({
+  title: "",
+  slug: "",
+  category: "",
+  year: new Date().getFullYear().toString(),
+  featured_image: "",
+  content: "",
+  order,
+  kind: "product",
+  made_for: "client",
+  client_name: "",
+  has_case_study: true,
+  live_url: "",
+  figma_url: "",
+  summary: "",
+  role: "",
+  metrics: [],
+  tags: [],
+  status: "",
+  accent: "",
+  is_published: true,
+});

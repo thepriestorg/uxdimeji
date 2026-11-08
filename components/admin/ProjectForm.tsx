@@ -16,36 +16,14 @@ import {
   type Project,
   type ProjectKind,
   type ProjectMetric,
+  type ProjectFormValues,
 } from "@/lib/projects";
 
-export type ProjectFormValues = Omit<Project, "id" | "created_at" | "updated_at"> & { id?: string };
-
-export const emptyProject = (order = 0): ProjectFormValues => ({
-  title: "",
-  slug: "",
-  category: "",
-  year: new Date().getFullYear().toString(),
-  featured_image: "",
-  content: "",
-  order,
-  kind: "product",
-  made_for: "client",
-  client_name: "",
-  has_case_study: true,
-  live_url: "",
-  figma_url: "",
-  summary: "",
-  role: "",
-  metrics: [],
-  tags: [],
-  status: "",
-  accent: "",
-  is_published: true,
-});
 
 const input =
-  "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-accent";
-const labelClass = "block text-sm font-mono text-white/50 mb-2 uppercase tracking-widest";
+    // 16px text on phones stops iOS zooming into the field.
+  "w-full min-w-0 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent";
+const labelClass = "block text-xs sm:text-sm font-mono text-white/50 mb-2 uppercase tracking-widest";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -201,23 +179,24 @@ export default function ProjectForm({ initial }: { initial: ProjectFormValues })
   };
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 sm:p-8 max-w-4xl">
       <div className="mb-8 flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <Link href="/admin/projects" className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors mb-4">
             <ArrowLeft className="w-4 h-4" />
             Back to Projects
           </Link>
-          <h1 className="text-3xl font-bold text-white">{isNew ? "New project" : form.title || "Edit project"}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white break-words">{isNew ? "New project" : form.title || "Edit project"}</h1>
         </div>
         {!isNew && (
           <button
             type="button"
             onClick={() => setConfirmDelete(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+            className="shrink-0 mt-10 sm:mt-0 flex items-center gap-2 p-3 sm:px-4 sm:py-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+            aria-label="Delete project"
           >
             <Trash2 className="w-4 h-4" />
-            Delete
+            <span className="hidden sm:inline">Delete</span>
           </button>
         )}
       </div>
@@ -332,12 +311,12 @@ export default function ProjectForm({ initial }: { initial: ProjectFormValues })
               <div className="space-y-2">
                 {form.metrics.map((metric, index) => (
                   <div key={index} className="flex gap-2">
-                    <input className={`${input} max-w-[180px]`} value={metric.value} onChange={(e) => setMetric(index, { value: e.target.value })} placeholder="1,000+" />
+                    <input className={`${input} w-28 shrink-0 sm:w-[180px]`} value={metric.value} onChange={(e) => setMetric(index, { value: e.target.value })} placeholder="1,000+" />
                     <input className={input} value={metric.label} onChange={(e) => setMetric(index, { label: e.target.value })} placeholder="organic downloads" />
                     <button
                       type="button"
                       onClick={() => set("metrics", form.metrics.filter((_, i) => i !== index))}
-                      className="px-3 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-500/10"
+                      className="shrink-0 px-3 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-500/10"
                       aria-label="Remove number"
                     >
                       <X className="w-4 h-4" />
@@ -368,7 +347,7 @@ export default function ProjectForm({ initial }: { initial: ProjectFormValues })
                   }}
                   placeholder="Next.js, Supabase…"
                 />
-                <button type="button" onClick={addTag} className="px-4 rounded-xl border border-white/10 text-white/70 hover:bg-white/5">
+                <button type="button" onClick={addTag} className="shrink-0 px-4 rounded-xl border border-white/10 text-white/70 hover:bg-white/5">
                   Add
                 </button>
               </div>
@@ -397,15 +376,16 @@ export default function ProjectForm({ initial }: { initial: ProjectFormValues })
 
         {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-400">{error}</div>}
 
-        <div className="flex items-center justify-end gap-4">
+        {/* Pinned to the bottom of the screen on phones so Save is always in reach. */}
+        <div className="sticky bottom-0 z-30 -mx-4 px-4 py-3 bg-zinc-950/95 backdrop-blur border-t border-white/10 flex items-center justify-end gap-3 sm:static sm:mx-0 sm:p-0 sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:gap-4">
           {saved && <span className="text-sm text-accent">Saved</span>}
-          <Link href="/admin/projects" className="px-6 py-3 rounded-xl border border-white/10 text-white font-bold hover:bg-white/5 transition-colors">
+          <Link href="/admin/projects" className="hidden sm:inline-flex px-6 py-3 rounded-xl border border-white/10 text-white font-bold hover:bg-white/5 transition-colors">
             Cancel
           </Link>
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-black font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-black font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
             {isNew ? "Create project" : "Save changes"}

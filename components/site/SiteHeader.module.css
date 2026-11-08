@@ -5,10 +5,21 @@
   top: 0;
   left: 0;
   right: 0;
+}
+
+/* The blur lives on a pseudo-element: backdrop-filter on the header itself would trap the
+   fixed mobile menu inside the 60px bar and leave it with no background. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: color-mix(in srgb, var(--paper, #0c0c0d) 86%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+
+.open::before { background: var(--paper, #0c0c0d); }
 
 .bar {
   max-width: calc(var(--site-max, 1160px) + 2 * var(--gutter, 24px));

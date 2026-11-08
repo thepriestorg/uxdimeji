@@ -117,7 +117,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-auto min-h-[calc(100vh-65px)] lg:min-h-screen">
+            {/* overflow-x-clip (not auto) so sticky toolbars and save bars inside pages still stick. */}
+            <main className="flex-1 min-w-0 overflow-x-clip min-h-[calc(100vh-73px)] lg:min-h-screen">
                 {children}
             </main>
         </div>

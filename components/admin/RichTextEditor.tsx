@@ -555,7 +555,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
 
                 {/* ── Toolbar ─────────────────────────────────────────────── */}
-                <div className="sticky top-0 z-20 border-b border-white/10 bg-zinc-950/95 backdrop-blur p-2 flex flex-wrap items-center gap-0.5">
+                <div className="sticky top-[73px] lg:top-0 z-20 border-b border-white/10 bg-zinc-950/95 backdrop-blur p-2 flex flex-wrap items-center gap-0.5">
 
                     {/* Text style */}
                     <Btn onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive("bold")} title="Bold (Ctrl+B)">

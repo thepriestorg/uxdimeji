@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import ProjectForm, { emptyProject } from "@/components/admin/ProjectForm";
+import ProjectForm from "@/components/admin/ProjectForm";
+import { emptyProject } from "@/lib/projects";
 
 export default async function NewProjectPage() {
     const supabase = await createClient();
