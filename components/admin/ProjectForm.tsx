@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import SummaryEditor from "@/components/admin/SummaryEditor";
 import MediaUploader from "@/components/admin/MediaUploader";
+import { refreshProjects } from "@/app/admin/actions";
 import {
   PROJECT_KINDS,
   legacyFeatured,
@@ -151,11 +152,16 @@ export default function ProjectForm({ initial }: { initial: ProjectFormValues })
       ? await supabase.from("projects").update(payload).eq("id", id)
       : await supabase.from("projects").insert([payload]);
 
-    setSaving(false);
     if (saveError) {
+      setSaving(false);
       setError(saveError.message);
       return;
     }
+
+    // Push the change to the live site now rather than waiting for the cache to expire.
+    await refreshProjects(payload.slug);
+    if (initial.slug && initial.slug !== payload.slug) await refreshProjects(initial.slug);
+    setSaving(false);
 
     if (isNew || payload.slug !== initial.slug) {
       router.push(isNew ? "/admin/projects" : `/admin/projects/${payload.slug}`);
@@ -174,6 +180,7 @@ export default function ProjectForm({ initial }: { initial: ProjectFormValues })
       setDeleting(false);
       return;
     }
+    await refreshProjects(form.slug);
     router.push("/admin/projects");
     router.refresh();
   };

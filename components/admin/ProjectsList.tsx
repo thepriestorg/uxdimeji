@@ -7,6 +7,7 @@ import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, v
 import { CSS } from "@dnd-kit/utilities";
 import { ArrowUpRight, ChevronDown, ChevronUp, ChevronsUp, Eye, EyeOff, GripVertical, Pencil, Star } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { refreshProjects } from "@/app/admin/actions";
 import { kindLabel, legacyFeatured, madeForLabel, type Project } from "@/lib/projects";
 
 type Row = Pick<
@@ -174,7 +175,9 @@ export default function ProjectsList({ initial }: { initial: Row[] }) {
     if (failed) {
       setRows(previous);
       setError(failed.error!.message);
+      return;
     }
+    await refreshProjects();
   };
 
   const handleDragEnd = ({ active: dragged, over }: DragEndEvent) => {
@@ -197,7 +200,9 @@ export default function ProjectsList({ initial }: { initial: Row[] }) {
     if (saveError) {
       setRows((current) => current.map((r) => (r.id === row.id ? row : r)));
       setError(saveError.message);
+      return;
     }
+    await refreshProjects(row.slug);
   };
 
   return (
