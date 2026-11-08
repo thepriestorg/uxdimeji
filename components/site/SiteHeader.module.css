@@ -57,17 +57,90 @@
 
 .header .nav .contact:hover { background: var(--surface); border-color: var(--surface); }
 
-/* Narrow screens: the nav drops to its own row under the name. */
-@media (max-width: 560px) {
-  .bar {
-    height: auto;
-    padding-top: 14px;
-    padding-bottom: 12px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
+/* ── Mobile: two-line icon that opens a full-screen menu ── */
+.menuButton {
+  display: none;
+  position: relative;
+  width: 28px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
 
-  .nav { gap: 18px; }
-  .header .nav .contact { display: none; }
+.menuButton span {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 0.3s, top 0.3s;
+}
+
+.menuButton span:first-child { top: 15px; }
+.menuButton span:last-child { top: 23px; }
+.open .menuButton span:first-child { top: 19px; transform: rotate(45deg); }
+.open .menuButton span:last-child { top: 19px; transform: rotate(-45deg); }
+
+.panel {
+  position: fixed;
+  inset: 60px 0 0;
+  padding: 8px var(--gutter, 16px) 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--paper);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+}
+
+.open .panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.panel nav { display: grid; }
+
+.header .panel nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 40px;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+}
+
+.header .panel nav a.active { color: var(--ink); }
+
+.panel nav a span {
+  font: 400 11px/1 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.header .panelCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.panelCta svg { width: 17px; height: 17px; }
+
+@media (max-width: 700px) {
+  .nav { display: none; }
+  .menuButton { display: block; }
+}
+
+@media (min-width: 701px) {
+  .panel { display: none; }
 }
