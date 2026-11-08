@@ -273,7 +273,7 @@ export default function AgentAssembly({
     ? ["Agent / data", "Agent / build", "Agent / detail"]
     : ["Agent / layout", "Agent / type", "Agent / content", variant === "hero" ? "Agent / connect" : "Agent / stack"];
   return (
-    <Tag ref={rootRef} className={`${styles.scope} ${className}`} id={id} aria-label={label} data-assembly={variant} data-assembly-state="pending">
+    <Tag ref={rootRef} className={`${styles.scope} ${className}`} id={id} role={label && Tag === "div" ? "group" : undefined} aria-label={label} data-assembly={variant} data-assembly-state="pending">
       {children}
       <div ref={overlayRef} className={styles.overlay} aria-hidden="true">
         {names.map((name, index) => (

@@ -13,12 +13,13 @@ export const getOptimizedVideoUrl = (url: string, width: LocalVideoWidth = 1280)
     ? url.replace("/video/upload/", `/video/upload/f_auto,q_auto:eco,c_limit,w_${width}/`)
     : url);
 
-export const getVideoPoster = (url: string) => {
+// Posters are a plain attribute, so they cannot be responsive. Send a card-sized WebP/AVIF instead of the full JPEG.
+export const getVideoPoster = (url: string, width = 828) => {
   const localPoster = getLocalPoster(url);
-  if (localPoster) return localPoster;
+  if (localPoster) return `/_next/image?url=${encodeURIComponent(localPoster)}&w=${width}&q=75`;
   if (!url.includes("cloudinary.com") || !url.includes("/video/upload/")) return undefined;
   return url
-    .replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/")
+    .replace("/video/upload/", `/video/upload/so_0,f_auto,q_auto,w_${width}/`)
     .replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2");
 };
 

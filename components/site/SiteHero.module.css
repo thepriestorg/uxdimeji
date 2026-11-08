@@ -100,12 +100,21 @@
   height: 6px;
   border-radius: 50%;
   background: #4fbf7a;
-  box-shadow: 0 0 0 4px rgba(79, 191, 122, 0.16);
+  position: relative;
+}
+
+/* The ring pulses with transform and opacity only, so it runs on the compositor. */
+.statusPill i::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: rgba(79, 191, 122, 0.22);
   animation: pulse 2.4s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  50% { box-shadow: 0 0 0 7px rgba(79, 191, 122, 0); }
+  50% { transform: scale(1.6); opacity: 0; }
 }
 
 /* ── Statement ── */
@@ -283,5 +292,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .statusPill i { animation: none; }
+  .statusPill i::after { animation: none; }
 }

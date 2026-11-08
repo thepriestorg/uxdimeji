@@ -1,125 +1,28 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Scroll progress bar and skip link. Kept free of animation libraries so it adds almost no JavaScript.
 export default function V2ScrollEffects() {
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const root = document.querySelector<HTMLElement>(".v2-design");
-    if (!root) return;
-
     const progressBar = document.querySelector<HTMLElement>(".page-progress");
+    if (!progressBar) return;
+
+    let frame = 0;
     const updateProgress = () => {
-      if (!progressBar) return;
+      frame = 0;
       const distance = document.documentElement.scrollHeight - window.innerHeight;
       progressBar.style.transform = `scaleX(${distance > 0 ? window.scrollY / distance : 0})`;
     };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(updateProgress);
+    };
 
-    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     updateProgress();
-
-    const context = gsap.context(() => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      document.querySelectorAll<HTMLElement>(".section-intro").forEach((intro) => {
-        const eyebrow = intro.querySelector(".eyebrow");
-        const heading = intro.querySelector("h2");
-        gsap.set(intro, { autoAlpha: 1, y: 0 });
-
-        if (eyebrow) {
-          gsap.from(eyebrow, {
-            autoAlpha: 0,
-            x: -30,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: { trigger: intro, start: "top 82%", once: true },
-          });
-        }
-
-        if (heading) {
-          gsap.from(heading, {
-            autoAlpha: 0,
-            y: 70,
-            clipPath: "inset(0 0 100% 0)",
-            duration: 1.15,
-            ease: "expo.out",
-            scrollTrigger: { trigger: intro, start: "top 80%", once: true },
-          });
-        }
-      });
-    }, root);
-
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener("portfolio:layout", refresh);
-    window.addEventListener("load", refresh, { once: true });
-
-    // ─── Repair Pass ────────────────────────────────────────────────────────
-    // When a page loads in a background tab, browsers suspend layout/paint, so
-    // ScrollTrigger measures elements at wrong positions. With `once: true`,
-    // the trigger is permanently destroyed after firing — even if it fired with
-    // bad data and left the element stuck at opacity:0 / visibility:hidden.
-    //
-    // After every refresh we scan ALL GSAP-animated targets. If an element
-    // still has GSAP's inline opacity<0.5 or visibility:hidden, we know the
-    // animation never completed properly, so we force it in.
-    // This is the guaranteed safety net that makes the animations bulletproof.
-    const REPAIR_SELECTORS = [
-      ".section-intro .eyebrow",
-      ".section-intro h2",
-    ];
-
-    const runRepairPass = () => {
-      REPAIR_SELECTORS.forEach((sel) => {
-        document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
-          const opacity = parseFloat(el.style.opacity ?? "");
-          const isHidden =
-            el.style.visibility === "hidden" ||
-            (!isNaN(opacity) && opacity < 0.5);
-          if (isHidden) {
-            gsap.to(el, {
-              autoAlpha: 1,
-              y: 0,
-              x: 0,
-              rotate: 0,
-              clipPath: "inset(0 0 0% 0)",
-              duration: 0.55,
-              ease: "power2.out",
-              overwrite: "auto",
-            });
-          }
-        });
-      });
-    };
-
-    // Run after initial settle — catches pages that loaded while tab was hidden
-    const refreshTimer = window.setTimeout(() => {
-      ScrollTrigger.refresh();
-      window.setTimeout(runRepairPass, 400);
-    }, 1200);
-
-    // Run every time the user switches back to this tab
-    const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        ScrollTrigger.refresh();
-        window.setTimeout(runRepairPass, 400);
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    document.querySelectorAll("[data-year]").forEach((element) => {
-      element.textContent = String(new Date().getFullYear());
-    });
-
     return () => {
-      window.clearTimeout(refreshTimer);
-      window.removeEventListener("scroll", updateProgress);
-      window.removeEventListener("portfolio:layout", refresh);
-      window.removeEventListener("load", refresh);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      context.revert();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 

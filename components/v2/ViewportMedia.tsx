@@ -16,6 +16,9 @@ interface ViewportVideoProps {
   className?: string;
   eager?: boolean;
   controls?: boolean;
+  // Seed the box size before the poster or metadata arrives, to avoid a layout shift.
+  width?: number;
+  height?: number;
   onMetadata?: (video: HTMLVideoElement) => void;
 }
 
@@ -27,6 +30,8 @@ export function ViewportVideo({
   className,
   eager = false,
   controls = false,
+  width,
+  height,
   onMetadata,
 }: ViewportVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -77,6 +82,8 @@ export function ViewportVideo({
       poster={poster}
       aria-label={ariaLabel}
       className={className}
+      width={width}
+      height={height}
       muted
       loop
       playsInline
@@ -84,6 +91,8 @@ export function ViewportVideo({
       preload={eager ? "auto" : "metadata"}
       onLoadedMetadata={(event) => onMetadata?.(event.currentTarget)}
     >
+      {/* The previews are silent, so the captions track is intentionally empty. */}
+      <track kind="captions" src="/media/no-audio.vtt" srcLang="en" label="No audio" />
       {active && mobileSrc && (
         <>
           <source media={MOBILE_VIDEO_QUERY} src={mobileSrc} />

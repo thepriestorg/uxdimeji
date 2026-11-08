@@ -36,18 +36,20 @@ function Media({ src, alt, eager, sizes }: { src: string | null; alt: string; ea
         poster={getVideoPoster(src)}
         ariaLabel={alt}
         eager={eager}
+        width={1200}
+        height={900}
       />
     );
   }
   if (isGifUrl(src)) return <ViewportGif className={styles.mediaFill} src={getLocalGif(src) ?? src} alt={alt} />;
-  // Width and height only seed the box; the image keeps its own proportions once it loads.
+  // Width and height only seed the box (4:3, like the card media); the image keeps its own proportions once it loads.
   return (
     <Image
       className={styles.mediaFill}
       src={getOptimizedImageUrl(src, 1600)}
       alt={alt}
       width={1600}
-      height={1000}
+      height={1200}
       priority={eager}
       quality={88}
       sizes={sizes}
@@ -85,7 +87,16 @@ function Excerpt({ html, action, external }: { html: string | null; action: stri
         const node = lastText();
         if (!node) break;
         const shorter = node.data.replace(/…$/, "").replace(/\s*\S+\s*$/, "");
-        node.data = shorter.trim() ? `${shorter.replace(/[\s,;:.\-–—]+$/, "")}…` : "";
+        if (shorter.trim()) {
+          node.data = `${shorter.replace(/[\s,;:.\-–—]+$/, "")}…`;
+          continue;
+        }
+        // The whole text run is gone: drop it and any wrapper (a link, bold) it leaves empty, so no empty link remains.
+        let empty: Node = node;
+        while (empty.parentNode && empty.parentNode !== body && empty.parentNode.textContent === empty.textContent) {
+          empty = empty.parentNode;
+        }
+        empty.parentNode?.removeChild(empty);
       }
     };
 
