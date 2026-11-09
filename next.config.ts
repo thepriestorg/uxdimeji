@@ -4,8 +4,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Landing-page screen recordings are uploaded through the admin panel.
     proxyClientMaxBodySize: '100mb',
-    // Put the CSS in the HTML so first paint does not wait on separate stylesheet requests.
-    inlineCss: true,
   },
   images: {
     remotePatterns: [

@@ -6,17 +6,21 @@ import "./globals.css";
 import "./site.css";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
+// Not used on the homepage, so not preloaded.
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif", preload: false });
 // Receipt type in the footer.
 const mono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-mono", display: "swap" });
 const manrope = localFont({
   src: "../public/assets/Manrope-Variable.woff2",
+  weight: "300 800",
   variable: "--font-manrope",
+  display: "swap",
 });
 const flux = localFont({
   src: "../public/assets/Flux-Variable.woff2",
   variable: "--font-flux",
   display: "swap",
+  preload: false,
 });
 const handwriting = localFont({
   src: "../public/assets/JustMeAgainDownHere.woff2",
