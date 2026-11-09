@@ -3,30 +3,19 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { ViewportGif, ViewportVideo } from "./ViewportMedia";
 import styles from "@/app/playground/Playground.module.css";
 
-interface GalleryItem { id: string; image_url: string; title: string | null; }
+export interface GalleryItem { id: string; image_url: string; title: string | null; }
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 const isGifUrl = (url: string) => /\.gif(\?|$)/i.test(url);
 const optimized = (url: string, w = 1000) => url.includes("cloudinary.com") ? url.replace("/upload/", `/upload/f_auto,q_auto:eco,w_${w},c_limit/`) : url;
 const optimizedVideo = (url: string) => url.includes("cloudinary.com") && url.includes("/video/upload/") ? url.replace("/video/upload/", "/video/upload/q_auto:eco,vc_auto,w_1000,c_limit/") : url;
 const poster = (url: string) => url.includes("/video/upload/") ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto:eco,w_1000,c_limit/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2") : undefined;
 
-export default function PlaygroundGallery() {
-  const [items, setItems] = useState<GalleryItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
+// Items arrive from the server, so the images are in the HTML and no database client ships to the browser.
+export default function PlaygroundGallery({ items }: { items: GalleryItem[] }) {
   const [open, setOpen] = useState<GalleryItem | null>(null);
-
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await createClient().from("gallery_images").select("id, image_url, title, display_order").order("display_order", { ascending: true });
-      if (data) setItems(data as GalleryItem[]);
-      setLoaded(true);
-    };
-    void load();
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -39,7 +28,6 @@ export default function PlaygroundGallery() {
     };
   }, [open]);
 
-  if (!loaded) return <div className={styles.loading} aria-label="Loading interface shots"><i /><i /><i /><i /></div>;
   if (!items.length) return <p className={styles.empty}>New interface shots are on the way.</p>;
 
   return (

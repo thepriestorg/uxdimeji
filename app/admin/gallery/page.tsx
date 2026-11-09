@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { refreshPlayground } from "@/app/admin/actions";
 import { Trash2, Loader2, RefreshCcw, Pencil, X, Check } from "lucide-react";
 import MediaUploader from "@/components/admin/MediaUploader";
 import Image from "next/image";
@@ -123,6 +124,7 @@ export default function GalleryAdmin() {
             alert("Failed to add images");
         } else {
             fetchImages();
+            void refreshPlayground();
         }
     };
 
@@ -139,6 +141,7 @@ export default function GalleryAdmin() {
             alert("Failed to delete image");
         } else {
             setImages(images.filter(img => img.id !== id));
+            void refreshPlayground();
         }
     };
 
@@ -178,6 +181,7 @@ export default function GalleryAdmin() {
                     : img
             ));
             cancelEditing();
+            void refreshPlayground();
         }
     };
 
@@ -204,6 +208,7 @@ export default function GalleryAdmin() {
         } catch (error) {
             console.error("Error saving order:", error);
         }
+        void refreshPlayground();
         setSavingOrder(false);
     };
 

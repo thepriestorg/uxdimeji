@@ -1,0 +1,76 @@
+/* Tailwind for the admin only. The public site loads just the reset from app/globals.css. */
+@import "tailwindcss";
+
+@theme {
+  /* Custom Colors: "Void" Palette */
+  --color-background: #0a0a0a;
+  --color-surface: #121212;
+  --color-primary: #EDEDED;
+  --color-secondary: #888888;
+  --color-accent: #7C3AED;
+  /* Electric Violet */
+
+  /* Fonts */
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-sans);
+  /* Unifying heading/body to Jakarta for now for clean look */
+  --font-serif: var(--font-serif);
+
+  /* Animations */
+  --animate-grain: grain 8s steps(10) infinite;
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes grain {
+
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+
+    10% {
+      transform: translate(-5%, -10%);
+    }
+
+    20% {
+      transform: translate(-15%, 5%);
+    }
+
+    30% {
+      transform: translate(7%, -25%);
+    }
+
+    40% {
+      transform: translate(-5%, 25%);
+    }
+
+    50% {
+      transform: translate(-15%, 10%);
+    }
+
+    60% {
+      transform: translate(15%, 0%);
+    }
+
+    70% {
+      transform: translate(0%, 15%);
+    }
+
+    80% {
+      transform: translate(3%, 35%);
+    }
+
+    90% {
+      transform: translate(-10%, 10%);
+    }
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}

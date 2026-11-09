@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, FolderKanban, LogOut, Image as ImageIcon, Menu, X, BookOpen, MessageCircle, ChartNoAxesCombined } from "lucide-react";
 import { useState } from "react";
+import "./admin.css";
 
 const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },

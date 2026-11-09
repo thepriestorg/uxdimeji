@@ -7,7 +7,6 @@
 .intro,
 .count,
 .gallery,
-.loading,
 .empty {
   width: min(100%, calc(var(--site-max, 1160px) + 2 * var(--gutter, 16px)));
   margin-right: auto;
@@ -158,23 +157,6 @@
 .close svg { width: 18px; height: 18px; }
 
 /* ── States ── */
-.loading {
-  margin-top: clamp(48px, 6vw, 80px);
-  padding-bottom: 140px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 2.4vw, 32px);
-}
-
-.loading i {
-  display: block;
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
-  background: linear-gradient(105deg, var(--surface) 20%, var(--raised) 35%, var(--surface) 50%);
-  background-size: 200% 100%;
-  animation: loading 1.2s linear infinite;
-}
-
 .empty {
   min-height: 42vh;
   margin-top: 56px;
@@ -183,16 +165,13 @@
 }
 
 @keyframes shotIn { from { opacity: 0; transform: translateY(16px); } }
-@keyframes loading { to { background-position-x: -200%; } }
 @keyframes fade { from { opacity: 0; } }
 
 @media (max-width: 760px) {
   .gallery { columns: 1; }
-  .loading { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .shot,
-  .loading i,
   .lightbox { animation: none; }
 }

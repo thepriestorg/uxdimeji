@@ -45,8 +45,8 @@ export default function BlogPostViews({
   }, [slug]);
 
   return (
-    <span className="inline-flex items-center gap-1 text-[inherit]" title="Total views">
-      <Eye size={12} className="opacity-60 shrink-0" aria-hidden="true" />
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, color: "inherit" }} title="Total views">
+      <Eye size={12} style={{ opacity: 0.6, flexShrink: 0 }} aria-hidden="true" />
       <span>{formatViews(views)}</span>
     </span>
   );

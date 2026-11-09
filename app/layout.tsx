@@ -192,7 +192,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} ${mono.variable} font-sans bg-background text-secondary antialiased`}>
+      <body className={`${jakarta.variable} ${playfair.variable} ${manrope.variable} ${flux.variable} ${handwriting.variable} ${mono.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(seoJsonLd) }}

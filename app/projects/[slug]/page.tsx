@@ -72,8 +72,7 @@ function RenderContent({ content }: { content: string | null }) {
                              <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto", aspectRatio: "16/9" }}>
                                 <iframe
                                     src={`https://www.youtube.com/embed/${extractYoutubeId(child.attrs?.src as string)}`}
-                                    className="w-full h-full"
-                                    style={{ position: "absolute", top: 0, left: 0 }}
+                                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
                                     allowFullScreen
                                 />
                             </div>
