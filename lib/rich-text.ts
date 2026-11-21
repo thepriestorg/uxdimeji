@@ -60,6 +60,11 @@ function renderNode(node: RichNode): string {
   if (node.type === "horizontalRule") return "<hr>";
   if (node.type === "hardBreak") return "<br>";
   if (node.type === "image") return `<img src="${attr(node, "src")}" alt="${attr(node, "alt")}">`;
+  if (node.type === "video") {
+    const caption = attr(node, "caption");
+    const poster = attr(node, "poster");
+    return `<figure class="cs-figure cs-video"><video src="${attr(node, "src")}"${poster ? ` poster="${poster}"` : ""} controls playsinline preload="metadata"></video>${caption ? `<figcaption class="cs-figure__caption">${caption}</figcaption>` : ""}</figure>`;
+  }
   if (node.type === "figure") {
     const caption = attr(node, "caption") || children;
     return `<figure class="cs-figure"><img class="cs-figure__img" src="${attr(node, "src")}" alt="${attr(node, "alt")}">${caption ? `<figcaption class="cs-figure__caption">${caption}</figcaption>` : ""}</figure>`;

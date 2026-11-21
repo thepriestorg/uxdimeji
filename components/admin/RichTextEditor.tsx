@@ -15,7 +15,7 @@ import {
     Heading1, Heading2, Heading3,
     List, ListOrdered, Code, Quote, ImageIcon,
     Youtube as YoutubeIcon, Link as LinkIcon, Undo, Redo,
-    Minus, Upload, X, Loader2
+    Minus, Upload, X, Loader2, Film
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { uploadToCloudinary } from "@/lib/cloudinary-upload";
@@ -105,7 +105,24 @@ const Figure = Node.create({
     },
 
     parseHTML() {
-        return [{ tag: "figure" }];
+        return [{
+            tag: "figure",
+            // Read the image and caption back out of saved HTML, so a figure
+            // reloads as one node instead of an empty figure, a loose image
+            // and a stray caption paragraph.
+            getAttrs: (element) => {
+                const el = element as HTMLElement;
+                if (el.querySelector("video")) return false;
+                const img = el.querySelector("img");
+                if (!img) return false;
+                return {
+                    src: img.getAttribute("src"),
+                    alt: img.getAttribute("alt") || "",
+                    caption: el.querySelector("figcaption")?.textContent || "",
+                };
+            },
+            contentElement: () => document.createElement("span"),
+        }];
     },
 
     renderHTML({ HTMLAttributes }) {
@@ -155,6 +172,109 @@ const Figure = Node.create({
             dom.appendChild(caption);
 
             return { dom };
+        };
+    },
+});
+
+// ─── Custom Video Node (uploaded video + caption) ───────────────────────────
+
+// A Cloudinary video URL with the extension swapped to .jpg returns a still;
+// so_1 takes it one second in, past any fade from black.
+function videoPoster(src: string) {
+    if (!/res\.cloudinary\.com\/.+\/video\/upload\//.test(src)) return "";
+    return src
+        .replace("/video/upload/", "/video/upload/so_1/")
+        .replace(/\.(mp4|mov|webm|m4v)(\?.*)?$/i, ".jpg");
+}
+
+const Video = Node.create({
+    name: "video",
+    group: "block",
+    atom: true,
+    draggable: true,
+
+    addAttributes() {
+        return {
+            src: { default: null },
+            poster: { default: "" },
+            caption: { default: "" },
+        };
+    },
+
+    parseHTML() {
+        const read = (el: HTMLElement) => {
+            const video = el.tagName === "VIDEO" ? el : el.querySelector("video");
+            if (!video) return false;
+            const src = video.getAttribute("src") || video.querySelector("source")?.getAttribute("src");
+            if (!src) return false;
+            return {
+                src,
+                poster: video.getAttribute("poster") || "",
+                caption: el.querySelector("figcaption")?.textContent || "",
+            };
+        };
+        return [
+            { tag: "figure", priority: 60, getAttrs: (el) => read(el as HTMLElement) },
+            { tag: "video", getAttrs: (el) => read(el as HTMLElement) },
+        ];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return [
+            "figure",
+            { class: "cs-figure cs-video" },
+            ["video", {
+                src: HTMLAttributes.src,
+                poster: HTMLAttributes.poster || null,
+                controls: "",
+                playsinline: "",
+                preload: "metadata",
+            }],
+            ["figcaption", { class: "cs-figure__caption" }, HTMLAttributes.caption || ""],
+        ];
+    },
+
+    addNodeView() {
+        return ({ node, getPos, editor }) => {
+            let current = node;
+            const dom = document.createElement("figure");
+            dom.className = "cs-figure cs-video";
+
+            const video = document.createElement("video");
+            video.src = node.attrs.src;
+            if (node.attrs.poster) video.poster = node.attrs.poster;
+            video.controls = true;
+            video.playsInline = true;
+            video.preload = "metadata";
+
+            const caption = document.createElement("figcaption");
+            caption.className = "cs-figure__caption";
+            caption.contentEditable = "true";
+            caption.textContent = node.attrs.caption || "";
+            caption.setAttribute("data-placeholder", "Add a caption…");
+            caption.addEventListener("input", () => {
+                const pos = typeof getPos === "function" ? getPos() : undefined;
+                if (typeof pos !== "number") return;
+                editor.view.dispatch(editor.view.state.tr.setNodeMarkup(pos, undefined, {
+                    ...current.attrs,
+                    caption: caption.textContent || "",
+                }));
+            });
+            caption.addEventListener("keydown", (e) => e.stopPropagation());
+
+            dom.append(video, caption);
+            return {
+                dom,
+                update(updated) {
+                    if (updated.type.name !== "video") return false;
+                    current = updated;
+                    return true;
+                },
+                stopEvent(event) {
+                    return event.target instanceof HTMLElement && (caption.contains(event.target) || video.contains(event.target));
+                },
+                ignoreMutation: () => true,
+            };
         };
     },
 });
@@ -376,6 +496,14 @@ const EDITOR_STYLES = `
     pointer-events: none;
 }
 
+/* Uploaded video */
+.rte-editor .cs-video video {
+    width: 100%;
+    display: block;
+    border-radius: 0.75rem;
+    background: #000;
+}
+
 /* YouTube embed */
 .rte-editor iframe {
     border-radius: 0.75rem;
@@ -414,6 +542,13 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     const [uploadQueue, setUploadQueue] = useState<{ file: File; preview: string; caption: string }[]>([]);
     const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showVideoModal, setShowVideoModal] = useState(false);
+    const [videoFile, setVideoFile] = useState<File | null>(null);
+    const [videoUrl, setVideoUrl] = useState("");
+    const [videoCaption, setVideoCaption] = useState("");
+    const [videoUploading, setVideoUploading] = useState(false);
+    const [videoError, setVideoError] = useState("");
+    const videoInputRef = useRef<HTMLInputElement>(null);
 
     const editor = useEditor({
         immediatelyRender: false,
@@ -428,6 +563,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                 HTMLAttributes: { class: "rounded-xl max-w-full" },
             }),
             Figure,
+            Video,
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: { class: "text-accent underline" },
@@ -497,6 +633,33 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
             setLinkUrl(""); setShowLinkModal(false);
         }
     }, [editor, linkUrl]);
+
+    const closeVideoModal = useCallback(() => {
+        setShowVideoModal(false);
+        setVideoFile(null);
+        setVideoUrl("");
+        setVideoCaption("");
+        setVideoError("");
+    }, []);
+
+    const insertVideo = useCallback(async () => {
+        if (!editor || (!videoFile && !videoUrl)) return;
+        setVideoUploading(true);
+        setVideoError("");
+        try {
+            const src = videoFile ? (await uploadToCloudinary(videoFile)).url : videoUrl.trim();
+            editor.chain().focus().insertContent({
+                type: "video",
+                attrs: { src, poster: videoPoster(src), caption: videoCaption },
+            }).run();
+            closeVideoModal();
+        } catch (err) {
+            console.error("Video upload failed:", err);
+            setVideoError(err instanceof Error ? err.message : "Upload failed. Please try again.");
+        } finally {
+            setVideoUploading(false);
+        }
+    }, [editor, videoFile, videoUrl, videoCaption, closeVideoModal]);
 
     const addYoutube = useCallback(() => {
         if (youtubeUrl && editor) {
@@ -611,6 +774,9 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                     </Btn>
                     <Btn onClick={() => setShowImageModal(true)} title="Add Image(s)">
                         <ImageIcon className="w-4 h-4" />
+                    </Btn>
+                    <Btn onClick={() => setShowVideoModal(true)} title="Add Video">
+                        <Film className="w-4 h-4" />
                     </Btn>
                     <Btn onClick={() => setShowYoutubeModal(true)} title="Embed YouTube">
                         <YoutubeIcon className="w-4 h-4" />
@@ -763,6 +929,61 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
                             )}
                         </div>
                         {uploadError && <p className="mt-3 text-sm text-red-400" role="alert">{uploadError}</p>}
+                    </div>
+                </div>
+            )}
+
+            {/* ── Video Modal ──────────────────────────────────────────────── */}
+            {showVideoModal && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                    <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-md">
+                        <h3 className="text-lg font-bold text-white mb-4">Add Video</h3>
+                        <div
+                            className="border-2 border-dashed border-white/10 hover:border-white/20 rounded-xl p-6 text-center cursor-pointer transition-colors mb-4"
+                            onClick={() => videoInputRef.current?.click()}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                                e.preventDefault();
+                                const file = Array.from(e.dataTransfer.files).find((f) => f.type.startsWith("video/"));
+                                if (file) setVideoFile(file);
+                            }}
+                        >
+                            <Upload className="w-7 h-7 mx-auto mb-2 text-white/30" />
+                            <p className="text-white/50 text-sm">{videoFile ? videoFile.name : "Click or drag a video file"}</p>
+                            <p className="text-white/25 text-xs mt-1">MP4 or WebM, under 100 MB</p>
+                        </div>
+                        <input
+                            ref={videoInputRef} type="file" accept="video/*" className="hidden"
+                            onChange={(e) => { setVideoFile(e.target.files?.[0] ?? null); e.target.value = ""; }}
+                        />
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="flex-1 h-px bg-white/10" />
+                            <span className="text-white/30 text-xs">or paste a video URL</span>
+                            <div className="flex-1 h-px bg-white/10" />
+                        </div>
+                        <div className="space-y-2 mb-5">
+                            <input
+                                type="url" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} disabled={!!videoFile}
+                                placeholder="https://…/film.mp4"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-accent disabled:opacity-40"
+                            />
+                            <input
+                                type="text" value={videoCaption} onChange={(e) => setVideoCaption(e.target.value)}
+                                placeholder="Caption (optional)"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-accent"
+                            />
+                        </div>
+                        <div className="flex gap-2">
+                            <button type="button" onClick={closeVideoModal} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-white font-medium">Cancel</button>
+                            <button
+                                type="button" onClick={insertVideo} disabled={videoUploading || (!videoFile && !videoUrl)}
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-accent text-black font-bold flex items-center justify-center gap-2 disabled:opacity-40"
+                            >
+                                {videoUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Film className="w-4 h-4" />}
+                                {videoUploading ? "Uploading…" : "Insert video"}
+                            </button>
+                        </div>
+                        {videoError && <p className="mt-3 text-sm text-red-400" role="alert">{videoError}</p>}
                     </div>
                 </div>
             )}
