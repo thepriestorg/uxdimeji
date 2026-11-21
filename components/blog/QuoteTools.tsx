@@ -14,6 +14,8 @@ export default function QuoteTools() {
       button.setAttribute("aria-label", "Copy quote to clipboard");
       const copy = async () => {
         const text = quote.innerText.replace(/Copy quote|Copied/g, "").trim();
+        // Clipboard can be blocked; the button just stays as it was.
+        if (!navigator.clipboard) return;
         await navigator.clipboard.writeText(text);
         button.textContent = "Copied";
         window.setTimeout(() => { button.textContent = "Copy quote"; }, 1600);

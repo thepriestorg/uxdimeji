@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Share2, Mail, Linkedin } from "lucide-react";
+import { ArrowLeft, ArrowRight, Linkedin, Mail } from "lucide-react";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 import ArticleAudio from "@/components/blog/ArticleAudio";
+import ArticleNav from "@/components/blog/ArticleNav";
 import QuoteTools from "@/components/blog/QuoteTools";
 import CommentSection from "@/components/blog/CommentSection";
 import BlogPostViews from "@/components/blog/BlogPostViews";
+import CopyLinkButton from "@/components/blog/CopyLinkButton";
+import { UnderlineSketch, VerifiedBadge } from "@/components/blog/BlogMarks";
 import { formatPostDate, getPublishedPost, getPublishedPosts, readingTime } from "@/lib/blog";
 import { richTextToHtml, richTextToPlainText } from "@/lib/rich-text";
 import { absoluteUrl, authorRef, jsonLdScript } from "@/lib/seo";
@@ -57,52 +60,34 @@ export async function generateMetadata({
   };
 }
 
-/* ─── Blue Verified Badge SVG ───────────────────────────── */
-function VerifiedBadge() {
-  return (
-    <svg
-      className="signoff-verified-badge"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="Verified Designer"
-    >
-      <path
-        d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6z"
-        fill="#0099ff"
-      />
-      <path
-        d="M10.2 16.2L6 12l1.4-1.4 2.8 2.8 6.4-6.4 1.4 1.4-7.8 7.8z"
-        fill="#ffffff"
-      />
-    </svg>
-  );
-}
+const decodeEntities = (value: string) =>
+  value
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
 
-/* ─── Double Underline Sketch SVG ───────────────────────── */
-function UnderlineSketch() {
-  return (
-    <svg
-      className="signoff-sketch-underline"
-      viewBox="0 0 70 8"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M2 3C22 1.5 48 2 68 3.5"
-        stroke="#181816"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 6.5C26 5 44 5.5 62 6.5"
-        stroke="#181816"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+/* Give every h2 an id so the contents list can link to it, and collect them in order. */
+function withHeadingAnchors(html: string) {
+  const headings: { id: string; text: string }[] = [];
+  const used = new Set<string>();
+  const output = html.replace(/<h2>([\s\S]*?)<\/h2>/g, (_, inner: string) => {
+    const text = decodeEntities(inner.replace(/<[^>]+>/g, "")).trim();
+    const base =
+      text
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .trim()
+        .replace(/\s+/g, "-")
+        .slice(0, 60) || "section";
+    let id = base;
+    for (let n = 2; used.has(id); n++) id = `${base}-${n}`;
+    used.add(id);
+    headings.push({ id, text });
+    return `<h2 id="${id}">${inner}</h2>`;
+  });
+  return { html: output, headings };
 }
 
 export default async function BlogPostPage({
@@ -111,11 +96,19 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPublishedPost(slug);
+  const [post, allPosts] = await Promise.all([getPublishedPost(slug), getPublishedPosts()]);
   if (!post) notFound();
 
-  const renderedContent = richTextToHtml(post.content);
+  const { html: renderedContent, headings } = withHeadingAnchors(richTextToHtml(post.content));
   const spokenText = richTextToPlainText(post.content);
+  const minutes = Number.parseInt(readingTime(post.content), 10) || 1;
+  const postUrl = `https://uxdimeji.com/blog/${post.slug}`;
+
+  // Keep reading: the next older note, or the newest one when this is the oldest.
+  const others = allPosts.filter((item) => item.slug !== post.slug);
+  const index = allPosts.findIndex((item) => item.slug === post.slug);
+  const nextPost = allPosts.slice(index + 1)[0] ?? others[0];
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -131,146 +124,157 @@ export default async function BlogPostPage({
   };
 
   return (
-    <main className="v2-design blog-page" id="top">
+    <main className="v2-design site-page blog-page" id="top">
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd)} />
       <SiteHeader />
 
-      {/* ── Unboxed Centered Article Reader ── */}
-      <article className="article-reader-container">
-        {/* Back link */}
-        <Link href="/blog" className="article-back-nav">
-          <ArrowLeft size={13} aria-hidden="true" />
-          <span>All writing</span>
-        </Link>
+      <article className="post">
+        <header className="post-hero">
+          <Link href="/blog" className="post-back">
+            <ArrowLeft size={14} aria-hidden="true" />
+            <span>All writing</span>
+          </Link>
 
-        {/* Category */}
-        {post.category && (
-          <span className="article-category-badge">{post.category}</span>
-        )}
+          <p className="post-kicker">
+            {post.category && <span className="stamp post-stamp"><i />{post.category}</span>}
+            <time dateTime={post.published_at ?? undefined}>{formatPostDate(post.published_at)}</time>
+          </p>
 
-        {/* Title & Deck */}
-        <h1 className="article-reader-title">{post.title}</h1>
-        {post.excerpt && <p className="article-reader-deck">{post.excerpt}</p>}
+          <h1 className="post-title">{post.title}</h1>
+          {post.excerpt && <p className="post-deck">{post.excerpt}</p>}
 
-        {/* Author Byline */}
-        <div className="article-reader-byline">
-          <div className="article-byline-avatar">
-            <Image
-              src="/images/oladimeji.jpg"
-              alt="Oladimeji Abubakar"
-              width={40}
-              height={40}
-            />
-          </div>
-          <div className="article-byline-text">
-            <span className="article-byline-name">Oladimeji Abubakar</span>
-            <span className="article-byline-sub">
-              {formatPostDate(post.published_at)} · {readingTime(post.content)} ·{" "}
-              <BlogPostViews slug={post.slug} initialViews={post.views} />
+          <p className="post-mood" aria-hidden="true">
+            <span className="post-mood-time">{minutes} min</span>
+            <span className="post-mood-note">
+              {minutes <= 5 ? "a quick one ⚡" : minutes <= 12 ? "grab a coffee ☕" : "a long one, get comfy 🛋️"}
             </span>
-          </div>
-        </div>
+          </p>
 
-        {/* Featured Cover Image */}
+          <div className="post-byline">
+            <div className="post-author">
+              <span className="post-author-avatar">
+                <Image src="/images/oladimeji.jpg" alt="" width={44} height={44} />
+              </span>
+              <span className="post-author-text">
+                <span className="post-author-name">
+                  Oladimeji Abubakar <VerifiedBadge className="verified-badge" />
+                </span>
+                <span className="post-author-sub">
+                  Product designer &amp; builder ·{" "}
+                  <BlogPostViews slug={post.slug} initialViews={post.views} />
+                </span>
+              </span>
+            </div>
+            <ArticleAudio title={post.title} text={spokenText} />
+          </div>
+        </header>
+
         {post.cover_image && (
-          <div className="article-reader-cover">
+          <div className="post-cover">
             <Image
               src={post.cover_image}
-              alt={post.title}
+              alt=""
               fill
-              sizes="(max-width: 768px) 100vw, 680px"
+              priority
+              sizes="(max-width: 1180px) 100vw, 1120px"
               unoptimized
             />
           </div>
         )}
 
-        <ArticleAudio title={post.title} text={spokenText} />
+        <div className="post-layout">
+          <aside className="post-rail">
+            <ArticleNav headings={headings} minutes={minutes} />
+          </aside>
 
-        {/* Article Body */}
-        <div
-          className="article-reader-body"
-          dangerouslySetInnerHTML={{ __html: renderedContent }}
-        />
+          <div className="article-body" dangerouslySetInnerHTML={{ __html: renderedContent }} />
+        </div>
 
         <QuoteTools />
 
-        {/* ── Redesigned "Thanks for reading" Personal Sign-off Card ── */}
-        <div className="article-signoff-card">
-          <div className="article-signoff-top">
-            <div className="signoff-avatar-wrapper">
-              <div className="signoff-avatar">
-                <Image
-                  src="/images/oladimeji.jpg"
-                  alt="Oladimeji Abubakar"
-                  width={52}
-                  height={52}
-                  className="signoff-avatar-img"
-                />
-              </div>
-              <span className="signoff-online-dot" aria-label="Online" />
-            </div>
-
-            <div className="signoff-author-details">
-              <div className="signoff-author-name-row">
-                <strong>Oladimeji Abubakar</strong>
-                <VerifiedBadge />
-              </div>
-              <span>Product Designer & Builder</span>
-            </div>
-          </div>
-
-          <div className="signoff-handwriting-wrap">
-            <span className="signoff-handwriting-text">
-              thanks for reading — oladimeji
-            </span>
-            <UnderlineSketch />
-          </div>
-
-          <h2 className="signoff-headline">Thanks for spending time here.</h2>
-          <p className="signoff-body">
-            I write about product design, craft, my journey in tech, life
-            observations, and other things I find interesting along the way. If
-            anything here resonated with you, sparked a question, or you&apos;d
-            like to chat, I&apos;d love to hear from you.
+        <footer className="post-end">
+          <p className="post-end-mark" aria-hidden="true">
+            <span />✦<span />
           </p>
 
-          <div className="signoff-actions">
-            <a
-              href={`https://x.com/intent/tweet?text=${encodeURIComponent(
-                post.title
-              )}&url=${encodeURIComponent(
-                `https://uxdimeji.com/blog/${post.slug}`
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="signoff-btn-pill"
-            >
-              <Share2 size={13} aria-hidden="true" />
-              <span>Share on 𝕏</span>
-            </a>
-            <a
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                `https://uxdimeji.com/blog/${post.slug}`
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="signoff-btn-pill"
-            >
-              <Linkedin size={13} aria-hidden="true" />
-              <span>LinkedIn</span>
-            </a>
-            <a
-              href="mailto:oladimejiuiux@gmail.com"
-              className="signoff-btn-pill signoff-btn-primary"
-            >
-              <Mail size={13} aria-hidden="true" />
-              <span>Say hello</span>
-            </a>
-          </div>
-        </div>
+          {/* Sign-off: who wrote this, and an open door to say hello */}
+          <section className="signoff" aria-labelledby="signoff-title">
+            <div className="signoff-top">
+              <span className="signoff-avatar">
+                <Image src="/images/oladimeji.jpg" alt="Oladimeji Abubakar" width={96} height={96} />
+                <i aria-label="Online" />
+              </span>
+              <span className="signoff-who">
+                <span className="signoff-name">
+                  Oladimeji Abubakar <VerifiedBadge className="verified-badge" />
+                </span>
+                <span className="signoff-role">Product Designer &amp; Builder</span>
+              </span>
+            </div>
 
-        {/* ── Redesigned Comments Section ── */}
-        <CommentSection postSlug={post.slug} />
+            <div className="signoff-script">
+              <span>thanks for reading — oladimeji</span>
+              <UnderlineSketch className="signoff-underline" />
+            </div>
+
+            <h2 id="signoff-title" className="signoff-headline">
+              Thanks for spending time here. <span className="signoff-wave" aria-hidden="true">👋</span>
+            </h2>
+            <p className="signoff-body">
+              I write about product design, craft, my journey in tech, life observations, and other
+              things I find interesting along the way. If anything here resonated with you, sparked a
+              question, or you&apos;d like to chat, I&apos;d love to hear from you.
+            </p>
+
+            <div className="signoff-actions">
+              <a href="mailto:oladimejiuiux@gmail.com" className="signoff-btn signoff-btn-primary">
+                <Mail size={14} aria-hidden="true" />
+                <span>Say hello</span>
+              </a>
+              <a
+                href={`https://x.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="signoff-btn"
+              >
+                <span className="signoff-x" aria-hidden="true">𝕏</span>
+                <span>Share on X</span>
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="signoff-btn"
+              >
+                <Linkedin size={14} aria-hidden="true" />
+                <span>LinkedIn</span>
+              </a>
+              <CopyLinkButton url={postUrl} className="signoff-btn" />
+            </div>
+          </section>
+
+          {nextPost && (
+            <Link href={`/blog/${nextPost.slug}`} className="next-read">
+              <span className="next-read-copy">
+                <span className="next-read-label">Keep reading</span>
+                <span className="next-read-title">{nextPost.title}</span>
+                <span className="next-read-facts">
+                  {formatPostDate(nextPost.published_at)} · {readingTime(nextPost.content)}
+                </span>
+              </span>
+              {nextPost.cover_image ? (
+                <span className="next-read-thumb">
+                  <Image src={nextPost.cover_image} alt="" width={320} height={200} unoptimized />
+                </span>
+              ) : null}
+              <span className="next-read-go" aria-hidden="true">
+                <ArrowRight size={18} />
+              </span>
+            </Link>
+          )}
+
+          <CommentSection postSlug={post.slug} />
+        </footer>
       </article>
 
       <SiteFooter />

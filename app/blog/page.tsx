@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
+import NotesIndex, { type NoteSummary } from "@/components/blog/NotesIndex";
 import { formatPostDate, formatViews, getPublishedPosts, readingTime } from "@/lib/blog";
 import { socialMetadata } from "@/lib/seo";
-import "./blog.css";
 import styles from "./Writing.module.css";
 
 // Serve the list from cache; new posts show up within a minute.
@@ -24,7 +22,16 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const posts = await getPublishedPosts();
-  const [latest, ...rest] = posts;
+
+  const notes: NoteSummary[] = posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    category: post.category,
+    date: formatPostDate(post.published_at),
+    minutes: Number.parseInt(readingTime(post.content), 10) || 1,
+    views: formatViews(post.views),
+    cover: post.cover_image,
+  }));
 
   return (
     <main className={`v2-design site-page ${styles.page}`} id="top">
@@ -32,63 +39,21 @@ export default async function BlogPage() {
 
       <div className={styles.shell}>
         <header className={styles.head}>
-          <p className="mono-label">Writing · {String(posts.length).padStart(2, "0")}</p>
+          <p className="mono-label">Writing · {String(posts.length).padStart(2, "0")} notes</p>
           <h1>
-            Notes from my desk.
-            <span> On design, craft and building things.</span>
+            Notes from <span className={styles.headDesk}>my desk.</span>
           </h1>
+          <p className={styles.headScript} aria-hidden="true">
+            <svg viewBox="0 0 60 40" fill="none">
+              <path d="M4 6c18 2 34 10 44 26" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M40 30l8 3 1-9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            on design, craft &amp; building things
+          </p>
         </header>
 
-        {latest ? (
-          <>
-            <Link href={`/blog/${latest.slug}`} className={styles.latest}>
-              {latest.cover_image && (
-                <div className={styles.latestCover}>
-                  <Image
-                    src={latest.cover_image}
-                    alt={latest.title}
-                    width={1600}
-                    height={1000}
-                    sizes="(max-width: 900px) 100vw, 640px"
-                    unoptimized
-                  />
-                </div>
-              )}
-              <div className={styles.latestCopy}>
-                <p className={styles.meta}>
-                  <span className={styles.newTag}>Latest</span>
-                  {formatPostDate(latest.published_at)} · {readingTime(latest.content)}
-                </p>
-                <h2>{latest.title}</h2>
-                {latest.excerpt && <p className={styles.excerpt}>{latest.excerpt}</p>}
-                <span className={styles.read}>
-                  Read the note <ArrowUpRight aria-hidden="true" />
-                </span>
-              </div>
-            </Link>
-
-            {rest.length > 0 && (
-              <ol className={styles.index} aria-label="All notes">
-                {rest.map((post) => (
-                  <li key={post.id}>
-                    <Link href={`/blog/${post.slug}`} className={styles.row}>
-                      <time className={styles.date}>{formatPostDate(post.published_at)}</time>
-                      <div className={styles.rowCopy}>
-                        <h2>{post.title}</h2>
-                        {post.excerpt && <p>{post.excerpt}</p>}
-                      </div>
-                      <span className={styles.rowMeta}>
-                        {readingTime(post.content)}
-                        <br />
-                        {formatViews(post.views)}
-                      </span>
-                      <ArrowUpRight className={styles.arrow} aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </>
+        {notes.length > 0 ? (
+          <NotesIndex notes={notes} />
         ) : (
           <div className={styles.empty}>
             <p>Nothing published yet.</p>
