@@ -70,13 +70,14 @@ export default function SiteHero() {
               <Image src="/images/oladimeji.jpg" alt="Oladimeji Abubakar" width={112} height={112} priority />
               <i className={styles.onlineDot} aria-hidden="true" />
             </span>
-            <span>
-              <span className={styles.nameRow}>
-                <strong>Oladimeji Abubakar</strong>
+            <div>
+              {/* The visible name is the page's main heading, so Google ties the page to name searches. */}
+              <div className={styles.nameRow}>
+                <h1 className={styles.name} id="hero-title">Oladimeji Abubakar</h1>
                 <VerifiedBadge className={styles.verified} />
-              </span>
+              </div>
               <span className={styles.role}>Product designer who builds</span>
-            </span>
+            </div>
           </div>
 
           <p className={styles.status}>
@@ -85,13 +86,12 @@ export default function SiteHero() {
           </p>
         </div>
 
-        <h1 className={styles.statement} id="hero-title">
+        <p className={styles.statement}>
           I design products,
           <br />
           <span>and help bring them to life.</span>
-          <span className="sr-only"> Oladimeji Abubakar, Product Designer in Nigeria.</span>
           <span className={styles.note} aria-hidden="true">from Figma to code ↘</span>
-        </h1>
+        </p>
 
         <p className={styles.bio}>
           I&apos;m a product designer in Kwara, Nigeria

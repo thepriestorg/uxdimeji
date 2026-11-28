@@ -55,8 +55,10 @@
   gap: 6px;
 }
 
-.nameRow strong {
+.nameRow .name {
+  margin: 0;
   font-size: 17px;
+  line-height: inherit;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
