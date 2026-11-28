@@ -11,9 +11,14 @@ const EVENTS = new Set([
   "file_download",
 ]);
 
-// Vercel and Netlify each put the visitor's location in their own headers.
+// Each host puts the visitor's location in its own headers: Vercel, Netlify, and
+// Cloudflare (which sits in front of Render). "XX" is Cloudflare's "unknown".
 function visitorLocation(request: NextRequest) {
-  let country = request.headers.get("x-vercel-ip-country") || request.headers.get("x-country");
+  const cloudflareCountry = request.headers.get("cf-ipcountry");
+  let country =
+    request.headers.get("x-vercel-ip-country") ||
+    request.headers.get("x-country") ||
+    (cloudflareCountry && cloudflareCountry !== "XX" ? cloudflareCountry : null);
   let city = request.headers.get("x-vercel-ip-city");
   const netlifyGeo = request.headers.get("x-nf-geo");
   if (netlifyGeo && (!country || !city)) {
