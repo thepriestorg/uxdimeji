@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 import { formatViews } from "@/lib/blog-utils";
+import { callPublicRpc } from "@/lib/supabase/rpc";
 
 type BlogPostViewsProps = {
   slug: string;
@@ -26,16 +27,11 @@ export default function BlogPostViews({
       // Optimistic increment
       setViews((prev) => (prev ?? 0) + 1);
 
-      fetch("/api/blog/views", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
-        keepalive: true,
-      })
-        .then((res) => (res.ok ? res.json() : null))
+      // Counted straight in Supabase, so a page view never runs a server function.
+      callPublicRpc<number>("increment_blog_post_views", { p_slug: slug })
         .then((data) => {
-          if (data && typeof data.views === "number") {
-            setViews(data.views);
+          if (data !== null && Number.isFinite(Number(data))) {
+            setViews(Number(data));
           }
         })
         .catch(() => {

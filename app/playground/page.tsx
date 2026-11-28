@@ -17,8 +17,9 @@ export const metadata: Metadata = {
   ...socialMetadata({ title: "UI/UX Design Playground", description, path: "/playground" }),
 };
 
-// Cached; gallery edits in the admin refresh it straight away.
-export const revalidate = 60;
+// Built once and served as a static page. Saving in the admin rebuilds it straight away;
+// the daily rebuild is only a safety net.
+export const revalidate = 86400;
 
 export default async function PlaygroundPage() {
   const { data } = await createPublicClient()

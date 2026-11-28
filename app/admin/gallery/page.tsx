@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { refreshPlayground } from "@/app/admin/actions";
 import { Trash2, Loader2, RefreshCcw, Pencil, X, Check } from "lucide-react";
 import MediaUploader from "@/components/admin/MediaUploader";
-import Image from "next/image";
+import Image from "@/components/Img";
 import {
     DndContext,
     closestCenter,

@@ -7,8 +7,9 @@ import { formatPostDate, formatViews, getPublishedPosts, readingTime } from "@/l
 import { socialMetadata } from "@/lib/seo";
 import styles from "./Writing.module.css";
 
-// Serve the list from cache; new posts show up within a minute.
-export const revalidate = 60;
+// Built once and served as a static page. Saving in the admin rebuilds it straight away;
+// the daily rebuild is only a safety net.
+export const revalidate = 86400;
 
 const description =
   "A quiet space for thoughts on product design, craft, interfaces, and code by Oladimeji Abubakar.";

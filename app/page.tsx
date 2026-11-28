@@ -6,8 +6,9 @@ import Work from "@/components/site/Work";
 import StackActivity from "@/components/site/StackActivity";
 import SiteFooter from "@/components/site/SiteFooter";
 
-// Serve the homepage from cache; admin edits show up within a minute.
-export const revalidate = 60;
+// Built once and served as a static page. Saving in the admin rebuilds it straight away;
+// the daily rebuild is only a safety net.
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: { absolute: "Oladimeji Abubakar — Product Designer in Nigeria" },

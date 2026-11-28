@@ -1,11 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/Img";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { ViewportGif, ViewportVideo } from "@/components/v2/ViewportMedia";
-import { getLocalGif } from "@/lib/local-media";
 import { getOptimizedImageUrl, getOptimizedVideoUrl, getVideoPoster, isGifUrl, isVideoUrl } from "@/lib/media";
 import type { Project } from "@/lib/projects";
 import styles from "./Work.module.css";
@@ -41,7 +40,7 @@ function Media({ src, alt, eager, sizes }: { src: string | null; alt: string; ea
       />
     );
   }
-  if (isGifUrl(src)) return <ViewportGif className={styles.mediaFill} src={getLocalGif(src) ?? src} alt={alt} />;
+  if (isGifUrl(src)) return <ViewportGif className={styles.mediaFill} src={src} alt={alt} />;
   // Width and height only seed the box (4:3, like the card media); the image keeps its own proportions once it loads.
   return (
     <Image

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/Img";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { ViewportGif, ViewportVideo } from "./ViewportMedia";

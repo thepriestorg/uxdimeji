@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/Img";
 import { ArrowUpRight, FileText, Instagram, Linkedin, Music2 } from "lucide-react";
 import { trackCustomEvent } from "@/components/AnalyticsTracker";
 import { InlineCodeBadge, InlineFigmaBadge, NigeriaFlag, VerifiedBadge } from "./Badges";

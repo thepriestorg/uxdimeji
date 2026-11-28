@@ -1,5 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { NextRequest, NextResponse } from "next/server";
+import { BOT_PATTERN, userAgentDetails } from "@/lib/analytics-ua";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -10,35 +11,28 @@ const EVENTS = new Set([
   "file_download",
 ]);
 
-function userAgentDetails(value: string) {
-  const device = /tablet|ipad/i.test(value)
-    ? "Tablet"
-    : /mobile|iphone|android/i.test(value)
-      ? "Mobile"
-      : "Desktop";
-  const browser = /edg\//i.test(value)
-    ? "Edge"
-    : /opr\/|opera/i.test(value)
-      ? "Opera"
-      : /chrome|crios/i.test(value)
-        ? "Chrome"
-        : /safari/i.test(value)
-          ? "Safari"
-          : /firefox|fxios/i.test(value)
-            ? "Firefox"
-            : "Other";
-  const os = /windows/i.test(value)
-    ? "Windows"
-    : /iphone|ipad|ios/i.test(value)
-      ? "iOS"
-      : /android/i.test(value)
-        ? "Android"
-        : /mac os|macintosh/i.test(value)
-          ? "macOS"
-          : /linux/i.test(value)
-            ? "Linux"
-            : "Other";
-  return { device, browser, os };
+// Vercel and Netlify each put the visitor's location in their own headers.
+function visitorLocation(request: NextRequest) {
+  let country = request.headers.get("x-vercel-ip-country") || request.headers.get("x-country");
+  let city = request.headers.get("x-vercel-ip-city");
+  const netlifyGeo = request.headers.get("x-nf-geo");
+  if (netlifyGeo && (!country || !city)) {
+    try {
+      const geo = JSON.parse(Buffer.from(netlifyGeo, "base64").toString("utf8"));
+      country ||= geo?.country?.code || null;
+      city ||= geo?.city || null;
+    } catch {
+      // Ignore a malformed header; the event is still worth keeping.
+    }
+  }
+  if (city) {
+    try {
+      city = decodeURIComponent(city);
+    } catch {
+      // Keep the raw value.
+    }
+  }
+  return { country: country || null, city: city || null };
 }
 
 export async function POST(request: NextRequest) {
@@ -47,7 +41,7 @@ export async function POST(request: NextRequest) {
   }
 
   const userAgent = request.headers.get("user-agent") || "";
-  if (/bot|crawler|spider|preview|lighthouse|headless/i.test(userAgent)) {
+  if (BOT_PATTERN.test(userAgent)) {
     return new NextResponse(null, { status: 204 });
   }
 
@@ -83,15 +77,16 @@ export async function POST(request: NextRequest) {
         )
       : {};
   const details = userAgentDetails(userAgent);
-  const supabase = await createClient();
+  const location = visitorLocation(request);
+  const supabase = createPublicClient();
   const { error } = await supabase.rpc("track_analytics_event", {
     p_event_name: eventName,
     p_visitor_id: visitorId,
     p_session_id: sessionId,
     p_path: path,
     p_referrer: String(body.referrer || "").slice(0, 1000) || null,
-    p_country: request.headers.get("x-vercel-ip-country") || null,
-    p_city: request.headers.get("x-vercel-ip-city") || null,
+    p_country: location.country,
+    p_city: location.city,
     p_device: details.device,
     p_browser: details.browser,
     p_os: details.os,

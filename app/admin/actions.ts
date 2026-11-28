@@ -28,3 +28,16 @@ export async function refreshProjects(slug?: string | null) {
   revalidatePath("/sitemap.xml");
   if (slug) revalidatePath(`/projects/${slug}`);
 }
+
+// Blog pages are static, so saving or deleting a post rebuilds the list and the article.
+export async function refreshBlog(...slugs: (string | null | undefined)[]) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  revalidatePath("/blog");
+  revalidatePath("/sitemap.xml");
+  for (const slug of new Set(slugs.filter(Boolean))) revalidatePath(`/blog/${slug}`);
+}

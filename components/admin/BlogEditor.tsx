@@ -7,6 +7,7 @@ import { ArrowLeft, Loader2, Save, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import MediaUploader from "@/components/admin/MediaUploader";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import { refreshBlog } from "@/app/admin/actions";
 
 type FormData = {
   id?: string;
@@ -69,6 +70,7 @@ export default function BlogEditor({ slug }: { slug?: string }) {
       setSaving(false);
       return;
     }
+    await refreshBlog(form.slug, slug);
     router.push(`/admin/blog/${form.slug}`);
     router.refresh();
     setSaving(false);
@@ -79,6 +81,7 @@ export default function BlogEditor({ slug }: { slug?: string }) {
     setDeleting(true);
     const { error } = await supabase.from("blog_posts").delete().eq("id", form.id);
     if (error) { setError(error.message); setDeleting(false); return; }
+    await refreshBlog(form.slug, slug);
     router.push("/admin/blog");
     router.refresh();
   }

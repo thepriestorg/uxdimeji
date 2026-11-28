@@ -3,10 +3,9 @@ import { absoluteUrl, authorRef, getProjectSummary, jsonLdScript, truncateDescri
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/Img";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
-import { getLocalGif, getLocalPoster, getLocalVideo, type LocalVideoWidth } from "@/lib/local-media";
 import { kindLabel, madeForLabel, type ProjectMetric } from "@/lib/projects";
 import { sanitizeSummary, summaryText } from "@/lib/summary";
 import { displayDomain } from "@/lib/media";
@@ -185,7 +184,7 @@ function extractYoutubeId(url: string): string {
 
 const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url) || url.includes("/video/upload/");
 
-const getOptimizedVideoUrl = (url: string, width: LocalVideoWidth = 1600) => getLocalVideo(url, width) ??
+const getOptimizedVideoUrl = (url: string, width = 1600) =>
     (url.includes("cloudinary.com") && url.includes("/video/upload/")
         ? url.replace("/video/upload/", `/video/upload/f_auto,q_auto:eco,c_limit,w_${width}/`)
         : url);
@@ -193,8 +192,9 @@ const getVideoPoster = (url: string) => url.includes("cloudinary.com") && url.in
     ? url.replace("/video/upload/", "/video/upload/so_0,f_jpg,q_auto,w_1200/").replace(/\.(mp4|webm|mov)(\?.*)?$/i, ".jpg$2")
     : undefined;
 
-// Serve case studies from cache; admin edits show up within a minute.
-export const revalidate = 60;
+// Built once and served as a static page. Saving in the admin rebuilds it straight away;
+// the daily rebuild is only a safety net.
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
     const { data: projects } = await createPublicClient().from("projects").select("slug").eq("is_published", true).eq("has_case_study", true);
@@ -355,7 +355,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                             <div className="desktop-shot" style={{ position: "relative", width: "100%", height: "auto" }}>
                                 {isVideoUrl(project.featured_image) ? (
                                 <video
-                                    poster={getLocalPoster(project.featured_image) ?? getVideoPoster(project.featured_image)}
+                                    poster={getVideoPoster(project.featured_image)}
                                     aria-label={project.title}
                                     muted
                                     autoPlay
@@ -369,12 +369,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                                 </video>
                                 ) : (
                                 <Image
-                                    src={getLocalGif(project.featured_image) ?? project.featured_image}
+                                    src={project.featured_image}
                                     alt={project.title}
                                     width={1400}
                                     height={1000}
                                     style={{ width: "100%", height: "auto", display: "block" }}
-                                    unoptimized={Boolean(getLocalGif(project.featured_image))}
                                     priority
                                     quality={95}
                                 />

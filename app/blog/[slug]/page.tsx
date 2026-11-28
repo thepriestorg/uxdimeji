@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/Img";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Linkedin, Mail } from "lucide-react";
 import SiteHeader from "@/components/site/SiteHeader";
@@ -17,8 +17,9 @@ import { richTextToHtml, richTextToPlainText } from "@/lib/rich-text";
 import { absoluteUrl, authorRef, jsonLdScript } from "@/lib/seo";
 import "../blog.css";
 
-// Serve articles from cache; admin edits show up within a minute.
-export const revalidate = 60;
+// Built once and served as a static page. Saving in the admin rebuilds it straight away;
+// the daily rebuild is only a safety net.
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const posts = await getPublishedPosts();

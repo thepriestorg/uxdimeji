@@ -2,6 +2,8 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
+import { BOT_PATTERN, userAgentDetails } from "@/lib/analytics-ua";
+import { callPublicRpc } from "@/lib/supabase/rpc";
 
 export type AnalyticsEvent = {
   eventName: "page_view" | "engagement" | "outbound_click" | "file_download";
@@ -57,44 +59,58 @@ export function trackCustomEvent(
   engagementSeconds?: number
 ) {
   if (typeof window === "undefined") return;
-  const ids = getVisitorIds();
-  const path = `${window.location.pathname}${window.location.search}`;
-
-  const body = JSON.stringify({
+  send({
     eventName,
-    path,
-    ...ids,
+    path: `${window.location.pathname}${window.location.search}`,
+    ...getVisitorIds(),
     referrer: document.referrer || undefined,
     engagementSeconds,
     metadata,
   });
-
-  if (eventName === "engagement" && navigator.sendBeacon) {
-    navigator.sendBeacon("/api/analytics", new Blob([body], { type: "application/json" }));
-    return;
-  }
-
-  void fetch("/api/analytics", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body,
-    keepalive: true,
-  });
 }
 
+function shouldSkipTracking() {
+  return (
+    navigator.doNotTrack === "1" ||
+    navigator.webdriver ||
+    BOT_PATTERN.test(navigator.userAgent)
+  );
+}
+
+// Only the page view goes through the site's own server, because that is where the
+// visitor's country and city come from. Heartbeats, scroll depth and clicks happen many
+// times per visit, so they go straight to Supabase and never run a server function.
 function send(event: AnalyticsEvent) {
-  const body = JSON.stringify(event);
-  if (event.eventName === "engagement" && navigator.sendBeacon) {
-    navigator.sendBeacon("/api/analytics", new Blob([body], { type: "application/json" }));
+  if (shouldSkipTracking()) return;
+
+  if (event.eventName === "page_view") {
+    void fetch("/api/analytics", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(event),
+      keepalive: true,
+    }).catch(() => {});
     return;
   }
 
-  void fetch("/api/analytics", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body,
-    keepalive: true,
-  });
+  const metadata = Object.fromEntries(
+    Object.entries(event.metadata || {})
+      .slice(0, 10)
+      .map(([key, value]) => [key.slice(0, 50), String(value).slice(0, 500)]),
+  );
+  const details = userAgentDetails(navigator.userAgent);
+  void callPublicRpc("track_analytics_event", {
+    p_event_name: event.eventName,
+    p_visitor_id: event.visitorId,
+    p_session_id: event.sessionId,
+    p_path: event.path.slice(0, 500),
+    p_referrer: event.referrer?.slice(0, 1000) || null,
+    p_device: details.device,
+    p_browser: details.browser,
+    p_os: details.os,
+    p_engagement_seconds: Math.max(0, Math.min(Number(event.engagementSeconds) || 0, 1800)),
+    p_metadata: metadata,
+  }).catch(() => {});
 }
 
 function Tracker() {

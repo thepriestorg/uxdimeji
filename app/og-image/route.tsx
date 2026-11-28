@@ -1,6 +1,9 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+// Drawn once during the build and served as a static file, instead of on every request.
+export const dynamic = "force-static";
 
 const CREAM = "#f6f1ea";
 const INK = "#151413";
@@ -31,8 +34,9 @@ function Tight({ text }: { text: string }) {
   );
 }
 
-export async function GET(request: Request) {
-  const photo = `${new URL(request.url).origin}/images/oladimeji.jpg`;
+export async function GET() {
+  const photoFile = await readFile(path.join(process.cwd(), "public/images/oladimeji.jpg"));
+  const photo = `data:image/jpeg;base64,${photoFile.toString("base64")}`;
   const [bold, medium, mono, hand] = await Promise.all([
     googleFont("Plus Jakarta Sans", 700),
     googleFont("Plus Jakarta Sans", 500),
